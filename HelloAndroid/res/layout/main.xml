@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:a="http://schemas.android.com/apk/res/android" 
+	a:orientation="vertical"
+	a:layout_width="fill_parent"
+	a:layout_height="fill_parent"
+	>
+	
+	<chau.nguyen.calendar.ui.VNMCalendarViewer a:id="@+id/vnmCalendarViewer" 
+			a:layout_width="fill_parent" a:layout_height="fill_parent"/>
+</LinearLayout>

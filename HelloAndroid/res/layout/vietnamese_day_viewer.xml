@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:a="http://schemas.android.com/apk/res/android" 
+	a:layout_width="fill_parent"
+	a:layout_height="wrap_content"
+	a:stretchColumns="*"
+	>
+	
+	<TableRow>
+		<TextView a:layout_width="wrap_content" a:layout_height="wrap_content" a:text="Giờ"
+				a:gravity="center" a:textSize="20sp"/>
+		<TextView  a:layout_width="wrap_content" a:layout_height="wrap_content" a:text="Ngày"
+				a:gravity="center" a:textSize="20sp"/>
+		<TextView a:layout_width="wrap_content" a:layout_height="wrap_content" a:text="Tháng"
+				a:gravity="center" a:textSize="20sp"/>
+		<TextView a:layout_width="wrap_content" a:layout_height="wrap_content" a:text="Năm"
+				a:gravity="center" a:textSize="20sp"/>
+	</TableRow>
+	
+	<TableRow>
+		<LinearLayout
+			a:orientation="vertical"
+			a:layout_width="fill_parent"
+			a:layout_height="fill_parent"
+			>
+	
+			<TextView a:id="@+id/vnmHourText" a:layout_width="fill_parent" a:layout_height="wrap_content" a:text="1:23"
+						a:gravity="center" a:textSize="20sp"/>
+			<TextView a:id="@+id/vnmHourInText" a:layout_width="fill_parent" a:layout_height="wrap_content" a:text="Quý sửu"
+						a:gravity="center" a:textSize="20sp"/>
+		</LinearLayout>
+		<LinearLayout
+			a:orientation="vertical"
+			a:layout_width="fill_parent"
+			a:layout_height="fill_parent"
+			>
+	
+			<TextView a:id="@+id/vnmDayOfMonthText" a:layout_width="fill_parent" a:layout_height="wrap_content" a:text="23"
+						a:gravity="center" a:textSize="20sp"/>
+			<TextView a:id="@+id/vnmDayOfMonthInText" a:layout_width="fill_parent" a:layout_height="wrap_content" a:text="Quý hợi"
+						a:gravity="center" a:textSize="20sp"/>
+		</LinearLayout>
+		<LinearLayout
+			a:orientation="vertical"
+			a:layout_width="fill_parent"
+			a:layout_height="fill_parent"
+			>
+	
+			<TextView a:id="@+id/vnmMonthText" a:layout_width="fill_parent" a:layout_height="wrap_content" a:text="12"
+						a:gravity="center" a:textSize="20sp"/>
+			<TextView a:id="@+id/vnmMonthInText" a:layout_width="fill_parent" a:layout_height="wrap_content" a:text="Ất sửu"
+						a:gravity="center" a:textSize="20sp"/>
+		</LinearLayout>
+		<LinearLayout
+			a:orientation="vertical"
+			a:layout_width="fill_parent"
+			a:layout_height="fill_parent"
+			>
+	
+			<TextView a:id="@+id/vnmYearText" a:layout_width="fill_parent" a:layout_height="wrap_content" a:text="2008"
+						a:gravity="center" a:textSize="20sp"/>
+			<TextView a:id="@+id/vnmYearInText" a:layout_width="fill_parent" a:layout_height="wrap_content" a:text="Mậu tí"
+						a:gravity="center" a:textSize="20sp"/>
+		</LinearLayout>
+	</TableRow>
+</TableLayout>
