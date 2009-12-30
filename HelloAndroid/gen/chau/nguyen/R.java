@@ -17,14 +17,12 @@ public final class R {
         public static final int icon=0x7f020000;
     }
     public static final class id {
-        public static final int dayOfMonthText=0x7f060000;
-        public static final int dayOfMonthViewer=0x7f06000c;
-        public static final int dayOfWeekText=0x7f060001;
-        public static final int noteText=0x7f060002;
-        public static final int vnmCalendarViewer=0x7f060003;
+        public static final int dayOfMonthText=0x7f060001;
+        public static final int dayOfWeekText=0x7f060002;
+        public static final int noteText=0x7f060003;
+        public static final int vnmCalendarViewer=0x7f060000;
         public static final int vnmDayOfMonthInText=0x7f060007;
         public static final int vnmDayOfMonthText=0x7f060006;
-        public static final int vnmDayOfMonthViewer=0x7f06000d;
         public static final int vnmHourInText=0x7f060005;
         public static final int vnmHourText=0x7f060004;
         public static final int vnmMonthInText=0x7f060009;
@@ -33,11 +31,8 @@ public final class R {
         public static final int vnmYearText=0x7f06000a;
     }
     public static final class layout {
-        public static final int day_viewer=0x7f030000;
-        public static final int linearlayout=0x7f030001;
-        public static final int main=0x7f030002;
-        public static final int vietnamese_day_viewer=0x7f030003;
-        public static final int vnm_calendar_viewer=0x7f030004;
+        public static final int main=0x7f030000;
+        public static final int vnm_day_viewer=0x7f030001;
     }
     public static final class string {
         public static final int app_name=0x7f050001;
