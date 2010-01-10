@@ -91,4 +91,19 @@
 			</LinearLayout>
 		</TableRow>
 	</TableLayout>
+	<LinearLayout
+		a:orientation="horizontal"
+		a:layout_width="fill_parent"
+		a:layout_height="fill_parent">
+		
+		<Button a:id="@+id/previousButton"
+			a:text="Ngày trước"
+			a:layout_width="wrap_content"
+			a:layout_height="wrap_content" />
+		<Button a:id="@+id/nextButton"
+			a:text="Ngày sau"
+			a:layout_width="wrap_content"
+			a:layout_height="wrap_content" />
+	</LinearLayout>
+	
 </LinearLayout>
