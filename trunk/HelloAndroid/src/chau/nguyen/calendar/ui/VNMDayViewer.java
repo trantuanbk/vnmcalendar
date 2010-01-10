@@ -7,8 +7,12 @@ import java.util.TimeZone;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import chau.nguyen.MonthActivity;
 import chau.nguyen.R;
 import chau.nguyen.calendar.VietCalendar;
 
@@ -27,7 +31,12 @@ public class VNMDayViewer extends LinearLayout {
 	protected TextView vnmYearText;
 	protected TextView vnmYearInText;
 	
+	protected Button nextButton;
+	protected Button previousButton;
+	
 	private Date displayDate;
+	
+	private MonthActivity monthActivity;
 	
 	
 	static private String[] dayInVietnamese;
@@ -36,22 +45,24 @@ public class VNMDayViewer extends LinearLayout {
 		dayInVietnamese = new String[] {"Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"};
 	}
 
-	public VNMDayViewer(Context context) {
+	public VNMDayViewer(MonthActivity context) {
 		super(context);
-		init();
+		init(context);
 	}
 	
-	public VNMDayViewer(Context context, AttributeSet attrs) {
+	public VNMDayViewer(MonthActivity context, AttributeSet attrs) {
 		super(context, attrs);
-		init();
+		init(context);
 	}
 	
-	private void init() {
+	private void init(MonthActivity monthActivity) {
 		// Inflate the view from the layout resource.
 		String infService = Context.LAYOUT_INFLATER_SERVICE;
 		LayoutInflater li;
 		li = (LayoutInflater)getContext().getSystemService(infService);
 		li.inflate(R.layout.vnm_day_viewer, this, true);
+		
+		this.monthActivity = monthActivity;
 		
 		this.dayOfMonthText = (TextView)findViewById(R.id.dayOfMonthText);
 		this.dayOfWeekText = (TextView)findViewById(R.id.dayOfWeekText);
@@ -66,11 +77,53 @@ public class VNMDayViewer extends LinearLayout {
 		this.vnmYearText = (TextView) findViewById(R.id.vnmYearText);
 		this.vnmYearInText = (TextView) findViewById(R.id.vnmYearInText);
 		
+		this.nextButton = (Button)findViewById(R.id.nextButton);
+        this.previousButton = (Button)findViewById(R.id.previousButton);
+		
 		this.displayDate = new Date();
 		this.setDate(this.displayDate);
+		
+		this.dayOfMonthText.setOnTouchListener(new View.OnTouchListener() {
+			public boolean onTouch(View v, MotionEvent event) {
+				switch (event.getAction()) {
+				case MotionEvent.ACTION_MOVE:
+					
+					break;
+
+				default:
+					break;
+				}
+				return true;
+			}
+		});
+		
+		this.nextButton.setOnClickListener(new View.OnClickListener() {
+
+			public void onClick(View v) {
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(displayDate);
+				calendar.add(Calendar.DAY_OF_MONTH, 1);
+				Date afterDate = calendar.getTime();
+				VNMDayViewer.this.monthActivity.gotoTime(afterDate);
+			}
+			
+		});
+		
+		this.previousButton.setOnClickListener(new View.OnClickListener() {
+
+			public void onClick(View v) {
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(displayDate);
+				calendar.add(Calendar.DAY_OF_MONTH, -1);
+				Date beforeDate = calendar.getTime();
+				VNMDayViewer.this.monthActivity.gotoTime(beforeDate);
+			}
+			
+		});
 	}
 	
-	private void setDate(Date date) {
+	public void setDate(Date date) {
+		this.displayDate = date;
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
 		int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
@@ -100,8 +153,28 @@ public class VNMDayViewer extends LinearLayout {
 		this.vnmYearInText.setText(vnmCalendarTexts[VietCalendar.YEAR]);
 	}
 	
+//	public void next() {
+//		Calendar calendar = Calendar.getInstance();
+//		calendar.setTime(this.displayDate);
+//		calendar.add(Calendar.DAY_OF_MONTH, 1);
+//		Date afterDate = calendar.getTime();
+//		setDate(afterDate);
+//	}
+	
+//	public void back() {
+//		Calendar calendar = Calendar.getInstance();
+//		calendar.setTime(this.displayDate);
+//		calendar.add(Calendar.DAY_OF_MONTH, -1);
+//		Date beforeDate = calendar.getTime();
+//		setDate(beforeDate);
+//	}
+	
 	public void setNote(String note) {
 		this.noteText.setText(note);
+	}
+	
+	public Date getDisplayDate() {
+		return displayDate;
 	}
 
 }
