@@ -4,7 +4,8 @@
 	a:layout_width="fill_parent"
 	a:layout_height="fill_parent"
 	>
-	
-	<chau.nguyen.calendar.ui.VNMCalendarViewer a:id="@+id/vnmCalendarViewer" 
-			a:layout_width="fill_parent" a:layout_height="fill_parent"/>
+
+	<ViewSwitcher a:id="@+id/switcher"
+            a:layout_width="fill_parent"
+            a:layout_height="fill_parent" />
 </LinearLayout>
