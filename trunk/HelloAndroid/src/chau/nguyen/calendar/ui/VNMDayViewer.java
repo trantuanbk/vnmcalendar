@@ -1,19 +1,13 @@
 package chau.nguyen.calendar.ui;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
 import android.content.Context;
-import android.gesture.Gesture;
-import android.gesture.GestureLibraries;
-import android.gesture.GestureLibrary;
-import android.gesture.GestureOverlayView;
-import android.gesture.Prediction;
-import android.gesture.GestureOverlayView.OnGesturePerformedListener;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,9 +18,8 @@ import chau.nguyen.MonthActivity;
 import chau.nguyen.R;
 import chau.nguyen.calendar.VietCalendar;
 
-public class VNMDayViewer extends LinearLayout implements OnGesturePerformedListener {
-	protected GestureOverlayView dayViewGesture;
-	protected GestureLibrary gLibrary;
+public class VNMDayViewer extends LinearLayout {
+	private static int HORIZONTAL_FLING_THRESHOLD = 5;
 	protected INavigator navigator;
 	
 	private TextView dayOfMonthText;
@@ -45,7 +38,7 @@ public class VNMDayViewer extends LinearLayout implements OnGesturePerformedList
 	private Date displayDate;
 	
 	private MonthActivity monthActivity;
-	
+	private GestureDetector gestureDetector;
 	
 	static private String[] dayInVietnamese;
 	
@@ -86,11 +79,11 @@ public class VNMDayViewer extends LinearLayout implements OnGesturePerformedList
 		this.vnmYearText = (TextView) findViewById(R.id.vnmYearText);
 		this.vnmYearInText = (TextView) findViewById(R.id.vnmYearInText);
 		
-        this.gLibrary = GestureLibraries.fromRawResource(this.monthActivity, R.raw.gestures);
-        this.gLibrary.load();
+        //this.gLibrary = GestureLibraries.fromRawResource(this.monthActivity, R.raw.gestures);
+        //this.gLibrary.load();
         
-        this.dayViewGesture = (GestureOverlayView)findViewById(R.id.dayViewGestures);
-        this.dayViewGesture.addOnGesturePerformedListener(this);
+        //this.dayViewGesture = (GestureOverlayView)findViewById(R.id.dayViewGestures);
+        //this.dayViewGesture.addOnGesturePerformedListener(this);
 		
 		this.displayDate = new Date();
 		this.setDate(this.displayDate);
@@ -108,6 +101,40 @@ public class VNMDayViewer extends LinearLayout implements OnGesturePerformedList
 				return true;
 			}
 		});
+		
+		
+		
+		gestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+                    float velocityY) {
+            	
+                // The user might do a slow "fling" after touching the screen
+                // and we don't want the long-press to pop up a context menu.
+                // Setting mLaunchDayView to false prevents the long-press.
+                int distanceX = Math.abs((int) e2.getX() - (int) e1.getX());
+                int distanceY = Math.abs((int) e2.getY() - (int) e1.getY());
+                if (distanceX < HORIZONTAL_FLING_THRESHOLD || distanceX < distanceY) {
+                    return false;
+                }
+
+                // Switch to a different month
+                Calendar calendar = Calendar.getInstance();
+    			calendar.setTime(displayDate);
+                if (velocityX < 0) {
+					calendar.add(Calendar.DAY_OF_MONTH, 1);
+					Date afterDate = calendar.getTime();
+					VNMDayViewer.this.monthActivity.gotoTime(afterDate);
+				} else {
+					calendar.add(Calendar.DAY_OF_MONTH, -1);
+					Date beforeDate = calendar.getTime();
+					VNMDayViewer.this.monthActivity.gotoTime(beforeDate);
+				}
+
+                return true;
+            }
+
+        });
 		
 	}
 	
@@ -167,34 +194,41 @@ public class VNMDayViewer extends LinearLayout implements OnGesturePerformedList
 		return displayDate;
 	}
 
-	@Override
-	public void onGesturePerformed(GestureOverlayView overlay, Gesture gesture) {
-		ArrayList<Prediction> predictions = this.gLibrary.recognize(gesture);
-		if (predictions.size() > 0) {
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(displayDate);
-			
-			for (Prediction prediction : predictions) {
-				if (prediction.score > 1) {
-					//Toast.makeText(this, prediction.name, Toast.LENGTH_SHORT).show();
-					if ("slide-to-left".equals(prediction.name)) {
-						calendar.add(Calendar.DAY_OF_MONTH, 1);
-						Date afterDate = calendar.getTime();
-						VNMDayViewer.this.monthActivity.gotoTime(afterDate);
-					} else if ("slide-to-right".equals(prediction.name)) {
-						calendar.add(Calendar.DAY_OF_MONTH, -1);
-						Date beforeDate = calendar.getTime();
-						VNMDayViewer.this.monthActivity.gotoTime(beforeDate);
-					}
-				}
-			}
-		}
-		
-	}
+//	@Override
+//	public void onGesturePerformed(GestureOverlayView overlay, Gesture gesture) {
+//		ArrayList<Prediction> predictions = this.gLibrary.recognize(gesture);
+//		if (predictions.size() > 0) {
+//			Calendar calendar = Calendar.getInstance();
+//			calendar.setTime(displayDate);
+//			
+//			for (Prediction prediction : predictions) {
+//				if (prediction.score > 1) {
+//					//Toast.makeText(this, prediction.name, Toast.LENGTH_SHORT).show();
+//					if ("slide-to-left".equals(prediction.name)) {
+//						calendar.add(Calendar.DAY_OF_MONTH, 1);
+//						Date afterDate = calendar.getTime();
+//						VNMDayViewer.this.monthActivity.gotoTime(afterDate);
+//					} else if ("slide-to-right".equals(prediction.name)) {
+//						calendar.add(Calendar.DAY_OF_MONTH, -1);
+//						Date beforeDate = calendar.getTime();
+//						VNMDayViewer.this.monthActivity.gotoTime(beforeDate);
+//					}
+//				}
+//			}
+//		}
+//		
+//	}
+	
+	
 	
 	public String getDisplayDayText() {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		return simpleDateFormat.format(this.displayDate);
+	}
+	
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		return gestureDetector.onTouchEvent(event);
 	}
 
 }
