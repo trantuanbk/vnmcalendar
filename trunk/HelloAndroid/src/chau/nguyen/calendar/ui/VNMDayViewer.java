@@ -19,7 +19,7 @@ import chau.nguyen.R;
 import chau.nguyen.calendar.VietCalendar;
 
 public class VNMDayViewer extends LinearLayout {
-	private static int HORIZONTAL_FLING_THRESHOLD = 5;
+	private static int VERTICAL_FLING_THRESHOLD = 5;
 	protected INavigator navigator;
 	
 	private TextView dayOfMonthText;
@@ -114,7 +114,7 @@ public class VNMDayViewer extends LinearLayout {
                 // Setting mLaunchDayView to false prevents the long-press.
                 int distanceX = Math.abs((int) e2.getX() - (int) e1.getX());
                 int distanceY = Math.abs((int) e2.getY() - (int) e1.getY());
-                if (distanceX < HORIZONTAL_FLING_THRESHOLD || distanceX < distanceY) {
+                if (distanceX < VERTICAL_FLING_THRESHOLD || distanceX < distanceY) {
                     return false;
                 }
 
@@ -148,7 +148,7 @@ public class VNMDayViewer extends LinearLayout {
 		this.dayOfMonthText.setText(dayOfMonth + "");
 		this.dayOfWeekText.setText(dayInVietnamese[dayOfWeek - 1]);
 		
-		int hour = calendar.get(Calendar.HOUR);
+		int hour = calendar.get(Calendar.HOUR_OF_DAY);
 		int minute = calendar.get(Calendar.MINUTE);
 		int month = calendar.get(Calendar.MONTH) + 1;
 		
