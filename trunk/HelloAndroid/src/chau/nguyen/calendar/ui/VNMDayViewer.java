@@ -1,22 +1,33 @@
 package chau.nguyen.calendar.ui;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
 import android.content.Context;
+import android.gesture.Gesture;
+import android.gesture.GestureLibraries;
+import android.gesture.GestureLibrary;
+import android.gesture.GestureOverlayView;
+import android.gesture.Prediction;
+import android.gesture.GestureOverlayView.OnGesturePerformedListener;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import chau.nguyen.INavigator;
 import chau.nguyen.MonthActivity;
 import chau.nguyen.R;
 import chau.nguyen.calendar.VietCalendar;
 
-public class VNMDayViewer extends LinearLayout {
+public class VNMDayViewer extends LinearLayout implements OnGesturePerformedListener {
+	protected GestureOverlayView dayViewGesture;
+	protected GestureLibrary gLibrary;
+	protected INavigator navigator;
 	
 	private TextView dayOfMonthText;
 	private TextView dayOfWeekText;
@@ -31,9 +42,6 @@ public class VNMDayViewer extends LinearLayout {
 	protected TextView vnmYearText;
 	protected TextView vnmYearInText;
 	
-	protected Button nextButton;
-	protected Button previousButton;
-	
 	private Date displayDate;
 	
 	private MonthActivity monthActivity;
@@ -45,17 +53,17 @@ public class VNMDayViewer extends LinearLayout {
 		dayInVietnamese = new String[] {"Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"};
 	}
 
-	public VNMDayViewer(MonthActivity context) {
+	public VNMDayViewer(MonthActivity context, INavigator navigator) {
 		super(context);
-		init(context);
+		init(context, navigator);
 	}
 	
-	public VNMDayViewer(MonthActivity context, AttributeSet attrs) {
+	public VNMDayViewer(MonthActivity context, INavigator navigator, AttributeSet attrs) {
 		super(context, attrs);
-		init(context);
+		init(context, navigator);
 	}
 	
-	private void init(MonthActivity monthActivity) {
+	private void init(MonthActivity monthActivity, INavigator navigator) {
 		// Inflate the view from the layout resource.
 		String infService = Context.LAYOUT_INFLATER_SERVICE;
 		LayoutInflater li;
@@ -63,6 +71,7 @@ public class VNMDayViewer extends LinearLayout {
 		li.inflate(R.layout.vnm_day_viewer, this, true);
 		
 		this.monthActivity = monthActivity;
+		this.navigator = navigator;
 		
 		this.dayOfMonthText = (TextView)findViewById(R.id.dayOfMonthText);
 		this.dayOfWeekText = (TextView)findViewById(R.id.dayOfWeekText);
@@ -77,8 +86,11 @@ public class VNMDayViewer extends LinearLayout {
 		this.vnmYearText = (TextView) findViewById(R.id.vnmYearText);
 		this.vnmYearInText = (TextView) findViewById(R.id.vnmYearInText);
 		
-		this.nextButton = (Button)findViewById(R.id.nextButton);
-        this.previousButton = (Button)findViewById(R.id.previousButton);
+        this.gLibrary = GestureLibraries.fromRawResource(this.monthActivity, R.raw.gestures);
+        this.gLibrary.load();
+        
+        this.dayViewGesture = (GestureOverlayView)findViewById(R.id.dayViewGestures);
+        this.dayViewGesture.addOnGesturePerformedListener(this);
 		
 		this.displayDate = new Date();
 		this.setDate(this.displayDate);
@@ -97,33 +109,11 @@ public class VNMDayViewer extends LinearLayout {
 			}
 		});
 		
-		this.nextButton.setOnClickListener(new View.OnClickListener() {
-
-			public void onClick(View v) {
-				Calendar calendar = Calendar.getInstance();
-				calendar.setTime(displayDate);
-				calendar.add(Calendar.DAY_OF_MONTH, 1);
-				Date afterDate = calendar.getTime();
-				VNMDayViewer.this.monthActivity.gotoTime(afterDate);
-			}
-			
-		});
-		
-		this.previousButton.setOnClickListener(new View.OnClickListener() {
-
-			public void onClick(View v) {
-				Calendar calendar = Calendar.getInstance();
-				calendar.setTime(displayDate);
-				calendar.add(Calendar.DAY_OF_MONTH, -1);
-				Date beforeDate = calendar.getTime();
-				VNMDayViewer.this.monthActivity.gotoTime(beforeDate);
-			}
-			
-		});
 	}
 	
 	public void setDate(Date date) {
 		this.displayDate = date;
+		this.monthActivity.setTitle(this.getDisplayDayText());
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
 		int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
@@ -175,6 +165,36 @@ public class VNMDayViewer extends LinearLayout {
 	
 	public Date getDisplayDate() {
 		return displayDate;
+	}
+
+	@Override
+	public void onGesturePerformed(GestureOverlayView overlay, Gesture gesture) {
+		ArrayList<Prediction> predictions = this.gLibrary.recognize(gesture);
+		if (predictions.size() > 0) {
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(displayDate);
+			
+			for (Prediction prediction : predictions) {
+				if (prediction.score > 1) {
+					//Toast.makeText(this, prediction.name, Toast.LENGTH_SHORT).show();
+					if ("slide-to-left".equals(prediction.name)) {
+						calendar.add(Calendar.DAY_OF_MONTH, 1);
+						Date afterDate = calendar.getTime();
+						VNMDayViewer.this.monthActivity.gotoTime(afterDate);
+					} else if ("slide-to-right".equals(prediction.name)) {
+						calendar.add(Calendar.DAY_OF_MONTH, -1);
+						Date beforeDate = calendar.getTime();
+						VNMDayViewer.this.monthActivity.gotoTime(beforeDate);
+					}
+				}
+			}
+		}
+		
+	}
+	
+	public String getDisplayDayText() {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		return simpleDateFormat.format(this.displayDate);
 	}
 
 }

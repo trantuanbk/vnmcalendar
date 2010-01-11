@@ -3,6 +3,7 @@ package chau.nguyen;
 import java.util.Date;
 
 import android.app.Activity;
+import android.gesture.GestureOverlayView.OnGesturePerformedListener;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
@@ -34,7 +35,7 @@ public class MonthActivity extends Activity implements ViewFactory, INavigator {
     }
     
 	public View makeView() {
-		VNMDayViewer viewer = new VNMDayViewer(this);
+		VNMDayViewer viewer = new VNMDayViewer(this, this);
 		viewer.setLayoutParams(new ViewSwitcher.LayoutParams(
                 LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
 		return viewer;
@@ -45,11 +46,11 @@ public class MonthActivity extends Activity implements ViewFactory, INavigator {
 		Date currentDate = currentView.getDisplayDate();
 		
 		if (date.after(currentDate)) {
-			switcher.setInAnimation(this.inAnimationFuture);
-			switcher.setOutAnimation(this.outAnimationFuture);
-		} else if (date.before(currentDate)) {
 			switcher.setInAnimation(this.inAnimationPast);
 			switcher.setOutAnimation(this.outAnimationPast);
+		} else if (date.before(currentDate)) {
+			switcher.setInAnimation(this.inAnimationFuture);
+			switcher.setOutAnimation(this.outAnimationFuture);
 		}
 		
 		VNMDayViewer next = (VNMDayViewer)this.switcher.getNextView();
