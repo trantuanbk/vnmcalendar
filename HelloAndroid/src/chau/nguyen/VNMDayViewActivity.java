@@ -4,7 +4,6 @@ import java.util.Date;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -13,7 +12,7 @@ import android.widget.Gallery.LayoutParams;
 import android.widget.ViewSwitcher.ViewFactory;
 import chau.nguyen.calendar.ui.VNMDayViewer;
 
-public class MonthActivity extends Activity implements ViewFactory, INavigator {
+public class VNMDayViewActivity extends Activity implements ViewFactory, INavigator {
 	private Animation inAnimationPast;
 	private Animation inAnimationFuture;
 	private Animation outAnimationPast;
@@ -24,7 +23,7 @@ public class MonthActivity extends Activity implements ViewFactory, INavigator {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        setContentView(R.layout.vnm_calendar);
         this.switcher = (ViewSwitcher)findViewById(R.id.switcher);
         this.switcher.setFactory(this);
         inAnimationPast = AnimationUtils.loadAnimation(this, R.anim.slide_left_in);
@@ -59,9 +58,4 @@ public class MonthActivity extends Activity implements ViewFactory, INavigator {
 		switcher.showNext();
 	}
 	
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		VNMDayViewer view = (VNMDayViewer)this.switcher.getCurrentView();
-		return view.onTouchEvent(event);
-	}
 }
