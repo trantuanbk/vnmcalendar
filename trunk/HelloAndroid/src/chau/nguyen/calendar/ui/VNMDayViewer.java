@@ -10,12 +10,11 @@ import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import chau.nguyen.INavigator;
-import chau.nguyen.MonthActivity;
 import chau.nguyen.R;
+import chau.nguyen.VNMDayViewActivity;
 import chau.nguyen.calendar.VietCalendar;
 
 public class VNMDayViewer extends LinearLayout {
@@ -37,7 +36,7 @@ public class VNMDayViewer extends LinearLayout {
 	
 	private Date displayDate;
 	
-	private MonthActivity monthActivity;
+	private VNMDayViewActivity monthActivity;
 	private GestureDetector gestureDetector;
 	
 	static private String[] dayInVietnamese;
@@ -46,17 +45,17 @@ public class VNMDayViewer extends LinearLayout {
 		dayInVietnamese = new String[] {"Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"};
 	}
 
-	public VNMDayViewer(MonthActivity context, INavigator navigator) {
+	public VNMDayViewer(VNMDayViewActivity context, INavigator navigator) {
 		super(context);
 		init(context, navigator);
 	}
 	
-	public VNMDayViewer(MonthActivity context, INavigator navigator, AttributeSet attrs) {
+	public VNMDayViewer(VNMDayViewActivity context, INavigator navigator, AttributeSet attrs) {
 		super(context, attrs);
 		init(context, navigator);
 	}
 	
-	private void init(MonthActivity monthActivity, INavigator navigator) {
+	private void init(VNMDayViewActivity monthActivity, INavigator navigator) {
 		// Inflate the view from the layout resource.
 		String infService = Context.LAYOUT_INFLATER_SERVICE;
 		LayoutInflater li;
@@ -79,36 +78,38 @@ public class VNMDayViewer extends LinearLayout {
 		this.vnmYearText = (TextView) findViewById(R.id.vnmYearText);
 		this.vnmYearInText = (TextView) findViewById(R.id.vnmYearInText);
 		
-        //this.gLibrary = GestureLibraries.fromRawResource(this.monthActivity, R.raw.gestures);
-        //this.gLibrary.load();
-        
-        //this.dayViewGesture = (GestureOverlayView)findViewById(R.id.dayViewGestures);
-        //this.dayViewGesture.addOnGesturePerformedListener(this);
-		
 		this.displayDate = new Date();
 		this.setDate(this.displayDate);
 		
-		this.dayOfMonthText.setOnTouchListener(new View.OnTouchListener() {
-			public boolean onTouch(View v, MotionEvent event) {
-				switch (event.getAction()) {
-				case MotionEvent.ACTION_MOVE:
-					
-					break;
-
-				default:
-					break;
-				}
-				return true;
+		this.gestureDetector = new GestureDetector(getContext(), new GestureDetector.OnGestureListener() {
+			
+			@Override
+			public boolean onSingleTapUp(MotionEvent e) {
+				// TODO Auto-generated method stub
+				return false;
 			}
-		});
-		
-		
-		
-		gestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
-            @Override
+			
+			@Override
+			public void onShowPress(MotionEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
+					float distanceY) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+			@Override
+			public void onLongPress(MotionEvent e) {
+				
+			}
+			
+			@Override
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
                     float velocityY) {
-            	
                 // The user might do a slow "fling" after touching the screen
                 // and we don't want the long-press to pop up a context menu.
                 // Setting mLaunchDayView to false prevents the long-press.
@@ -133,8 +134,12 @@ public class VNMDayViewer extends LinearLayout {
 
                 return true;
             }
-
-        });
+			
+			@Override
+			public boolean onDown(MotionEvent e) {
+				return true;
+			}
+		});
 		
 	}
 	
@@ -170,21 +175,6 @@ public class VNMDayViewer extends LinearLayout {
 		this.vnmYearInText.setText(vnmCalendarTexts[VietCalendar.YEAR]);
 	}
 	
-//	public void next() {
-//		Calendar calendar = Calendar.getInstance();
-//		calendar.setTime(this.displayDate);
-//		calendar.add(Calendar.DAY_OF_MONTH, 1);
-//		Date afterDate = calendar.getTime();
-//		setDate(afterDate);
-//	}
-	
-//	public void back() {
-//		Calendar calendar = Calendar.getInstance();
-//		calendar.setTime(this.displayDate);
-//		calendar.add(Calendar.DAY_OF_MONTH, -1);
-//		Date beforeDate = calendar.getTime();
-//		setDate(beforeDate);
-//	}
 	
 	public void setNote(String note) {
 		this.noteText.setText(note);
@@ -194,33 +184,6 @@ public class VNMDayViewer extends LinearLayout {
 		return displayDate;
 	}
 
-//	@Override
-//	public void onGesturePerformed(GestureOverlayView overlay, Gesture gesture) {
-//		ArrayList<Prediction> predictions = this.gLibrary.recognize(gesture);
-//		if (predictions.size() > 0) {
-//			Calendar calendar = Calendar.getInstance();
-//			calendar.setTime(displayDate);
-//			
-//			for (Prediction prediction : predictions) {
-//				if (prediction.score > 1) {
-//					//Toast.makeText(this, prediction.name, Toast.LENGTH_SHORT).show();
-//					if ("slide-to-left".equals(prediction.name)) {
-//						calendar.add(Calendar.DAY_OF_MONTH, 1);
-//						Date afterDate = calendar.getTime();
-//						VNMDayViewer.this.monthActivity.gotoTime(afterDate);
-//					} else if ("slide-to-right".equals(prediction.name)) {
-//						calendar.add(Calendar.DAY_OF_MONTH, -1);
-//						Date beforeDate = calendar.getTime();
-//						VNMDayViewer.this.monthActivity.gotoTime(beforeDate);
-//					}
-//				}
-//			}
-//		}
-//		
-//	}
-	
-	
-	
 	public String getDisplayDayText() {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		return simpleDateFormat.format(this.displayDate);
@@ -228,7 +191,8 @@ public class VNMDayViewer extends LinearLayout {
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		return gestureDetector.onTouchEvent(event);
+		
+		return this.gestureDetector.onTouchEvent(event);
 	}
 
 }
