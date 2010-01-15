@@ -7,9 +7,15 @@ import java.util.TimeZone;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.ContextMenu;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.MenuItem.OnMenuItemClickListener;
+import android.view.View.OnCreateContextMenuListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import chau.nguyen.INavigator;
@@ -17,8 +23,11 @@ import chau.nguyen.R;
 import chau.nguyen.VNMDayViewActivity;
 import chau.nguyen.calendar.VietCalendar;
 
-public class VNMDayViewer extends LinearLayout {
+public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuListener {
 	private static int VERTICAL_FLING_THRESHOLD = 5;
+	private static final int CREATE_NEW_EVENT = 1;
+	private static final int SELECT_DATE = 2;
+	private static final int DATE_DIALOG_ID = 0;
 	protected INavigator navigator;
 	
 	private TextView dayOfMonthText;
@@ -38,7 +47,7 @@ public class VNMDayViewer extends LinearLayout {
 	
 	private VNMDayViewActivity monthActivity;
 	private GestureDetector gestureDetector;
-	
+	private ContextMenuClickHandler contextMenuClickHandler;
 	static private String[] dayInVietnamese;
 	
 	static {
@@ -81,6 +90,8 @@ public class VNMDayViewer extends LinearLayout {
 		this.displayDate = new Date();
 		this.setDate(this.displayDate);
 		
+		setOnCreateContextMenuListener(this);
+		this.contextMenuClickHandler = new ContextMenuClickHandler();
 		this.gestureDetector = new GestureDetector(getContext(), new GestureDetector.OnGestureListener() {
 			
 			@Override
@@ -104,7 +115,7 @@ public class VNMDayViewer extends LinearLayout {
 			
 			@Override
 			public void onLongPress(MotionEvent e) {
-				
+				performLongClick();
 			}
 			
 			@Override
@@ -173,6 +184,8 @@ public class VNMDayViewer extends LinearLayout {
 		this.vnmDayOfMonthInText.setText(vnmCalendarTexts[VietCalendar.DAY]);
 		this.vnmMonthInText.setText(vnmCalendarTexts[VietCalendar.MONTH]);
 		this.vnmYearInText.setText(vnmCalendarTexts[VietCalendar.YEAR]);
+		
+		
 	}
 	
 	
@@ -193,6 +206,35 @@ public class VNMDayViewer extends LinearLayout {
 	public boolean onTouchEvent(MotionEvent event) {
 		
 		return this.gestureDetector.onTouchEvent(event);
+	}
+
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+		MenuItem item;
+		
+		item = menu.add(0, SELECT_DATE, 0, "Chọn ngày");
+		item.setOnMenuItemClickListener(this.contextMenuClickHandler);
+		item = menu.add(0, CREATE_NEW_EVENT, 0, "Thêm sự kiện");
+		item.setOnMenuItemClickListener(this.contextMenuClickHandler);
+	}
+	
+	private class ContextMenuClickHandler implements OnMenuItemClickListener {
+
+		@Override
+		public boolean onMenuItemClick(MenuItem item) {
+			switch (item.getItemId()) {
+			case CREATE_NEW_EVENT:
+				
+				break;
+			case SELECT_DATE:
+				VNMDayViewer.this.monthActivity.showDialog(DATE_DIALOG_ID);
+				break;
+			default:
+				break;
+			}
+			return false;
+		}
+		
 	}
 
 }
