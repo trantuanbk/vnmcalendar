@@ -32,7 +32,7 @@ public class VietCalendar {
 		results[YEAR] = CAN[(lunarYear + 6) % 10] + " " + CHI[(lunarYear + 8) % 12];
 		results[MONTH] = CAN[(lunarYear * 12 + lunarMonth + 3) % 10] + " " + CHI[(lunarMonth + 1) % 12];
 		results[DAY] = CAN[(jd + 9) % 10] + " " + CHI[(jd + 1) % 12];
-		results[HOUR] = CAN[(jd - 1) * 2 % 10] + CHI[0];
+		results[HOUR] = CAN[(jd - 1) * 2 % 10] + " " + CHI[0];
     	results[TIET_KHI] = "";//TIETKHI[getSolarTerm(jd + 1, 7.0)]; 
     	return results;
     }
