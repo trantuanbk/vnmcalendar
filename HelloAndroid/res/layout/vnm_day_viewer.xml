@@ -14,7 +14,7 @@
 			a:layout_height="wrap_content" 
 			a:text="29" 
 			a:gravity="center"
-			a:textSize="150sp"/>
+			a:textSize="130sp"/>
 		<TextView a:id="@+id/dayOfWeekText" 
 			a:layout_width="fill_parent" 
 			a:layout_height="wrap_content" 
@@ -51,40 +51,43 @@
 		
 				<TextView a:id="@+id/vnmHourText" a:layout_width="fill_parent" a:layout_height="wrap_content" a:text="1:23"
 							a:gravity="center" a:textSize="20sp"/>
-				<TextView a:id="@+id/vnmHourInText" a:layout_width="fill_parent" a:layout_height="wrap_content" a:text="Quý sửu"
+				<TextView a:id="@+id/vnmHourInText" a:layout_width="60sp" a:layout_height="wrap_content" a:text="Quý sửu"
 							a:gravity="center" a:textSize="20sp" />
 			</LinearLayout>
 			<LinearLayout
 				a:orientation="vertical"
 				a:layout_width="fill_parent"
 				a:layout_height="fill_parent"
+				a:gravity="center"
 				>
 		
 				<TextView a:id="@+id/vnmDayOfMonthText" a:layout_width="fill_parent" a:layout_height="wrap_content" a:text="23"
 							a:gravity="center" a:textSize="20sp"/>
-				<TextView a:id="@+id/vnmDayOfMonthInText" a:layout_width="fill_parent" a:layout_height="wrap_content" a:text="Quý hợi"
+				<TextView a:id="@+id/vnmDayOfMonthInText" a:layout_width="60sp" a:layout_height="wrap_content" a:text="Quý hợi"
 							a:gravity="center" a:textSize="20sp"/>
 			</LinearLayout>
 			<LinearLayout
 				a:orientation="vertical"
 				a:layout_width="fill_parent"
 				a:layout_height="fill_parent"
+				a:gravity="center"
 				>
 		
 				<TextView a:id="@+id/vnmMonthText" a:layout_width="fill_parent" a:layout_height="wrap_content" a:text="12"
 							a:gravity="center" a:textSize="20sp"/>
-				<TextView a:id="@+id/vnmMonthInText" a:layout_width="fill_parent" a:layout_height="wrap_content" a:text="Ất sửu"
+				<TextView a:id="@+id/vnmMonthInText" a:layout_width="60sp" a:layout_height="wrap_content" a:text="Ất sửu"
 							a:gravity="center" a:textSize="20sp"/>
 			</LinearLayout>
 			<LinearLayout
 				a:orientation="vertical"
 				a:layout_width="fill_parent"
 				a:layout_height="fill_parent"
+				a:gravity="center"
 				>
 		
 				<TextView a:id="@+id/vnmYearText" a:layout_width="fill_parent" a:layout_height="wrap_content" a:text="2008"
 							a:gravity="center" a:textSize="20sp"/>
-				<TextView a:id="@+id/vnmYearInText" a:layout_width="fill_parent" a:layout_height="wrap_content" a:text="Mậu tí"
+				<TextView a:id="@+id/vnmYearInText" a:layout_width="60sp" a:layout_height="wrap_content" a:text="Mậu tí"
 							a:gravity="center" a:textSize="20sp"/>
 			</LinearLayout>
 		</TableRow>
