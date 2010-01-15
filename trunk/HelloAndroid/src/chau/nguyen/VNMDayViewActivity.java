@@ -58,4 +58,5 @@ public class VNMDayViewActivity extends Activity implements ViewFactory, INaviga
 		switcher.showNext();
 	}
 	
+	
 }
