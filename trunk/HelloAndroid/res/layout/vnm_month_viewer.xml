@@ -3,9 +3,5 @@
 	a:orientation="vertical"
 	a:layout_width="fill_parent"
 	a:layout_height="wrap_content">
-	<LinearLayout a:orientation="horizontal"
-		a:layout_width="fill_parent"
-		a:layout_height="wrap_content">
-		
-	</LinearLayout>
+	
 </LinearLayout>
