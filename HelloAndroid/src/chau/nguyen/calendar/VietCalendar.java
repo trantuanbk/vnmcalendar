@@ -222,16 +222,22 @@ public class VietCalendar {
         return new int[]{lunarDay, lunarMonth, lunarYear, lunarLeap};
     }
     
-    public static int[] convertLunar2SolarInVietnam(Date date) {
+    public static int[] convertSolar2LunarInVietnam(Date date) {
     	Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
 		int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
 		int month = calendar.get(Calendar.MONTH) + 1;
 		int year = calendar.get(Calendar.YEAR);
+		return convertSolar2LunarInVietnam(dayOfMonth, month, year);
+    }
+    
+    public static int[] convertSolar2LunarInVietnam(int day, int month, int year) {
+    	Calendar calendar = Calendar.getInstance();
 		TimeZone tz = calendar.getTimeZone();
 		double timeZone = tz.getRawOffset() / 3600000;		
-		return VietCalendar.convertSolar2Lunar(dayOfMonth, month, year, timeZone);
+		return VietCalendar.convertSolar2Lunar(day, month, year, timeZone);
     }
+    
     public static int[] convertLunar2Solar(int lunarDay, int lunarMonth, int lunarYear, int lunarLeap, double timeZone) {
         int a11, b11;
         if (lunarMonth < 11) {

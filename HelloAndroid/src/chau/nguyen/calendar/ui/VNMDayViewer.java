@@ -169,7 +169,7 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 		int month = calendar.get(Calendar.MONTH) + 1;
 		
 		int year = calendar.get(Calendar.YEAR);
-		int[] lunars = VietCalendar.convertLunar2SolarInVietnam(date);
+		int[] lunars = VietCalendar.convertSolar2LunarInVietnam(date);
 		
 		this.vnmHourText.setText(hour + ":" + minute);
 		this.vnmDayOfMonthText.setText(lunars[0] + "");

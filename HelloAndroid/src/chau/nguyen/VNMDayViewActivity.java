@@ -31,10 +31,10 @@ public class VNMDayViewActivity extends Activity implements ViewFactory, INaviga
         setContentView(R.layout.vnm_calendar);
         this.switcher = (ViewSwitcher)findViewById(R.id.switcher);
         this.switcher.setFactory(this);
-        inAnimationPast = AnimationUtils.loadAnimation(this, R.anim.slide_left_in);
-        outAnimationPast = AnimationUtils.loadAnimation(this, R.anim.slide_left_out);
-        inAnimationFuture = AnimationUtils.loadAnimation(this, R.anim.slide_right_in);
-        outAnimationFuture = AnimationUtils.loadAnimation(this, R.anim.slide_right_out);
+        this.inAnimationPast = AnimationUtils.loadAnimation(this, R.anim.slide_left_in);
+        this.outAnimationPast = AnimationUtils.loadAnimation(this, R.anim.slide_left_out);
+        this.inAnimationFuture = AnimationUtils.loadAnimation(this, R.anim.slide_right_in);
+        this.outAnimationFuture = AnimationUtils.loadAnimation(this, R.anim.slide_right_out);
         this.monthDaySwitcherButton = (ImageButton)findViewById(R.id.monthDaySwitcherButton);
         this.monthDaySwitcherButton.setOnClickListener(new View.OnClickListener() {
 
