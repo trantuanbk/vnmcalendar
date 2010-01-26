@@ -19,7 +19,8 @@ public class VNMDayViewActivity extends Activity implements ViewFactory, INaviga
 	private Animation inAnimationFuture;
 	private Animation outAnimationPast;
 	private Animation outAnimationFuture;
-	protected ViewSwitcher switcher;
+	protected ViewSwitcher daySwitcher;
+	protected ViewSwitcher monthSwitcher;
 	
 	private ImageButton monthDaySwitcherButton;
 	private boolean isDayView = true;
@@ -29,8 +30,9 @@ public class VNMDayViewActivity extends Activity implements ViewFactory, INaviga
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vnm_calendar);
-        this.switcher = (ViewSwitcher)findViewById(R.id.switcher);
-        this.switcher.setFactory(this);
+        this.daySwitcher = (ViewSwitcher)findViewById(R.id.daySwitcher);
+        this.daySwitcher.setFactory(this);
+        this.monthSwitcher.setFactory(this);
         this.inAnimationPast = AnimationUtils.loadAnimation(this, R.anim.slide_left_in);
         this.outAnimationPast = AnimationUtils.loadAnimation(this, R.anim.slide_left_out);
         this.inAnimationFuture = AnimationUtils.loadAnimation(this, R.anim.slide_right_in);
@@ -64,20 +66,26 @@ public class VNMDayViewActivity extends Activity implements ViewFactory, INaviga
 	}
 
 	public void gotoTime(Date date) {
-		VNMDayViewer currentView = (VNMDayViewer)this.switcher.getCurrentView();
+		VNMDayViewer currentView = (VNMDayViewer)this.daySwitcher.getCurrentView();
 		Date currentDate = currentView.getDisplayDate();
 		
 		if (date.after(currentDate)) {
-			switcher.setInAnimation(this.inAnimationPast);
-			switcher.setOutAnimation(this.outAnimationPast);
+			this.daySwitcher.setInAnimation(this.inAnimationPast);
+			this.daySwitcher.setOutAnimation(this.outAnimationPast);
 		} else if (date.before(currentDate)) {
-			switcher.setInAnimation(this.inAnimationFuture);
-			switcher.setOutAnimation(this.outAnimationFuture);
+			this.daySwitcher.setInAnimation(this.inAnimationFuture);
+			this.daySwitcher.setOutAnimation(this.outAnimationFuture);
 		}
 		
-		VNMDayViewer next = (VNMDayViewer)this.switcher.getNextView();
+		VNMDayViewer next = (VNMDayViewer)this.daySwitcher.getNextView();
 		next.setDate(date);
-		switcher.showNext();
+		this.daySwitcher.showNext();
+	}
+
+	@Override
+	public void gotoMonth(Date date) {
+		
+		
 	}
 	
 	
