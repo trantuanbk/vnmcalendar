@@ -3,7 +3,6 @@ package chau.nguyen.calendar.ui;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
 
 import android.content.Context;
 import android.util.AttributeSet;
