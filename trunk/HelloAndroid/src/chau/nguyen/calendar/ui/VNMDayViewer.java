@@ -44,7 +44,7 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 	
 	private Date displayDate;
 	
-	private VNMDayViewActivity monthActivity;
+	private VNMDayViewActivity dayViewActivity;
 	private GestureDetector gestureDetector;
 	private ContextMenuClickHandler contextMenuClickHandler;
 	static private String[] dayInVietnamese;
@@ -63,14 +63,14 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 		init(context, navigator);
 	}
 	
-	private void init(VNMDayViewActivity monthActivity, INavigator navigator) {
+	private void init(VNMDayViewActivity dayViewActivity, INavigator navigator) {
 		// Inflate the view from the layout resource.
 		String infService = Context.LAYOUT_INFLATER_SERVICE;
 		LayoutInflater li;
 		li = (LayoutInflater)getContext().getSystemService(infService);
 		li.inflate(R.layout.vnm_day_viewer, this, true);
 		
-		this.monthActivity = monthActivity;
+		this.dayViewActivity = dayViewActivity;
 		this.navigator = navigator;
 		
 		this.dayOfMonthText = (TextView)findViewById(R.id.dayOfMonthText);
@@ -135,11 +135,11 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
                 if (velocityX < 0) {
 					calendar.add(Calendar.DAY_OF_MONTH, 1);
 					Date afterDate = calendar.getTime();
-					VNMDayViewer.this.monthActivity.gotoTime(afterDate);
+					VNMDayViewer.this.navigator.gotoTime(afterDate);
 				} else {
 					calendar.add(Calendar.DAY_OF_MONTH, -1);
 					Date beforeDate = calendar.getTime();
-					VNMDayViewer.this.monthActivity.gotoTime(beforeDate);
+					VNMDayViewer.this.navigator.gotoTime(beforeDate);
 				}
 
                 return true;
@@ -155,7 +155,7 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 	
 	public void setDate(Date date) {
 		this.displayDate = date;
-		this.monthActivity.setTitle(this.getDisplayDayText());
+		this.dayViewActivity.setTitle(this.getDisplayDayText());
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
 		int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
@@ -224,7 +224,7 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 				
 				break;
 			case SELECT_DATE:
-				VNMDayViewer.this.monthActivity.showDialog(DATE_DIALOG_ID);
+				VNMDayViewer.this.dayViewActivity.showDialog(DATE_DIALOG_ID);
 				break;
 			default:
 				break;
