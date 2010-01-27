@@ -3,32 +3,8 @@
 	a:orientation="vertical"
 	a:layout_width="fill_parent"
 	a:layout_height="fill_parent">
-	<ViewFlipper a:id="@+id/viewFlipper"
-        a:layout_width="fill_parent"
-        a:layout_height="fill_parent"
-        a:layout_weight="2"> 
-		<ViewSwitcher a:id="@+id/daySwitcher"
-	    	a:layout_width="fill_parent"
-	        a:layout_height="fill_parent"/>
-	    <!-- 
-	    <chau.nguyen.calendar.ui.VNMMonthViewer 
-	    	a:layout_width="fill_parent"
-			a:layout_height="fill_parent"/>
-		 -->
-		<ViewSwitcher a:id="@+id/monthSwitcher"
-    		a:layout_width="fill_parent"
-        	a:layout_height="fill_parent"/>
-	    
-	</ViewFlipper>
-    <LinearLayout
-		a:orientation="horizontal"
-		a:layout_height="wrap_content" 
-		a:layout_width="fill_parent">
-	
-		<ImageButton a:id="@+id/monthDaySwitcherButton"
-			a:layout_height="wrap_content"
-			a:layout_width="wrap_content"
-			a:src="@drawable/month"
-			/>
-	</LinearLayout>
+	<ViewSwitcher a:id="@+id/switcher"
+    	a:layout_width="fill_parent"
+        a:layout_height="fill_parent"/>
+    
 </LinearLayout>

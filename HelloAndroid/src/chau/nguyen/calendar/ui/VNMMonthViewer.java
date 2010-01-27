@@ -5,21 +5,24 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.View;
+import android.widget.LinearLayout;
+import chau.nguyen.INavigator;
+import chau.nguyen.R;
 import chau.nguyen.calendar.VietCalendar;
 
-public class VNMMonthViewer extends View {
+public class VNMMonthViewer extends LinearLayout {
+	private static int VERTICAL_FLING_THRESHOLD = 5;
 	private Date displayDate;
-	private Canvas canvas;
-	private Bitmap canvasBitmap;
+	private INavigator navigator;
+	private GestureDetector gestureDetector;
 	
 	private final static int dom[] = { 
 		31, 28, 31, /* jan, feb, mar */
@@ -28,20 +31,87 @@ public class VNMMonthViewer extends View {
 		31, 30, 31 /* oct, nov, dec */
 	};
 	 
-	public VNMMonthViewer(Context context, AttributeSet attrs) {
+	public VNMMonthViewer(Context context, AttributeSet attrs, INavigator navigator) {
 		super(context, attrs);
-		init();
+		init(context, navigator);
 	}
 	
-	public VNMMonthViewer(Context context) {
-		super(context);
-		init();
+	private void init(Context context, INavigator navigator) {
+		
+		// Inflate the view from the layout resource.
+		String infService = Context.LAYOUT_INFLATER_SERVICE;
+		LayoutInflater li;
+		li = (LayoutInflater)getContext().getSystemService(infService);
+		li.inflate(R.layout.vnm_month_view_activity, this, true);
+		
+		this.displayDate = new Date();
+		this.navigator = navigator;
+		this.gestureDetector = new GestureDetector(getContext(), new GestureDetector.OnGestureListener() {
+			
+			@Override
+			public boolean onSingleTapUp(MotionEvent e) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+			@Override
+			public void onShowPress(MotionEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
+					float distanceY) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+			@Override
+			public void onLongPress(MotionEvent e) {
+				//performLongClick();
+			}
+			
+			@Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+                    float velocityY) {
+                // The user might do a slow "fling" after touching the screen
+                // and we don't want the long-press to pop up a context menu.
+                // Setting mLaunchDayView to false prevents the long-press.
+                int distanceX = Math.abs((int) e2.getX() - (int) e1.getX());
+                int distanceY = Math.abs((int) e2.getY() - (int) e1.getY());
+                if (distanceX < VERTICAL_FLING_THRESHOLD || distanceX < distanceY) {
+                    return false;
+                }
+
+                // Switch to a different month
+                Calendar calendar = Calendar.getInstance();
+    			calendar.setTime(displayDate);
+                if (velocityX < 0) {
+					calendar.add(Calendar.MONTH, 1);
+					Date afterDate = calendar.getTime();
+					VNMMonthViewer.this.navigator.gotoTime(afterDate);
+				} else {
+					calendar.add(Calendar.MONTH, -1);
+					Date beforeDate = calendar.getTime();
+					VNMMonthViewer.this.navigator.gotoTime(beforeDate);
+				}
+
+                return true;
+            }
+			
+			@Override
+			public boolean onDown(MotionEvent e) {
+				return true;
+			}
+		});
 	}
 
-	public void init() {
-		this.displayDate = new Date();
+	public VNMMonthViewer(Context context, INavigator navigator) {
+		super(context);
+		init(context, navigator);
 	}
-	
+
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
@@ -134,6 +204,12 @@ public class VNMMonthViewer extends View {
 	private int getDayOfWeekVNLocale(int dayOfWeekUSLocale) {
 		if (dayOfWeekUSLocale == 1) return 7;
 		else return dayOfWeekUSLocale - 1;
+	}
+	
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		this.gestureDetector.onTouchEvent(event);
+		return true;
 	}
 
 }
