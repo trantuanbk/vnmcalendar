@@ -115,7 +115,7 @@ public class VNMMonthViewer extends View {
 		calendar.setTime(this.displayDate);
 		int mm = calendar.get(Calendar.MONTH);
 		int yy = calendar.get(Calendar.YEAR);
-		this.monthActivity.setTitle("Tháng " + (mm + 1));
+		this.monthActivity.setTitle("Tháng " + (mm + 1) + " - " + " Năm " + yy);
 		GregorianCalendar cal = new GregorianCalendar(yy, mm, 1);
 		
 		// Compute how much to leave before before the first day of the month.
