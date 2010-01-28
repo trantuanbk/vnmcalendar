@@ -4,25 +4,24 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.widget.LinearLayout;
+import android.view.View;
 import chau.nguyen.INavigator;
-import chau.nguyen.R;
+import chau.nguyen.VNMMonthViewActivity;
 import chau.nguyen.calendar.VietCalendar;
 
-public class VNMMonthViewer extends LinearLayout {
+public class VNMMonthViewer extends View {
 	private static int VERTICAL_FLING_THRESHOLD = 5;
 	private Date displayDate;
 	private INavigator navigator;
 	private GestureDetector gestureDetector;
+	private VNMMonthViewActivity monthActivity;
 	
 	private final static int dom[] = { 
 		31, 28, 31, /* jan, feb, mar */
@@ -31,21 +30,15 @@ public class VNMMonthViewer extends LinearLayout {
 		31, 30, 31 /* oct, nov, dec */
 	};
 	 
-	public VNMMonthViewer(Context context, AttributeSet attrs, INavigator navigator) {
+	public VNMMonthViewer(VNMMonthViewActivity context, AttributeSet attrs, INavigator navigator) {
 		super(context, attrs);
 		init(context, navigator);
 	}
 	
-	private void init(Context context, INavigator navigator) {
-		
-		// Inflate the view from the layout resource.
-		String infService = Context.LAYOUT_INFLATER_SERVICE;
-		LayoutInflater li;
-		li = (LayoutInflater)getContext().getSystemService(infService);
-		li.inflate(R.layout.vnm_month_view_activity, this, true);
-		
+	private void init(VNMMonthViewActivity context, INavigator navigator) {
 		this.displayDate = new Date();
 		this.navigator = navigator;
+		this.monthActivity = context;
 		this.gestureDetector = new GestureDetector(getContext(), new GestureDetector.OnGestureListener() {
 			
 			@Override
@@ -107,7 +100,7 @@ public class VNMMonthViewer extends LinearLayout {
 		});
 	}
 
-	public VNMMonthViewer(Context context, INavigator navigator) {
+	public VNMMonthViewer(VNMMonthViewActivity context, INavigator navigator) {
 		super(context);
 		init(context, navigator);
 	}
@@ -122,7 +115,7 @@ public class VNMMonthViewer extends LinearLayout {
 		calendar.setTime(this.displayDate);
 		int mm = calendar.get(Calendar.MONTH);
 		int yy = calendar.get(Calendar.YEAR);
-		
+		this.monthActivity.setTitle("Tháng " + (mm + 1));
 		GregorianCalendar cal = new GregorianCalendar(yy, mm, 1);
 		
 		// Compute how much to leave before before the first day of the month.
