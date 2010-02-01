@@ -4,16 +4,18 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.graphics.Paint.Align;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import chau.nguyen.INavigator;
-import chau.nguyen.VNMMonthViewActivity;
+import chau.nguyen.VNMMonthActivity;
 import chau.nguyen.calendar.VietCalendar;
 
 public class VNMMonthViewer extends View {
@@ -21,7 +23,10 @@ public class VNMMonthViewer extends View {
 	private Date displayDate;
 	private INavigator navigator;
 	private GestureDetector gestureDetector;
-	private VNMMonthViewActivity monthActivity;
+	private VNMMonthActivity monthActivity;
+	private Canvas mCanvas;
+	private Bitmap mBitmap;
+	private boolean reDrawScreen = true;
 	
 	private final static int dom[] = { 
 		31, 28, 31, /* jan, feb, mar */
@@ -30,12 +35,12 @@ public class VNMMonthViewer extends View {
 		31, 30, 31 /* oct, nov, dec */
 	};
 	 
-	public VNMMonthViewer(VNMMonthViewActivity context, AttributeSet attrs, INavigator navigator) {
+	public VNMMonthViewer(VNMMonthActivity context, AttributeSet attrs, INavigator navigator) {
 		super(context, attrs);
 		init(context, navigator);
 	}
 	
-	private void init(VNMMonthViewActivity context, INavigator navigator) {
+	private void init(VNMMonthActivity context, INavigator navigator) {
 		this.displayDate = new Date();
 		this.navigator = navigator;
 		this.monthActivity = context;
@@ -95,12 +100,13 @@ public class VNMMonthViewer extends View {
 			
 			@Override
 			public boolean onDown(MotionEvent e) {
+				reDrawScreen = true;
 				return true;
 			}
 		});
 	}
 
-	public VNMMonthViewer(VNMMonthViewActivity context, INavigator navigator) {
+	public VNMMonthViewer(VNMMonthActivity context, INavigator navigator) {
 		super(context);
 		init(context, navigator);
 	}
@@ -108,6 +114,25 @@ public class VNMMonthViewer extends View {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
+		if (reDrawScreen) {
+			if (mCanvas == null) {
+				mBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+				mCanvas = new Canvas(mBitmap);
+			} 
+			if (mCanvas != null){
+				final Canvas bitmapCanvas = mCanvas;
+	            bitmapCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
+	            doDraw(bitmapCanvas);
+	            reDrawScreen = false;
+			}
+		}
+		
+		
+		
+		canvas.drawBitmap(mBitmap, 0, 0, null);
+	}
+	
+	private void doDraw(Canvas canvas) {
 		float cellHeight = getHeight() / 7;
 		float cellWidth = getWidth() / 7;
 		int leadSpaces = 0;
@@ -155,6 +180,7 @@ public class VNMMonthViewer extends View {
 	private void drawCellContent(Canvas canvas, float x, float y, int day, int month, int year) {
 		Paint paint = new Paint();
 		paint.setColor(Color.WHITE);
+		paint.setAntiAlias(true);
 		paint.setTextAlign(Align.CENTER);
 		paint.setTextSize(25);
 		canvas.drawText(day + "", x, y, paint);
