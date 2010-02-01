@@ -4,12 +4,12 @@ import java.util.Date;
 
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ViewSwitcher;
 import android.widget.Gallery.LayoutParams;
 import android.widget.ViewSwitcher.ViewFactory;
 import chau.nguyen.calendar.ui.MainMenu;
 import chau.nguyen.calendar.ui.VNMDayViewer;
+import chau.nguyen.calendar.ui.MainMenu.SwitchViewOption;
 
 public class VNMDayActivity extends VNMCalendarViewActivity implements ViewFactory, INavigator {
 	protected MainMenu menu;
@@ -20,9 +20,9 @@ public class VNMDayActivity extends VNMCalendarViewActivity implements ViewFacto
         setContentView(R.layout.vnm_day_activity);
         this.switcher = (ViewSwitcher)findViewById(R.id.switcher);
         this.switcher.setFactory(this);
-        this.menu = new MainMenu(this);
-        this.menu.setLayoutParams(new ViewGroup.LayoutParams(
-                LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+        this.menu = (MainMenu)findViewById(R.id.dayMainMenu);
+        this.menu.setVnmCalendarActivity(this);
+        this.menu.setSwitchOption(SwitchViewOption.SWITCH_DAY_MONTH);
     }
     
 	public View makeView() {

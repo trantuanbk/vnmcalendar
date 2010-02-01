@@ -86,10 +86,14 @@ public class VNMMonthViewer extends View {
                 Calendar calendar = Calendar.getInstance();
     			calendar.setTime(displayDate);
                 if (velocityX < 0) {
+					calendar.set(Calendar.DAY_OF_MONTH, 1);
+					calendar.getTime();
 					calendar.add(Calendar.MONTH, 1);
 					Date afterDate = calendar.getTime();
 					VNMMonthViewer.this.navigator.gotoTime(afterDate);
 				} else {
+					calendar.set(Calendar.DAY_OF_MONTH, 1);
+					calendar.getTime();
 					calendar.add(Calendar.MONTH, -1);
 					Date beforeDate = calendar.getTime();
 					VNMMonthViewer.this.navigator.gotoTime(beforeDate);
@@ -200,6 +204,7 @@ public class VNMMonthViewer extends View {
 		Paint paint = new Paint();
 		paint.setColor(Color.WHITE);
 		paint.setTextAlign(Align.CENTER);
+		paint.setAntiAlias(true);
 		paint.setTextSize(25);
 		if (j != 8) {
 			canvas.drawText("T" + j, x, y, paint);

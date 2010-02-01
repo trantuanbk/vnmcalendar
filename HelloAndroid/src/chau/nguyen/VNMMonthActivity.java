@@ -1,15 +1,17 @@
 package chau.nguyen;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import android.os.Bundle;
+import android.text.format.Time;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ViewSwitcher;
 import android.widget.Gallery.LayoutParams;
 import android.widget.ViewSwitcher.ViewFactory;
 import chau.nguyen.calendar.ui.MainMenu;
 import chau.nguyen.calendar.ui.VNMMonthViewer;
+import chau.nguyen.calendar.ui.MainMenu.SwitchViewOption;
 
 public class VNMMonthActivity extends VNMCalendarViewActivity implements ViewFactory, INavigator {
 	private MainMenu menu;
@@ -21,9 +23,9 @@ public class VNMMonthActivity extends VNMCalendarViewActivity implements ViewFac
         setContentView(R.layout.vnm_month_activity);
         this.switcher = (ViewSwitcher)findViewById(R.id.monthSwitcher);
         this.switcher.setFactory(this);
-        this.menu = new MainMenu(this);
-        this.menu.setLayoutParams(new ViewGroup.LayoutParams(
-                LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+        this.menu = (MainMenu)findViewById(R.id.monthMainMenu);
+        this.menu.setVnmCalendarActivity(this);
+        this.menu.setSwitchOption(SwitchViewOption.SWITCH_MONTH_DAY);
     }
     
 	public View makeView() {
@@ -37,11 +39,17 @@ public class VNMMonthActivity extends VNMCalendarViewActivity implements ViewFac
 	public void gotoTime(Date date) {
 		VNMMonthViewer currentView = (VNMMonthViewer)this.switcher.getCurrentView();
 		Date currentDate = currentView.getDisplayDate();
-		
-		if (date.after(currentDate)) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(currentDate);
+		int currentMonth = calendar.get(Calendar.MONTH);
+		int currentYear = calendar.get(Calendar.YEAR);
+		calendar.setTime(date);
+		int nextMonth = calendar.get(Calendar.MONTH);
+		int nextYear = calendar.get(Calendar.YEAR);
+		if ((nextMonth + nextYear * 12) > (currentMonth + currentYear * 12)) {
 			this.switcher.setInAnimation(this.inAnimationPast);
 			this.switcher.setOutAnimation(this.outAnimationPast);
-		} else if (date.before(currentDate)) {
+		} else {
 			this.switcher.setInAnimation(this.inAnimationFuture);
 			this.switcher.setOutAnimation(this.outAnimationFuture);
 		}

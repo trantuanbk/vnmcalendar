@@ -2,7 +2,7 @@
 <LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
 	a:orientation="vertical"
 	a:layout_width="fill_parent"
-	a:layout_height="wrap_content">
+	a:layout_height="fill_parent">
 	
 	<LinearLayout
 		a:orientation="vertical"
@@ -14,7 +14,7 @@
 			a:layout_height="wrap_content" 
 			a:text="29" 
 			a:gravity="center"
-			a:textSize="130sp"/>
+			a:textSize="120sp"/>
 		<TextView a:id="@+id/dayOfWeekText" 
 			a:layout_width="fill_parent" 
 			a:layout_height="wrap_content" 
