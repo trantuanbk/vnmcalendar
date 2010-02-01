@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.ContextMenu;
 import android.view.GestureDetector;
@@ -20,12 +21,14 @@ import android.widget.TextView;
 import chau.nguyen.INavigator;
 import chau.nguyen.R;
 import chau.nguyen.VNMDayActivity;
+import chau.nguyen.VNMMonthActivity;
 import chau.nguyen.calendar.VietCalendar;
 
 public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuListener {
 	private static int VERTICAL_FLING_THRESHOLD = 5;
 	private static final int CREATE_NEW_EVENT = 1;
 	private static final int SELECT_DATE = 2;
+	private static final int SWITCH_TO_MONTH = 3;
 	private static final int DATE_DIALOG_ID = 0;
 	protected INavigator navigator;
 	
@@ -213,6 +216,8 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 		item.setOnMenuItemClickListener(this.contextMenuClickHandler);
 		item = menu.add(0, CREATE_NEW_EVENT, 0, "Thêm sự kiện");
 		item.setOnMenuItemClickListener(this.contextMenuClickHandler);
+		item = menu.add(0, SWITCH_TO_MONTH, 0, "Hiện thị theo tháng");
+		item.setOnMenuItemClickListener(this.contextMenuClickHandler);
 	}
 	
 	private class ContextMenuClickHandler implements OnMenuItemClickListener {
@@ -225,6 +230,10 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 				break;
 			case SELECT_DATE:
 				VNMDayViewer.this.dayViewActivity.showDialog(DATE_DIALOG_ID);
+				break;
+			case SWITCH_TO_MONTH:
+				Intent monthIntent = new Intent(getContext(), VNMMonthActivity.class);
+				VNMDayViewer.this.dayViewActivity.startActivity(monthIntent);
 				break;
 			default:
 				break;

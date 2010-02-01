@@ -17,19 +17,18 @@ public class MainMenu extends LinearLayout {
 	private SwitchViewOption switchOption;
 	private VNMCalendarViewActivity vnmCalendarActivity;
 
-	public MainMenu(VNMCalendarViewActivity context, AttributeSet attrs) {
+	public MainMenu(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		init(context);
+		init();
 	}
 	
-	public MainMenu(VNMCalendarViewActivity context) {
+	public MainMenu(Context context) {
 		super(context);
-		init(context);
+		init();
 	}
 
-	private void init(VNMCalendarViewActivity context) {
-		switchOption = SwitchViewOption.SWITCH_DAY_MONTH;
-		this.vnmCalendarActivity = context;
+	private void init() {
+		this.switchOption = SwitchViewOption.SWITCH_DAY_MONTH;
 		// Inflate the view from the layout resource.
 		String infService = Context.LAYOUT_INFLATER_SERVICE;
 		LayoutInflater li;
@@ -45,20 +44,37 @@ public class MainMenu extends LinearLayout {
 				case SWITCH_MONTH_DAY:
 					Intent dayIntent = new Intent(v.getContext(), VNMDayActivity.class);
 					vnmCalendarActivity.startActivity(dayIntent);
-					switchOption = SwitchViewOption.SWITCH_DAY_MONTH;
 					break;
 					
 				default:
 					Intent monthIntent = new Intent(v.getContext(), VNMMonthActivity.class);
 					vnmCalendarActivity.startActivity(monthIntent);
-					switchOption = SwitchViewOption.SWITCH_MONTH_DAY;
 					break;
 				}
 			}
 		});
 	}
 	
-	enum SwitchViewOption {
+	
+	public VNMCalendarViewActivity getVnmCalendarActivity() {
+		return vnmCalendarActivity;
+	}
+
+	public void setVnmCalendarActivity(VNMCalendarViewActivity vnmCalendarActivity) {
+		this.vnmCalendarActivity = vnmCalendarActivity;
+	}
+
+	public SwitchViewOption getSwitchOption() {
+		return switchOption;
+	}
+
+	public void setSwitchOption(SwitchViewOption switchOption) {
+		this.switchOption = switchOption;
+	}
+
+
+
+	public enum SwitchViewOption {
 		SWITCH_MONTH_DAY,
 		SWITCH_DAY_MONTH
 	}
