@@ -19,7 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import chau.nguyen.INavigator;
 import chau.nguyen.R;
-import chau.nguyen.VNMDayViewActivity;
+import chau.nguyen.VNMDayActivity;
 import chau.nguyen.calendar.VietCalendar;
 
 public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuListener {
@@ -44,7 +44,7 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 	
 	private Date displayDate;
 	
-	private VNMDayViewActivity dayViewActivity;
+	private VNMDayActivity dayViewActivity;
 	private GestureDetector gestureDetector;
 	private ContextMenuClickHandler contextMenuClickHandler;
 	static private String[] dayInVietnamese;
@@ -53,17 +53,17 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 		dayInVietnamese = new String[] {"Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"};
 	}
 
-	public VNMDayViewer(VNMDayViewActivity context, INavigator navigator) {
+	public VNMDayViewer(VNMDayActivity context, INavigator navigator) {
 		super(context);
 		init(context, navigator);
 	}
 	
-	public VNMDayViewer(VNMDayViewActivity context, INavigator navigator, AttributeSet attrs) {
+	public VNMDayViewer(VNMDayActivity context, INavigator navigator, AttributeSet attrs) {
 		super(context, attrs);
 		init(context, navigator);
 	}
 	
-	private void init(VNMDayViewActivity dayViewActivity, INavigator navigator) {
+	private void init(VNMDayActivity dayViewActivity, INavigator navigator) {
 		// Inflate the view from the layout resource.
 		String infService = Context.LAYOUT_INFLATER_SERVICE;
 		LayoutInflater li;

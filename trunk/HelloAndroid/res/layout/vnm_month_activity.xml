@@ -6,5 +6,4 @@
 	<ViewSwitcher a:id="@+id/monthSwitcher"
     	a:layout_width="fill_parent"
         a:layout_height="fill_parent"/>
-    
 </LinearLayout>

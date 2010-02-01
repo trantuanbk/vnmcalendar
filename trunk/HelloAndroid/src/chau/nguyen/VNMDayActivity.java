@@ -4,21 +4,25 @@ import java.util.Date;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ViewSwitcher;
 import android.widget.Gallery.LayoutParams;
 import android.widget.ViewSwitcher.ViewFactory;
+import chau.nguyen.calendar.ui.MainMenu;
 import chau.nguyen.calendar.ui.VNMDayViewer;
 
-public class VNMDayViewActivity extends VNMCalendarViewActivity implements ViewFactory, INavigator {
-	
+public class VNMDayActivity extends VNMCalendarViewActivity implements ViewFactory, INavigator {
+	protected MainMenu menu;
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.vnm_calendar);
+        setContentView(R.layout.vnm_day_activity);
         this.switcher = (ViewSwitcher)findViewById(R.id.switcher);
         this.switcher.setFactory(this);
-        	
+        this.menu = new MainMenu(this);
+        this.menu.setLayoutParams(new ViewGroup.LayoutParams(
+                LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
     }
     
 	public View makeView() {
