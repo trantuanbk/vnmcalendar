@@ -4,10 +4,11 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.Animation.AnimationListener;
 import android.widget.ViewSwitcher;
 import android.widget.ViewSwitcher.ViewFactory;
 
-public abstract class VNMCalendarViewActivity extends Activity implements ViewFactory, INavigator {
+public abstract class VNMCalendarViewActivity extends Activity implements ViewFactory, INavigator, AnimationListener {
 	protected Animation inAnimationPast;
 	protected Animation inAnimationFuture;
 	protected Animation outAnimationPast;
@@ -22,7 +23,8 @@ public abstract class VNMCalendarViewActivity extends Activity implements ViewFa
         this.outAnimationPast = AnimationUtils.loadAnimation(this, R.anim.slide_left_out);
         this.inAnimationFuture = AnimationUtils.loadAnimation(this, R.anim.slide_right_in);
         this.outAnimationFuture = AnimationUtils.loadAnimation(this, R.anim.slide_right_out);
-        	
+        this.inAnimationFuture.setAnimationListener(this);
+        this.inAnimationPast.setAnimationListener(this);
     }
 
 }
