@@ -27,6 +27,7 @@ public class VNMMonthViewer extends View {
 	private Canvas mCanvas;
 	private Bitmap mBitmap;
 	private boolean reDrawScreen = true;
+	private int count = 0;
 	
 	private final static int dom[] = { 
 		31, 28, 31, /* jan, feb, mar */
@@ -85,29 +86,28 @@ public class VNMMonthViewer extends View {
                 // Switch to a different month
                 Calendar calendar = Calendar.getInstance();
     			calendar.setTime(displayDate);
+    			calendar.set(Calendar.DAY_OF_MONTH, 1);
+    			calendar.getTime();
                 if (velocityX < 0) {
-					calendar.set(Calendar.DAY_OF_MONTH, 1);
-					calendar.getTime();
 					calendar.add(Calendar.MONTH, 1);
 					Date afterDate = calendar.getTime();
 					VNMMonthViewer.this.navigator.gotoTime(afterDate);
 				} else {
-					calendar.set(Calendar.DAY_OF_MONTH, 1);
-					calendar.getTime();
 					calendar.add(Calendar.MONTH, -1);
 					Date beforeDate = calendar.getTime();
 					VNMMonthViewer.this.navigator.gotoTime(beforeDate);
 				}
-
+                count++;
                 return true;
             }
 			
 			@Override
 			public boolean onDown(MotionEvent e) {
-				reDrawScreen = true;
 				return true;
 			}
+			
 		});
+		
 	}
 
 	public VNMMonthViewer(VNMMonthActivity context, INavigator navigator) {
@@ -130,9 +130,6 @@ public class VNMMonthViewer extends View {
 	            reDrawScreen = false;
 			}
 		}
-		
-		
-		
 		canvas.drawBitmap(mBitmap, 0, 0, null);
 	}
 	
@@ -215,6 +212,15 @@ public class VNMMonthViewer extends View {
 		
 	}
 	
+	public void animationFinished() {
+		this.reDrawScreen = true;
+		invalidate();
+	}
+	
+	public void animationStart() {
+		this.reDrawScreen = true;
+		invalidate();
+	}
 	
 	public void setDisplayDate(Date displayDate) {
 		this.displayDate = displayDate;

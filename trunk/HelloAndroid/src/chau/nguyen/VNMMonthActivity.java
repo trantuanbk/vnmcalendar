@@ -4,16 +4,15 @@ import java.util.Calendar;
 import java.util.Date;
 
 import android.os.Bundle;
-import android.text.format.Time;
 import android.view.View;
+import android.view.animation.Animation;
 import android.widget.ViewSwitcher;
 import android.widget.Gallery.LayoutParams;
-import android.widget.ViewSwitcher.ViewFactory;
 import chau.nguyen.calendar.ui.MainMenu;
 import chau.nguyen.calendar.ui.VNMMonthViewer;
 import chau.nguyen.calendar.ui.MainMenu.SwitchViewOption;
 
-public class VNMMonthActivity extends VNMCalendarViewActivity implements ViewFactory, INavigator {
+public class VNMMonthActivity extends VNMCalendarViewActivity {
 	private MainMenu menu;
 
 	/** Called when the activity is first created. */
@@ -57,6 +56,24 @@ public class VNMMonthActivity extends VNMCalendarViewActivity implements ViewFac
 		VNMMonthViewer next = (VNMMonthViewer)this.switcher.getNextView();
 		next.setDisplayDate(date);
 		this.switcher.showNext();
+	}
+
+	@Override
+	public void onAnimationEnd(Animation animation) {
+		
+	}
+
+	@Override
+	public void onAnimationRepeat(Animation animation) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onAnimationStart(Animation animation) {
+		VNMMonthViewer currentView = (VNMMonthViewer)this.switcher.getCurrentView();
+		currentView.animationStart();
+		
 	}
 
 }
