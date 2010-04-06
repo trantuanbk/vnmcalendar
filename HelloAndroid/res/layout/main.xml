@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:a="http://schemas.android.com/apk/res/android" 
+	a:orientation="vertical"
+	a:layout_width="fill_parent"
+	a:layout_height="fill_parent"
+	>
+	
+	<android.gesture.GestureOverlayView
+	    a:id="@+id/dayViewGestures"
+	    a:layout_width="fill_parent"
+	    a:layout_height="fill_parent"
+	    
+	    a:gestureStrokeType="multiple"
+	    a:eventsInterceptionEnabled="true"
+	    a:orientation="vertical"
+	    a:gestureColor="#00000000">
+
+    	<chau.nguyen.calendar.ui.VNMDayViewer a:id="@+id/vnmDayViewer" 
+			a:layout_width="fill_parent" a:layout_height="fill_parent"/>
+
+	</android.gesture.GestureOverlayView>
+</LinearLayout>
