@@ -3,7 +3,10 @@ package chau.nguyen;
 import java.util.Calendar;
 import java.util.Date;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.ViewSwitcher;
@@ -13,8 +16,9 @@ import chau.nguyen.calendar.ui.VNMMonthViewer;
 import chau.nguyen.calendar.ui.MainMenu.SwitchViewOption;
 
 public class VNMMonthActivity extends VNMCalendarViewActivity {
-	private MainMenu menu;
-
+	private static int MENU_DAY_VIEW = 1;
+	private static int MENU_SETTINGS = 2;
+	
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -22,9 +26,21 @@ public class VNMMonthActivity extends VNMCalendarViewActivity {
         setContentView(R.layout.vnm_month_activity);
         this.switcher = (ViewSwitcher)findViewById(R.id.monthSwitcher);
         this.switcher.setFactory(this);
-        this.menu = (MainMenu)findViewById(R.id.monthMainMenu);
-        this.menu.setVnmCalendarActivity(this);
-        this.menu.setSwitchOption(SwitchViewOption.SWITCH_MONTH_DAY);
+    }
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+    	menu.add(0, MENU_DAY_VIEW, 0, "Xem theo ngày").setIcon(android.R.drawable.ic_menu_day);
+    	menu.add(0, MENU_SETTINGS, 0, "Tùy chọn").setIcon(android.R.drawable.ic_menu_preferences);
+    	return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	if (item.getItemId() == MENU_DAY_VIEW) {
+    		this.finish();
+    	}    	
+    	return true;
     }
     
 	public View makeView() {
@@ -59,21 +75,16 @@ public class VNMMonthActivity extends VNMCalendarViewActivity {
 	}
 
 	@Override
-	public void onAnimationEnd(Animation animation) {
-		
+	public void onAnimationEnd(Animation animation) {		
 	}
 
 	@Override
 	public void onAnimationRepeat(Animation animation) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void onAnimationStart(Animation animation) {
 		VNMMonthViewer currentView = (VNMMonthViewer)this.switcher.getCurrentView();
-		currentView.animationStart();
-		
+		currentView.animationStart();		
 	}
-
 }

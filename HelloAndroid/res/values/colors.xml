@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="dayColor">#444</color>
+    <color name="dayOfWeekColor">#444</color>
+    <color name="weekendColor">#F00</color>
+</resources>

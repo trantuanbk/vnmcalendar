@@ -5,11 +5,6 @@
 	a:layout_height="fill_parent">
 	<ViewSwitcher a:id="@+id/monthSwitcher"
     	a:layout_width="fill_parent"
-        a:layout_height="fill_parent"
+        a:layout_height="wrap_content"
         a:layout_weight="1"/>
-        
-    <chau.nguyen.calendar.ui.MainMenu a:id="@+id/monthMainMenu"
-    	a:layout_width="fill_parent"
-        a:layout_height="fill_parent"
-        a:layout_weight="6"/>
 </LinearLayout>

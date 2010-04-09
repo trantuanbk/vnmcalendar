@@ -2,16 +2,11 @@
 <LinearLayout xmlns:a="http://schemas.android.com/apk/res/android" 
 	a:orientation="vertical"
 	a:layout_width="fill_parent"
-	a:layout_height="fill_parent">
+	a:layout_height="fill_parent"	
+    a:background="@drawable/body">
 	
 	<ViewSwitcher a:id="@+id/switcher"
     	a:layout_width="fill_parent"
         a:layout_height="wrap_content"
-        a:layout_weight="1"/>
-        
-    <chau.nguyen.calendar.ui.MainMenu a:id="@+id/dayMainMenu"
-    	a:layout_width="fill_parent"
-        a:layout_height="wrap_content"
-        a:layout_weight="6"/>
-    
+        a:layout_weight="1" />           
 </LinearLayout>
