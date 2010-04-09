@@ -5,16 +5,18 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.graphics.Paint.Align;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import chau.nguyen.INavigator;
+import chau.nguyen.R;
 import chau.nguyen.VNMMonthActivity;
 import chau.nguyen.calendar.VietCalendar;
 
@@ -28,6 +30,11 @@ public class VNMMonthViewer extends View {
 	private Bitmap mBitmap;
 	private boolean reDrawScreen = true;
 	private int count = 0;
+	
+	Bitmap cellBackground;
+	int dayColor = 0;
+	int dayOfWeekColor = 0;
+	int weekendColor = 0; 
 	
 	private final static int dom[] = { 
 		31, 28, 31, /* jan, feb, mar */
@@ -45,33 +52,23 @@ public class VNMMonthViewer extends View {
 		this.displayDate = new Date();
 		this.navigator = navigator;
 		this.monthActivity = context;
-		this.gestureDetector = new GestureDetector(getContext(), new GestureDetector.OnGestureListener() {
-			
-			@Override
+		this.cellBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.cells);
+		this.dayColor = context.getResources().getColor(R.color.dayColor);
+		this.dayOfWeekColor = context.getResources().getColor(R.color.dayOfWeekColor);
+		this.weekendColor = context.getResources().getColor(R.color.weekendColor);
+		
+		this.gestureDetector = new GestureDetector(getContext(), new GestureDetector.OnGestureListener() {			
 			public boolean onSingleTapUp(MotionEvent e) {
-				// TODO Auto-generated method stub
 				return false;
 			}
-			
-			@Override
 			public void onShowPress(MotionEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
-			
-			@Override
 			public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
 					float distanceY) {
-				// TODO Auto-generated method stub
 				return false;
 			}
-			
-			@Override
 			public void onLongPress(MotionEvent e) {
-				//performLongClick();
 			}
-			
-			@Override
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
                     float velocityY) {
                 // The user might do a slow "fling" after touching the screen
@@ -136,6 +133,8 @@ public class VNMMonthViewer extends View {
 	private void doDraw(Canvas canvas) {
 		float cellHeight = getHeight() / 7;
 		float cellWidth = getWidth() / 7;
+		int startX = (getWidth() - (int)cellWidth * 7) / 2;
+		int startY = (getHeight() - (int)cellHeight * 7) / 2;
 		int leadSpaces = 0;
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(this.displayDate);
@@ -156,57 +155,77 @@ public class VNMMonthViewer extends View {
 		}
 	       
 		int count = 1;
-	       for (int i = 0; i < 6 && count <= daysInMonth; i++) {
+	       for (int i = 0; i < 7 && count <= daysInMonth; i++) {
 	    	   if (i == 0) {
 	    		   for (int j = 0; j < 7; j++) {
-	    			   drawHeader(canvas, j * cellWidth + cellWidth / 2, i * cellHeight + cellHeight / 2, j + 2);
+	    			   drawHeader(canvas, startX + j * cellWidth, startY + i * cellHeight, cellWidth, cellHeight, j + 2);
 	    		   }
 	    	   } else if (i == 1) {
 	    		   for (int j = 0; j < 7 && count <= daysInMonth; j++) {
 	    			   if (j >= leadSpaces) {
-	    				   drawCellContent(canvas, j * cellWidth + cellWidth / 2, i * cellHeight + cellHeight / 2, count, mm + 1, yy);
+	    				   drawCellContent(canvas, startX + j * cellWidth, startY + i * cellHeight, cellWidth, cellHeight, count, mm + 1, yy);
 	    				   count++;
+	    			   } else {
+	    				   drawCellContent(canvas, startX + j * cellWidth, startY + i * cellHeight, cellWidth, cellHeight, 0, 0, yy);   
 	    			   }
 	    		   }
 	    	   } else {
-	    		   for (int j = 0; j < 7 && count <= daysInMonth; j++) {
-	    			   drawCellContent(canvas, j * cellWidth + cellWidth / 2, i * cellHeight + cellHeight / 2, count, mm + 1, yy);
-					   count++;
+	    		   for (int j = 0; j < 7; j++) {
+	    			   if (count <= daysInMonth) {
+	    				   drawCellContent(canvas, startX + j * cellWidth, startY + i * cellHeight, cellWidth, cellHeight, count, mm + 1, yy);
+	    				   count++;
+	    			   } else {
+	    				   drawCellContent(canvas, startX + j * cellWidth, startY + i * cellHeight, cellWidth, cellHeight, 0, 0, yy);
+	    			   }
 	        	   }
 	    	   }
 	    	   
 	       }
 	}
 	
-	private void drawCellContent(Canvas canvas, float x, float y, int day, int month, int year) {
+	private void drawCellContent(Canvas canvas, float cellX, float cellY, float cellWidth, float cellHeight, int day, int month, int year) {		
 		Paint paint = new Paint();
-		paint.setColor(Color.WHITE);
+		paint.setColor(this.dayColor);
 		paint.setAntiAlias(true);
-		paint.setTextAlign(Align.CENTER);
+		paint.setTextAlign(Align.CENTER);	
 		paint.setTextSize(25);
-		canvas.drawText(day + "", x, y, paint);
+		paint.setDither(true);
+				
+		canvas.drawBitmap(cellBackground, new Rect(0, 81, 81, 162),
+				new Rect((int)cellX, (int)cellY,  (int)cellX + (int)cellWidth, (int)cellY + (int)cellHeight), paint);
 		
-		int[] lunars = VietCalendar.convertSolar2LunarInVietnam(day, month, year);
-		paint.setTextAlign(Align.CENTER);
-		paint.setTextSize(16);
-		if (lunars[0] == 1) {
-			canvas.drawText(lunars[0] + "/" + lunars[1], x + 10, y + 15, paint);
-		} else {
-			canvas.drawText(lunars[0] + "", x + 10, y + 15, paint);
+		float x = cellX + cellWidth / 2;
+		float y = cellY + cellHeight / 2;
+		
+		if (day > 0) {
+			canvas.drawText(day + "", x, y, paint);		
+			int[] lunars = VietCalendar.convertSolar2LunarInVietnam(day, month, year);
+			paint.setTextAlign(Align.CENTER);
+			paint.setTextSize(14);
+			if (lunars[0] == 1) {
+				canvas.drawText(lunars[0] + "/" + lunars[1], x + 10, y + 15, paint);
+			} else {
+				canvas.drawText(lunars[0] + "", x + 10, y + 15, paint);
+			}
 		}
-		
 	}
 	
-	private void drawHeader(Canvas canvas, float x, float y, int j) {
+	private void drawHeader(Canvas canvas, float cellX, float cellY, float cellWidth, float cellHeight, int j) {
 		Paint paint = new Paint();
-		paint.setColor(Color.WHITE);
+		paint.setColor(dayOfWeekColor);
 		paint.setTextAlign(Align.CENTER);
 		paint.setAntiAlias(true);
 		paint.setTextSize(25);
+		paint.setDither(true);
+		canvas.drawBitmap(cellBackground, new Rect(0, 0, 81, 81),
+				new Rect((int)cellX, (int)cellY,  (int)cellX + (int)cellWidth, (int)cellY + (int)cellHeight), paint);
+		
+		float x = cellX + cellWidth / 2;
+		float y = cellY + cellHeight / 2;
 		if (j != 8) {
 			canvas.drawText("T" + j, x, y, paint);
 		} else {
-			paint.setColor(Color.RED);
+			paint.setColor(weekendColor);
 			canvas.drawText("CN", x, y, paint);
 		}
 		

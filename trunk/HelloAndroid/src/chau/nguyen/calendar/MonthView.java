@@ -28,8 +28,8 @@ package chau.nguyen.calendar;
 * =============================================================================
 */
 
-import java.util.*;
-import java.text.*;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 /**
 * -----------------------------------------------------------------------------

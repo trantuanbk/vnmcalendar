@@ -2,17 +2,20 @@ package chau.nguyen;
 
 import java.util.Date;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.ViewSwitcher;
 import android.widget.Gallery.LayoutParams;
 import chau.nguyen.calendar.ui.MainMenu;
 import chau.nguyen.calendar.ui.VNMDayViewer;
-import chau.nguyen.calendar.ui.MainMenu.SwitchViewOption;
 
 public class VNMDayActivity extends VNMCalendarViewActivity {
-	protected MainMenu menu;
+	private static int MENU_MONTH_VIEW = 1;
+	private static int MENU_SETTINGS = 2;	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -20,9 +23,22 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
         setContentView(R.layout.vnm_day_activity);
         this.switcher = (ViewSwitcher)findViewById(R.id.switcher);
         this.switcher.setFactory(this);
-        this.menu = (MainMenu)findViewById(R.id.dayMainMenu);
-        this.menu.setVnmCalendarActivity(this);
-        this.menu.setSwitchOption(SwitchViewOption.SWITCH_DAY_MONTH);
+    }
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+    	menu.add(0, MENU_MONTH_VIEW, 0, "Xem theo tháng").setIcon(android.R.drawable.ic_menu_month);
+    	menu.add(0, MENU_SETTINGS, 0, "Tùy chọn").setIcon(android.R.drawable.ic_menu_preferences);
+    	return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	if (item.getItemId() == MENU_MONTH_VIEW) {
+    		Intent monthIntent = new Intent(this, VNMMonthActivity.class);
+    		startActivity(monthIntent);
+    	}    	
+    	return true;
     }
     
 	public View makeView() {
@@ -52,19 +68,13 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
 
 	@Override
 	public void onAnimationEnd(Animation animation) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void onAnimationRepeat(Animation animation) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void onAnimationStart(Animation animation) {
-		// TODO Auto-generated method stub
-		
 	}
 }
