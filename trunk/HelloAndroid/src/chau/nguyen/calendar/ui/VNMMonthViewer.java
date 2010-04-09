@@ -194,8 +194,8 @@ public class VNMMonthViewer extends View {
 		paint.setTextSize(25);
 		paint.setDither(true);
 				
-		canvas.drawBitmap(cellBackground, new Rect(0, 81, 81, 162),
-				new Rect((int)cellX, (int)cellY,  (int)cellX + (int)cellWidth, (int)cellY + (int)cellHeight), paint);
+//		canvas.drawBitmap(cellBackground, new Rect(0, 81, 81, 162),
+//				new Rect((int)cellX, (int)cellY,  (int)cellX + (int)cellWidth, (int)cellY + (int)cellHeight), paint);
 		
 		float x = cellX + cellWidth / 2;
 		float y = cellY + cellHeight / 2;
@@ -220,8 +220,8 @@ public class VNMMonthViewer extends View {
 		paint.setAntiAlias(true);
 		paint.setTextSize(25);
 		paint.setDither(true);
-		canvas.drawBitmap(cellBackground, new Rect(0, 0, 81, 81),
-				new Rect((int)cellX, (int)cellY,  (int)cellX + (int)cellWidth, (int)cellY + (int)cellHeight), paint);
+//		canvas.drawBitmap(cellBackground, new Rect(0, 0, 81, 81),
+//				new Rect((int)cellX, (int)cellY,  (int)cellX + (int)cellWidth, (int)cellY + (int)cellHeight), paint);
 		
 		float x = cellX + cellWidth / 2;
 		float y = cellY + cellHeight / 2;
