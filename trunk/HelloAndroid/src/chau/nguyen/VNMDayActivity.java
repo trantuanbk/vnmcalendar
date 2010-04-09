@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.widget.ViewSwitcher;
 import android.widget.Gallery.LayoutParams;
-import chau.nguyen.calendar.ui.MainMenu;
 import chau.nguyen.calendar.ui.VNMDayViewer;
 
 public class VNMDayActivity extends VNMCalendarViewActivity {

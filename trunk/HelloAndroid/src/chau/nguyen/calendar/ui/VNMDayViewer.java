@@ -50,6 +50,8 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 	private VNMDayActivity dayViewActivity;
 	private GestureDetector gestureDetector;
 	private ContextMenuClickHandler contextMenuClickHandler;
+	private int dayOfWeekColor;
+	private int weekendColor;
 	static private String[] dayInVietnamese;
 	
 	static {
@@ -88,6 +90,8 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 		this.vnmMonthInText = (TextView) findViewById(R.id.vnmMonthInText);
 		this.vnmYearText = (TextView) findViewById(R.id.vnmYearText);
 		this.vnmYearInText = (TextView) findViewById(R.id.vnmYearInText);
+		this.dayOfWeekColor = getResources().getColor(R.color.dayOfWeekColor);
+		this.weekendColor = getResources().getColor(R.color.weekendColor);
 		
 		this.displayDate = new Date();
 		this.setDate(this.displayDate);
@@ -163,6 +167,13 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 		calendar.setTime(date);
 		int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 		int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+		if (dayOfWeek == 1) {
+			this.dayOfMonthText.setTextColor(this.weekendColor);
+			this.dayOfWeekText.setTextColor(this.weekendColor);
+		} else {
+			this.dayOfMonthText.setTextColor(this.dayOfWeekColor);
+			this.dayOfWeekText.setTextColor(this.dayOfWeekColor);
+		}
 		this.dayOfMonthText.setText(dayOfMonth + "");
 		this.dayOfWeekText.setText(dayInVietnamese[dayOfWeek - 1]);
 		
