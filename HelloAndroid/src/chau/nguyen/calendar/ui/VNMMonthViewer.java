@@ -163,19 +163,19 @@ public class VNMMonthViewer extends View {
 	    	   } else if (i == 1) {
 	    		   for (int j = 0; j < 7 && count <= daysInMonth; j++) {
 	    			   if (j >= leadSpaces) {
-	    				   drawCellContent(canvas, startX + j * cellWidth, startY + i * cellHeight, cellWidth, cellHeight, count, mm + 1, yy);
+	    				   drawCellContent(canvas, startX + j * cellWidth, startY + i * cellHeight, cellWidth, cellHeight, count, mm + 1, yy, j);
 	    				   count++;
 	    			   } else {
-	    				   drawCellContent(canvas, startX + j * cellWidth, startY + i * cellHeight, cellWidth, cellHeight, 0, 0, yy);   
+	    				   drawCellContent(canvas, startX + j * cellWidth, startY + i * cellHeight, cellWidth, cellHeight, 0, 0, yy, j);   
 	    			   }
 	    		   }
 	    	   } else {
 	    		   for (int j = 0; j < 7; j++) {
 	    			   if (count <= daysInMonth) {
-	    				   drawCellContent(canvas, startX + j * cellWidth, startY + i * cellHeight, cellWidth, cellHeight, count, mm + 1, yy);
+	    				   drawCellContent(canvas, startX + j * cellWidth, startY + i * cellHeight, cellWidth, cellHeight, count, mm + 1, yy, j);
 	    				   count++;
 	    			   } else {
-	    				   drawCellContent(canvas, startX + j * cellWidth, startY + i * cellHeight, cellWidth, cellHeight, 0, 0, yy);
+	    				   drawCellContent(canvas, startX + j * cellWidth, startY + i * cellHeight, cellWidth, cellHeight, 0, 0, yy, j);
 	    			   }
 	        	   }
 	    	   }
@@ -183,9 +183,12 @@ public class VNMMonthViewer extends View {
 	       }
 	}
 	
-	private void drawCellContent(Canvas canvas, float cellX, float cellY, float cellWidth, float cellHeight, int day, int month, int year) {		
+	private void drawCellContent(Canvas canvas, float cellX, float cellY, float cellWidth, float cellHeight, int day, int month, int year, int dayOfWeek) {		
 		Paint paint = new Paint();
-		paint.setColor(this.dayColor);
+		paint.setColor(dayColor);
+		if (dayOfWeek == 6) {
+			paint.setColor(weekendColor);
+		}
 		paint.setAntiAlias(true);
 		paint.setTextAlign(Align.CENTER);	
 		paint.setTextSize(25);

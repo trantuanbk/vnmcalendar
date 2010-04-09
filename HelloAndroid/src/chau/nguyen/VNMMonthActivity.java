@@ -3,7 +3,6 @@ package chau.nguyen;
 import java.util.Calendar;
 import java.util.Date;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,9 +10,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.widget.ViewSwitcher;
 import android.widget.Gallery.LayoutParams;
-import chau.nguyen.calendar.ui.MainMenu;
 import chau.nguyen.calendar.ui.VNMMonthViewer;
-import chau.nguyen.calendar.ui.MainMenu.SwitchViewOption;
 
 public class VNMMonthActivity extends VNMCalendarViewActivity {
 	private static int MENU_DAY_VIEW = 1;
