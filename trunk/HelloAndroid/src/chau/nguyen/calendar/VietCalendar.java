@@ -23,6 +23,14 @@ public class VietCalendar {
     		"Thu ph\u00E2n", "H\u00E0n l\u1ED9", "S\u01B0\u01A1ng gi\u00E1ng", "L\u1EADp \u0111\u00F4ng", "Ti\u1EC3u tuy\u1EBFt", "\u0110\u1EA1i tuy\u1EBFt",
     		"\u0110\u00F4ng ch\u00ED", "Ti\u1EC3u h\u00E0n", "\u0110\u1EA1i h\u00E0n", "L\u1EADp xu\u00E2n", "V\u0169 Th\u1EE7y", "Kinh tr\u1EADp"
     };
+    private static Holiday[] HOLIDAYS = new Holiday[] {new Holiday(1, 1, 0, 0, "Mồng một tết âm lịch"),
+    													new Holiday(2, 1, 0, 0, "Mồng hai tết âm lịch"),
+    													new Holiday(3, 1, 0, 0, "Mồng ba tết âm lịch"),
+    													new Holiday(10, 3, 0, 0, "Giỗ tổ hùng vương"),
+    													new Holiday(0, 0, 1, 1, "Tết dương lịch"),
+    													new Holiday(0, 0, 30, 4, "Ngày giải phóng miền nam"),
+    													new Holiday(0, 0, 1, 5, "Ngày quốc tế lao động"),
+    													new Holiday(0, 0, 2, 9, "Ngày Quốc khánh")};
     
     /*
      * dd : 1 - 31
@@ -293,5 +301,60 @@ public class VietCalendar {
     
     public static int getSolarTerm(int dd, double timeZone) {
     	return INT(SunLongitude(dd - 0.5 - timeZone/24.0) / PI * 12);    
-    } 
+    }
+    
+    public static Holiday getHoliday(int lunar, int lunarMonth, int solar, int solarMonth) {
+    	for (Holiday day : HOLIDAYS) {
+    		if (day.lunarMonth == lunarMonth && day.lunar == lunar || day.solarMonth == solarMonth && day.solar == solar) {
+    			return day;
+    		}
+			
+		}
+    	return null;
+    }
+    
+    public static class Holiday {
+    	private int lunar;
+    	private int solar;
+    	private int lunarMonth;
+    	private int solarMonth;
+    	private String description;
+    	public Holiday(int lunar, int lunarMonth, int solar, int solarMonth, String description) {
+    		this.lunar = lunar;
+    		this.solar = solar;
+    		this.description = description;
+    		this.lunarMonth = lunarMonth;
+    		this.setSolarMonth(solarMonth);
+    	}
+    	public void setDescription(String description) {
+			this.description = description;
+		}
+    	public String getDescription() {
+			return description;
+		}
+    	public void setLunar(int lunar) {
+			this.lunar = lunar;
+		}
+    	public int getLunar() {
+			return lunar;
+		}
+    	public void setSolar(int solar) {
+			this.solar = solar;
+		}
+    	public int getSolar() {
+			return solar;
+		}
+    	public void setMonth(int month) {
+			this.lunarMonth = month;
+		}
+    	public int getMonth() {
+			return lunarMonth;
+		}
+		public void setSolarMonth(int solarMonth) {
+			this.solarMonth = solarMonth;
+		}
+		public int getSolarMonth() {
+			return solarMonth;
+		}
+    }
 }

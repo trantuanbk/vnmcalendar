@@ -19,6 +19,7 @@ import chau.nguyen.INavigator;
 import chau.nguyen.R;
 import chau.nguyen.VNMMonthActivity;
 import chau.nguyen.calendar.VietCalendar;
+import chau.nguyen.calendar.VietCalendar.Holiday;
 
 public class VNMMonthViewer extends View {
 	private static int HORIZONTAL_FLING_THRESHOLD = 5;
@@ -34,7 +35,8 @@ public class VNMMonthViewer extends View {
 	Bitmap cellBackground;
 	int dayColor = 0;
 	int dayOfWeekColor = 0;
-	int weekendColor = 0; 
+	int weekendColor = 0;
+	int holidayColor = 0;
 	
 	private final static int dom[] = { 
 		31, 28, 31, /* jan, feb, mar */
@@ -56,6 +58,7 @@ public class VNMMonthViewer extends View {
 		this.dayColor = context.getResources().getColor(R.color.dayColor);
 		this.dayOfWeekColor = context.getResources().getColor(R.color.dayOfWeekColor);
 		this.weekendColor = context.getResources().getColor(R.color.weekendColor);
+		this.holidayColor = context.getResources().getColor(R.color.holidayColor);
 		
 		this.gestureDetector = new GestureDetector(getContext(), new GestureDetector.OnGestureListener() {			
 			public boolean onSingleTapUp(MotionEvent e) {
@@ -215,9 +218,13 @@ public class VNMMonthViewer extends View {
 		float y = cellY + cellHeight / 2;
 		
 		if (day > 0) {
-			canvas.drawText(day + "", x, y, paint);		
 			int[] lunars = VietCalendar.convertSolar2LunarInVietnam(day, month, year);
-			paint.setTextAlign(Align.CENTER);
+			Holiday holiday = VietCalendar.getHoliday(lunars[0], lunars[1], day, month);
+			if (holiday != null) {
+				paint.setColor(holidayColor);
+			}
+			canvas.drawText(day + "", x, y, paint);
+			//paint.setTextAlign(Align.CENTER);
 			paint.setTextSize(14);
 			if (lunars[0] == 1) {
 				canvas.drawText(lunars[0] + "/" + lunars[1], x + 10, y + 15, paint);

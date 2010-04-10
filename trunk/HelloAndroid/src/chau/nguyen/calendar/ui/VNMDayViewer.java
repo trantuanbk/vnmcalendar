@@ -23,6 +23,7 @@ import chau.nguyen.R;
 import chau.nguyen.VNMDayActivity;
 import chau.nguyen.VNMMonthActivity;
 import chau.nguyen.calendar.VietCalendar;
+import chau.nguyen.calendar.VietCalendar.Holiday;
 
 public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuListener {
 	private static int VERTICAL_FLING_THRESHOLD = 5;
@@ -52,6 +53,7 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 	private ContextMenuClickHandler contextMenuClickHandler;
 	private int dayOfWeekColor;
 	private int weekendColor;
+	private int holidayColor;
 	static private String[] dayInVietnamese;
 	
 	static {
@@ -92,6 +94,7 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 		this.vnmYearInText = (TextView) findViewById(R.id.vnmYearInText);
 		this.dayOfWeekColor = getResources().getColor(R.color.dayOfWeekColor);
 		this.weekendColor = getResources().getColor(R.color.weekendColor);
+		this.holidayColor = getResources().getColor(R.color.holidayColor);
 		
 		this.displayDate = new Date();
 		this.setDate(this.displayDate);
@@ -167,22 +170,33 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 		calendar.setTime(date);
 		int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 		int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-		if (dayOfWeek == 1) {
-			this.dayOfMonthText.setTextColor(this.weekendColor);
-			this.dayOfWeekText.setTextColor(this.weekendColor);
-		} else {
-			this.dayOfMonthText.setTextColor(this.dayOfWeekColor);
-			this.dayOfWeekText.setTextColor(this.dayOfWeekColor);
-		}
-		this.dayOfMonthText.setText(dayOfMonth + "");
-		this.dayOfWeekText.setText(dayInVietnamese[dayOfWeek - 1]);
-		
 		int hour = calendar.get(Calendar.HOUR_OF_DAY);
 		int minute = calendar.get(Calendar.MINUTE);
 		int month = calendar.get(Calendar.MONTH) + 1;
 		
 		int year = calendar.get(Calendar.YEAR);
 		int[] lunars = VietCalendar.convertSolar2LunarInVietnam(date);
+		Holiday holiday = VietCalendar.getHoliday(lunars[0], lunars[1], dayOfMonth, month);
+		if (dayOfWeek == 1) {
+			this.dayOfMonthText.setTextColor(this.weekendColor);
+			this.dayOfWeekText.setTextColor(this.weekendColor);
+			this.noteText.setTextColor(this.weekendColor);
+		} else if (holiday != null ) {
+			this.dayOfMonthText.setTextColor(this.holidayColor);
+			this.dayOfWeekText.setTextColor(this.holidayColor);
+			this.noteText.setTextColor(this.holidayColor);
+		} else {
+			this.dayOfMonthText.setTextColor(this.dayOfWeekColor);
+			this.dayOfWeekText.setTextColor(this.dayOfWeekColor);
+			this.noteText.setTextColor(this.dayOfWeekColor);
+		}
+		this.dayOfMonthText.setText(dayOfMonth + "");
+		this.dayOfWeekText.setText(dayInVietnamese[dayOfWeek - 1]);
+		if (holiday != null) {
+			this.noteText.setText(holiday.getDescription());
+		} else {
+			this.noteText.setText("Chúc bạn một ngày vui vẻ");
+		}
 		
 		this.vnmHourText.setText(hour + ":" + minute);
 		this.vnmDayOfMonthText.setText(lunars[0] + "");
