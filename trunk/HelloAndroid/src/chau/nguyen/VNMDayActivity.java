@@ -20,6 +20,7 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
 	private static int MENU_SELECT_DATE = 1;
 	private static int MENU_SELECT_TODAY = 2;
 	private static int MENU_MONTH_VIEW = 3;
+	private static int MENU_ADD_EVENT = 4;
 	//private static int MENU_SETTINGS = 4;
 	public static final int DATE_DIALOG_ID = 0;
 	
@@ -38,8 +39,9 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
     	menu.add(0, MENU_SELECT_DATE, 0, "Chọn ngày").setIcon(android.R.drawable.ic_menu_day);
-    	menu.add(0, MENU_SELECT_TODAY, 0, "Hôm nay").setIcon(android.R.drawable.ic_menu_today);
+    	menu.add(0, MENU_SELECT_TODAY, 0, "Hôm nay").setIcon(android.R.drawable.ic_menu_today);    	
     	menu.add(0, MENU_MONTH_VIEW, 0, "Xem tháng").setIcon(android.R.drawable.ic_menu_month);
+    	menu.add(0, MENU_ADD_EVENT, 0, "Thêm sự kiện").setIcon(android.R.drawable.ic_menu_add);
     	//menu.add(0, MENU_SETTINGS, 0, "Tùy chọn").setIcon(android.R.drawable.ic_menu_preferences);
     	return true;
     }
@@ -52,6 +54,8 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
     		selectDate();
     	} else if (item.getItemId() == MENU_SELECT_TODAY) {
     		gotoTime(new Date());
+    	} else if (item.getItemId() == MENU_ADD_EVENT) {
+    		addEvent();
     	}
     	return true;
     }
@@ -90,6 +94,20 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
 		Intent monthIntent = new Intent(this, VNMMonthActivity.class);
 		startActivity(monthIntent);
 	}	
+	
+	public void addEvent() {
+		Intent intent = new Intent(Intent.ACTION_EDIT);
+		intent.setClassName("com.android.calendar", "com.android.calendar.EditEvent");
+		Calendar eventCal = Calendar.getInstance();
+		eventCal.setTime(this.date);
+		eventCal.set(Calendar.HOUR_OF_DAY, 8);
+		eventCal.set(Calendar.MINUTE, 0);
+		intent.putExtra("beginTime", eventCal.getTimeInMillis());
+		eventCal.set(Calendar.HOUR_OF_DAY, 9);
+        intent.putExtra("endTime", eventCal.getTimeInMillis()); 
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(intent);
+	}
 
 	@Override
 	public void onAnimationEnd(Animation animation) {
