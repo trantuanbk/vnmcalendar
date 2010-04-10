@@ -227,7 +227,7 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 		public boolean onMenuItemClick(MenuItem item) {
 			switch (item.getItemId()) {
 			case CREATE_NEW_EVENT:
-				
+				VNMDayViewer.this.dayViewActivity.addEvent();
 				break;
 			case SELECT_DATE:
 				VNMDayViewer.this.dayViewActivity.selectDate();
