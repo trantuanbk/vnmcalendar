@@ -26,7 +26,7 @@ public class VietCalendar {
     private static Holiday[] HOLIDAYS = new Holiday[] {new Holiday(1, 1, 0, 0, "Mồng một tết âm lịch"),
     													new Holiday(2, 1, 0, 0, "Mồng hai tết âm lịch"),
     													new Holiday(3, 1, 0, 0, "Mồng ba tết âm lịch"),
-    													new Holiday(10, 3, 0, 0, "Giỗ tổ hùng vương"),
+    													new Holiday(10, 3, 0, 0, "Giỗ tổ Hùng Vương"),
     													new Holiday(0, 0, 1, 1, "Tết dương lịch"),
     													new Holiday(0, 0, 30, 4, "Ngày giải phóng miền nam"),
     													new Holiday(0, 0, 1, 5, "Ngày quốc tế lao động"),
