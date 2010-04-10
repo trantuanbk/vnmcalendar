@@ -30,7 +30,6 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 	private static final int CREATE_NEW_EVENT = 1;
 	private static final int SELECT_DATE = 2;
 	private static final int SWITCH_TO_MONTH = 3;
-	private static final int DATE_DIALOG_ID = 0;
 	protected INavigator navigator;
 	
 	private TextView dayOfMonthText;
@@ -254,7 +253,7 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 				
 				break;
 			case SELECT_DATE:
-				VNMDayViewer.this.dayViewActivity.showDialog(DATE_DIALOG_ID);
+				VNMDayViewer.this.dayViewActivity.showDialog(VNMDayActivity.DATE_DIALOG_ID);
 				break;
 			case SWITCH_TO_MONTH:
 				Intent monthIntent = new Intent(getContext(), VNMMonthActivity.class);
