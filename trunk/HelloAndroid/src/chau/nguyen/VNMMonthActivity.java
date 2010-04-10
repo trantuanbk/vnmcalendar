@@ -1,6 +1,5 @@
 package chau.nguyen;
 
-import java.util.Calendar;
 import java.util.Date;
 
 import android.os.Bundle;
@@ -8,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ViewSwitcher;
 import android.widget.Gallery.LayoutParams;
 import chau.nguyen.calendar.ui.VNMMonthViewer;
@@ -16,6 +16,11 @@ public class VNMMonthActivity extends VNMCalendarViewActivity {
 	private static int MENU_DAY_VIEW = 1;
 	private static int MENU_SETTINGS = 2;
 	
+	protected Animation inYearAnimationPast;
+	protected Animation inYearAnimationFuture;
+	protected Animation outYearAnimationPast;
+	protected Animation outYearAnimationFuture;
+	
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -23,6 +28,13 @@ public class VNMMonthActivity extends VNMCalendarViewActivity {
         setContentView(R.layout.vnm_month_activity);
         this.switcher = (ViewSwitcher)findViewById(R.id.monthSwitcher);
         this.switcher.setFactory(this);
+        
+        this.inYearAnimationPast = AnimationUtils.loadAnimation(this, R.anim.slide_up_in);
+        this.outYearAnimationPast = AnimationUtils.loadAnimation(this, R.anim.slide_up_out);
+        this.inYearAnimationFuture = AnimationUtils.loadAnimation(this, R.anim.slide_down_in);
+        this.outYearAnimationFuture = AnimationUtils.loadAnimation(this, R.anim.slide_down_out);        
+        this.inYearAnimationFuture.setAnimationListener(this);
+        this.inYearAnimationPast.setAnimationListener(this);
     }
     
     @Override
@@ -50,20 +62,23 @@ public class VNMMonthActivity extends VNMCalendarViewActivity {
 
 	public void gotoTime(Date date) {
 		VNMMonthViewer currentView = (VNMMonthViewer)this.switcher.getCurrentView();
-		Date currentDate = currentView.getDisplayDate();
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(currentDate);
-		int currentMonth = calendar.get(Calendar.MONTH);
-		int currentYear = calendar.get(Calendar.YEAR);
-		calendar.setTime(date);
-		int nextMonth = calendar.get(Calendar.MONTH);
-		int nextYear = calendar.get(Calendar.YEAR);
-		if ((nextMonth + nextYear * 12) > (currentMonth + currentYear * 12)) {
-			this.switcher.setInAnimation(this.inAnimationPast);
-			this.switcher.setOutAnimation(this.outAnimationPast);
+		Date currentDate = currentView.getDisplayDate(); 
+		if (date.before(currentDate)) {
+			if (date.getMonth() == currentDate.getMonth()) {
+				this.switcher.setInAnimation(this.inYearAnimationPast);
+				this.switcher.setOutAnimation(this.outYearAnimationPast);
+			} else {
+				this.switcher.setInAnimation(this.inAnimationPast);
+				this.switcher.setOutAnimation(this.outAnimationPast);
+			}
 		} else {
-			this.switcher.setInAnimation(this.inAnimationFuture);
-			this.switcher.setOutAnimation(this.outAnimationFuture);
+			if (date.getMonth() == currentDate.getMonth()) {
+				this.switcher.setInAnimation(this.inYearAnimationFuture);
+				this.switcher.setOutAnimation(this.outYearAnimationFuture);
+			} else {
+				this.switcher.setInAnimation(this.inAnimationFuture);
+				this.switcher.setOutAnimation(this.outAnimationFuture);
+			}
 		}
 		
 		VNMMonthViewer next = (VNMMonthViewer)this.switcher.getNextView();

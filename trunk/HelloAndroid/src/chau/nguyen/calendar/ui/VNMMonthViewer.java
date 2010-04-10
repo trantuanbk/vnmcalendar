@@ -21,6 +21,7 @@ import chau.nguyen.VNMMonthActivity;
 import chau.nguyen.calendar.VietCalendar;
 
 public class VNMMonthViewer extends View {
+	private static int HORIZONTAL_FLING_THRESHOLD = 5;
 	private static int VERTICAL_FLING_THRESHOLD = 5;
 	private Date displayDate;
 	private INavigator navigator;
@@ -29,7 +30,6 @@ public class VNMMonthViewer extends View {
 	private Canvas mCanvas;
 	private Bitmap mBitmap;
 	private boolean reDrawScreen = true;
-	private int count = 0;
 	
 	Bitmap cellBackground;
 	int dayColor = 0;
@@ -52,7 +52,7 @@ public class VNMMonthViewer extends View {
 		this.displayDate = new Date();
 		this.navigator = navigator;
 		this.monthActivity = context;
-		this.cellBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.cells);
+		this.cellBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.cell_bg);
 		this.dayColor = context.getResources().getColor(R.color.dayColor);
 		this.dayOfWeekColor = context.getResources().getColor(R.color.dayOfWeekColor);
 		this.weekendColor = context.getResources().getColor(R.color.weekendColor);
@@ -69,32 +69,47 @@ public class VNMMonthViewer extends View {
 			}
 			public void onLongPress(MotionEvent e) {
 			}
-            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-                    float velocityY) {
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
                 // The user might do a slow "fling" after touching the screen
                 // and we don't want the long-press to pop up a context menu.
                 // Setting mLaunchDayView to false prevents the long-press.
                 int distanceX = Math.abs((int) e2.getX() - (int) e1.getX());
                 int distanceY = Math.abs((int) e2.getY() - (int) e1.getY());
-                if (distanceX < VERTICAL_FLING_THRESHOLD || distanceX < distanceY) {
+                if (distanceX < HORIZONTAL_FLING_THRESHOLD && distanceY < VERTICAL_FLING_THRESHOLD) {
                     return false;
                 }
 
-                // Switch to a different month
-                Calendar calendar = Calendar.getInstance();
-    			calendar.setTime(displayDate);
-    			calendar.set(Calendar.DAY_OF_MONTH, 1);
-    			calendar.getTime();
-                if (velocityX < 0) {
-					calendar.add(Calendar.MONTH, 1);
-					Date afterDate = calendar.getTime();
-					VNMMonthViewer.this.navigator.gotoTime(afterDate);
-				} else {
-					calendar.add(Calendar.MONTH, -1);
-					Date beforeDate = calendar.getTime();
-					VNMMonthViewer.this.navigator.gotoTime(beforeDate);
-				}
-                count++;
+                if (distanceX > distanceY) {
+	                // Switch to a different month
+	                Calendar calendar = Calendar.getInstance();
+	    			calendar.setTime(displayDate);
+	    			calendar.set(Calendar.DAY_OF_MONTH, 1);
+	    			calendar.getTime();
+	                if (velocityX < 0) {
+						calendar.add(Calendar.MONTH, 1);
+						Date afterDate = calendar.getTime();
+						VNMMonthViewer.this.navigator.gotoTime(afterDate);
+					} else {
+						calendar.add(Calendar.MONTH, -1);
+						Date beforeDate = calendar.getTime();
+						VNMMonthViewer.this.navigator.gotoTime(beforeDate);
+					}
+                } else {
+                	Calendar calendar = Calendar.getInstance();
+	    			calendar.setTime(displayDate);
+	    			calendar.set(Calendar.DAY_OF_MONTH, 1);
+	    			calendar.getTime();
+	                if (velocityY < 0) {
+						calendar.add(Calendar.YEAR, 1);
+						Date afterDate = calendar.getTime();
+						VNMMonthViewer.this.navigator.gotoTime(afterDate);
+					} else {
+						calendar.add(Calendar.YEAR, -1);
+						Date beforeDate = calendar.getTime();
+						VNMMonthViewer.this.navigator.gotoTime(beforeDate);
+					}
+                }
+                // count++; why increase this counter?
                 return true;
             }
 			
@@ -154,33 +169,32 @@ public class VNMMonthViewer extends View {
 			++daysInMonth;
 		}
 	       
-		int count = 1;
-	       for (int i = 0; i < 7 && count <= daysInMonth; i++) {
-	    	   if (i == 0) {
-	    		   for (int j = 0; j < 7; j++) {
-	    			   drawHeader(canvas, startX + j * cellWidth, startY + i * cellHeight, cellWidth, cellHeight, j + 2);
-	    		   }
-	    	   } else if (i == 1) {
-	    		   for (int j = 0; j < 7 && count <= daysInMonth; j++) {
-	    			   if (j >= leadSpaces) {
-	    				   drawCellContent(canvas, startX + j * cellWidth, startY + i * cellHeight, cellWidth, cellHeight, count, mm + 1, yy, j);
-	    				   count++;
-	    			   } else {
-	    				   drawCellContent(canvas, startX + j * cellWidth, startY + i * cellHeight, cellWidth, cellHeight, 0, 0, yy, j);   
-	    			   }
-	    		   }
-	    	   } else {
-	    		   for (int j = 0; j < 7; j++) {
-	    			   if (count <= daysInMonth) {
-	    				   drawCellContent(canvas, startX + j * cellWidth, startY + i * cellHeight, cellWidth, cellHeight, count, mm + 1, yy, j);
-	    				   count++;
-	    			   } else {
-	    				   drawCellContent(canvas, startX + j * cellWidth, startY + i * cellHeight, cellWidth, cellHeight, 0, 0, yy, j);
-	    			   }
-	        	   }
-	    	   }
-	    	   
-	       }
+		int count = 1;	       
+		for (int i = 0; i < 7; i++) {
+    	   if (i == 0) {
+    		   for (int j = 0; j < 7; j++) {
+    			   drawHeader(canvas, startX + j * cellWidth, startY + i * cellHeight, cellWidth, cellHeight, j + 2);
+    		   }
+    	   } else if (i == 1) {
+    		   for (int j = 0; j < 7 && count <= daysInMonth; j++) {
+    			   if (j >= leadSpaces) {
+    				   drawCellContent(canvas, startX + j * cellWidth, startY + i * cellHeight, cellWidth, cellHeight, count, mm + 1, yy, j);
+    				   count++;
+    			   } else {
+    				   drawCellContent(canvas, startX + j * cellWidth, startY + i * cellHeight, cellWidth, cellHeight, 0, 0, yy, j);   
+    			   }
+    		   }
+    	   } else {
+    		   for (int j = 0; j < 7; j++) {
+    			   if (count <= daysInMonth) {
+    				   drawCellContent(canvas, startX + j * cellWidth, startY + i * cellHeight, cellWidth, cellHeight, count, mm + 1, yy, j);
+    				   count++;
+    			   } else {
+    				   drawCellContent(canvas, startX + j * cellWidth, startY + i * cellHeight, cellWidth, cellHeight, 0, 0, yy, j);
+    			   }
+        	   }
+    	   }
+		}
 	}
 	
 	private void drawCellContent(Canvas canvas, float cellX, float cellY, float cellWidth, float cellHeight, int day, int month, int year, int dayOfWeek) {		
@@ -194,8 +208,8 @@ public class VNMMonthViewer extends View {
 		paint.setTextSize(25);
 		paint.setDither(true);
 				
-//		canvas.drawBitmap(cellBackground, new Rect(0, 81, 81, 162),
-//				new Rect((int)cellX, (int)cellY,  (int)cellX + (int)cellWidth, (int)cellY + (int)cellHeight), paint);
+		canvas.drawBitmap(cellBackground, new Rect(0, 0, 45, 65),
+				new Rect((int)cellX, (int)cellY,  (int)cellX + (int)cellWidth, (int)cellY + (int)cellHeight), paint);
 		
 		float x = cellX + cellWidth / 2;
 		float y = cellY + cellHeight / 2;
@@ -220,8 +234,8 @@ public class VNMMonthViewer extends View {
 		paint.setAntiAlias(true);
 		paint.setTextSize(25);
 		paint.setDither(true);
-//		canvas.drawBitmap(cellBackground, new Rect(0, 0, 81, 81),
-//				new Rect((int)cellX, (int)cellY,  (int)cellX + (int)cellWidth, (int)cellY + (int)cellHeight), paint);
+		canvas.drawBitmap(cellBackground, new Rect(46, 0, 90, 65),
+				new Rect((int)cellX, (int)cellY,  (int)cellX + (int)cellWidth, (int)cellY + (int)cellHeight), paint);
 		
 		float x = cellX + cellWidth / 2;
 		float y = cellY + cellHeight / 2;
