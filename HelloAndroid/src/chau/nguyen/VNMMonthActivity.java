@@ -27,7 +27,7 @@ public class VNMMonthActivity extends VNMCalendarViewActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vnm_month_activity);
         this.switcher = (ViewSwitcher)findViewById(R.id.monthSwitcher);
-        this.switcher.setFactory(this);
+        this.switcher.setFactory(this);                
         
         this.inYearAnimationPast = AnimationUtils.loadAnimation(this, R.anim.slide_up_in);
         this.outYearAnimationPast = AnimationUtils.loadAnimation(this, R.anim.slide_up_out);
@@ -63,7 +63,7 @@ public class VNMMonthActivity extends VNMCalendarViewActivity {
 	public void gotoTime(Date date) {
 		VNMMonthViewer currentView = (VNMMonthViewer)this.switcher.getCurrentView();
 		Date currentDate = currentView.getDisplayDate(); 
-		if (date.before(currentDate)) {
+		if (date.after(currentDate)) {
 			if (date.getMonth() == currentDate.getMonth()) {
 				this.switcher.setInAnimation(this.inYearAnimationPast);
 				this.switcher.setOutAnimation(this.outYearAnimationPast);

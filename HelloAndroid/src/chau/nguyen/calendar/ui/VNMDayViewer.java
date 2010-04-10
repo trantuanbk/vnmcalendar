@@ -5,7 +5,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.ContextMenu;
 import android.view.GestureDetector;
@@ -21,7 +20,6 @@ import android.widget.TextView;
 import chau.nguyen.INavigator;
 import chau.nguyen.R;
 import chau.nguyen.VNMDayActivity;
-import chau.nguyen.VNMMonthActivity;
 import chau.nguyen.calendar.VietCalendar;
 import chau.nguyen.calendar.VietCalendar.Holiday;
 
@@ -101,32 +99,18 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 		setOnCreateContextMenuListener(this);
 		this.contextMenuClickHandler = new ContextMenuClickHandler();
 		this.gestureDetector = new GestureDetector(getContext(), new GestureDetector.OnGestureListener() {
-			
-			@Override
 			public boolean onSingleTapUp(MotionEvent e) {
-				// TODO Auto-generated method stub
 				return false;
 			}
-			
-			@Override
 			public void onShowPress(MotionEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
-			
-			@Override
 			public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
 					float distanceY) {
-				// TODO Auto-generated method stub
 				return false;
 			}
-			
-			@Override
 			public void onLongPress(MotionEvent e) {
 				performLongClick();
 			}
-			
-			@Override
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
                     float velocityY) {
                 // The user might do a slow "fling" after touching the screen
@@ -158,8 +142,7 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 			public boolean onDown(MotionEvent e) {
 				return true;
 			}
-		});
-		
+		});		
 	}
 	
 	public void setDate(Date date) {
@@ -207,11 +190,8 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 		this.vnmHourInText.setText(vnmCalendarTexts[VietCalendar.HOUR]);
 		this.vnmDayOfMonthInText.setText(vnmCalendarTexts[VietCalendar.DAY]);
 		this.vnmMonthInText.setText(vnmCalendarTexts[VietCalendar.MONTH]);
-		this.vnmYearInText.setText(vnmCalendarTexts[VietCalendar.YEAR]);
-		
-		
-	}
-	
+		this.vnmYearInText.setText(vnmCalendarTexts[VietCalendar.YEAR]);			
+	}	
 	
 	public void setNote(String note) {
 		this.noteText.setText(note);
@@ -227,25 +207,22 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 	}
 	
 	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		
+	public boolean onTouchEvent(MotionEvent event) {		
 		return this.gestureDetector.onTouchEvent(event);
 	}
 
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-		MenuItem item;
-		
-		item = menu.add(0, SELECT_DATE, 0, "Chọn ngày");
+		MenuItem item;		
+		item = menu.add(0, SELECT_DATE, 0, "Chọn ngày").setIcon(android.R.drawable.ic_menu_day);
 		item.setOnMenuItemClickListener(this.contextMenuClickHandler);
-		item = menu.add(0, CREATE_NEW_EVENT, 0, "Thêm sự kiện");
+		item = menu.add(0, CREATE_NEW_EVENT, 0, "Thêm sự kiện").setIcon(android.R.drawable.ic_menu_add);;
 		item.setOnMenuItemClickListener(this.contextMenuClickHandler);
-		item = menu.add(0, SWITCH_TO_MONTH, 0, "Hiện thị theo tháng");
+		item = menu.add(0, SWITCH_TO_MONTH, 0, "Hiện thị theo tháng").setIcon(android.R.drawable.ic_menu_month);;
 		item.setOnMenuItemClickListener(this.contextMenuClickHandler);
 	}
 	
 	private class ContextMenuClickHandler implements OnMenuItemClickListener {
-
 		@Override
 		public boolean onMenuItemClick(MenuItem item) {
 			switch (item.getItemId()) {
@@ -253,18 +230,15 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 				
 				break;
 			case SELECT_DATE:
-				VNMDayViewer.this.dayViewActivity.showDialog(VNMDayActivity.DATE_DIALOG_ID);
+				VNMDayViewer.this.dayViewActivity.selectDate();
 				break;
 			case SWITCH_TO_MONTH:
-				Intent monthIntent = new Intent(getContext(), VNMMonthActivity.class);
-				VNMDayViewer.this.dayViewActivity.startActivity(monthIntent);
+				VNMDayViewer.this.dayViewActivity.showMonthView();				
 				break;
 			default:
 				break;
 			}
 			return false;
-		}
-		
+		}		
 	}
-
 }
