@@ -145,9 +145,17 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 		});		
 	}
 	
+	private String getFamousSaying() {
+		String[] famousSayings = getResources().getStringArray(R.array.famousSaying);
+		int index = Calendar.getInstance().get(Calendar.MILLISECOND) % famousSayings.length;
+		return famousSayings[index];
+	}
+	
 	public void setDate(Date date) {
 		this.displayDate = date;
 		this.dayViewActivity.setTitle(this.getDisplayDayText());
+		String famousSaying = getFamousSaying();
+		this.noteText.setText(famousSaying);
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
 		int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
@@ -177,7 +185,7 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 		if (holiday != null) {
 			this.noteText.setText(holiday.getDescription());
 		} else {
-			this.noteText.setText("Chúc bạn một ngày vui vẻ");
+			this.noteText.setText(famousSaying);
 		}
 		
 		this.vnmHourText.setText(hour + ":" + minute);

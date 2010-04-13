@@ -10,4 +10,28 @@
         <item>Uranus</item>
         <item>Neptune</item>
     </string-array>
+    <string-array name="famousSaying">
+    	<item>Hãy làm tròn mỗi công việc của đời mình như thể đó là công việc cuối cùng (Marc aurele)</item>
+    	<item>Cách khéo nhất để làm vừa lòng ai đó là xin họ lời khuyên (Odove Primex)</item>
+    	<item>Đừng mua thứ hữu ích mà hãy mua thứ cần thiết (Caton Censeur)</item>
+    	<item>Đừng ném lời cho gió, nếu không hay biết gió thổi về đâu (N. Ghenin)</item>
+    	<item>Đừng để đến ngày mai những việc gì anh có thể làm hôm nay (Lord Chesterfield)</item>
+    	<item>Những gì ta cho đi một cách thật lòng thì mãi mãi là của ta (Geoges Granville)</item>
+    	<item>Thiếu thận trọng gây nhiều tai hại hơn thiếu hiểu biết (Franklin)</item>
+    	<item>Hãy suy nghĩ tất cả những gì bạn nói nhưng đừng nói tất cả những gì bạn nghĩ (Delarme)</item>
+    	<item>Con ong được ca tụng vì nó làm việc không phải cho chính mình mà cho tất cả (Saint J.Chrysistome)</item>
+    	<item>Bàn tay tặng đóa hồng bao giờ cũng còn phảng phất mùi thơm (KD)</item>
+    	<item>Đừng bao giờ khiêm tốn với kẻ kiêu căng, cũng đừng bao giờ kiêu căng với người khiêm tốn (Jeffecson) </item>
+    	<item>Sự ngắn gọn là linh hồn của trí khốn sắc sảo (Shakespear)</item>
+    	<item>Đầu hàng cám rỗ là hành động của thú tính, chiến thắng nó mới là con người (Waterstone)</item>
+    	<item>Hãy hiền dịu khoan dung với hết mọi người trừ bản thân mình (Joubert)</item>
+    	<item>Nếu ai nói xấu bạn mà nói đúng thì hãy sửa mình đi. Nếu họ nói bậy thì bạn hãy cười thôi (Epictete)</item>
+    	<item>Mỗi khi khuyên ai bất cứ điều gì thì nên thật vắn tắt (Horace)</item>
+    	<item>Phải biết mở cửa lòng mình trước mới hy vọng mở được lòng người khác (Pasquier Quesnel)</item>
+    	<item>Điều gì anh muốn người ta làm cho anh, thì anh hãy làm cho người ta trước(Kinh Thánh)</item>
+    	<item>Đôi khi phải nhượng bộ mà thừa nhận rằng củ cải là củ lê (Ngạn ngữ Đức)</item>
+    	<item>Muốn uốn cây cong cho thẳng lại, ta uốn cong nó theo chiều ngược lại (Montaigne)</item>
+    	<item>Khuyên răn thay cho giận dữ, mỉm cười thay cho khinh bỉ (Epiquya)</item>
+    	<item>Yêu mọi người, tin vài người và đừng xúc phạm đến ai (Shakespear)</item>
+    </string-array>
 </resources>
