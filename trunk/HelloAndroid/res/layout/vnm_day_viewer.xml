@@ -30,7 +30,7 @@
 		      a:layout_height="wrap_content" 
 		      a:text="Chúc bạn một ngày vui vẻ" 
 		      a:gravity="center_horizontal" 
-		      a:textSize="20sp"/>
+		      a:textSize="16sp"/>
 	</LinearLayout>
 	
 	<TableLayout 
