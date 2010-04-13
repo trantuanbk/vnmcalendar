@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="hello">Welcome to my first Android application</string>
-    <string name="app_name">Âm lịch</string>
-    <string name="planet_prompt">Chose one planet</string>
-    <string name="vnm_calendar_column_width">10px</string>
+<resources>    
+    <string name="app_name">Lịch Việt</string>
 </resources>
