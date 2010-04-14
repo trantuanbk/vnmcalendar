@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>    
     <string name="app_name">Lịch Việt</string>
+    <string name="cancel">Thoát</string>
+    <string name="date_time_set">Đồng ý</string>
 </resources>

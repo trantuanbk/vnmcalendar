@@ -3,7 +3,6 @@ package chau.nguyen;
 import java.util.Calendar;
 import java.util.Date;
 
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,7 +10,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.DatePicker;
 import android.widget.ViewSwitcher;
 import android.widget.Gallery.LayoutParams;
@@ -23,13 +21,11 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
 	private static int MENU_MONTH_VIEW = 3;
 	private static int MENU_ADD_EVENT = 4;
 	//private static int MENU_SETTINGS = 4;
+	private static int MENU_ABOUT = 5;
 	public static final int DATE_DIALOG_ID = 0;
+	public static final int ABOUT_DIALOG = 1;
 	
 	private Date date;
-	protected Animation inMonthAnimationPast;
-	protected Animation inMonthAnimationFuture;
-	protected Animation outMonthAnimationPast;
-	protected Animation outMonthAnimationFuture;
 	
     /** Called when the activity is first created. */
     @Override
@@ -39,13 +35,6 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
         this.date = new Date();
         this.switcher = (ViewSwitcher)findViewById(R.id.switcher);
         this.switcher.setFactory(this);
-        
-        this.inMonthAnimationPast = AnimationUtils.loadAnimation(this, R.anim.slide_up_in);
-        this.outMonthAnimationPast = AnimationUtils.loadAnimation(this, R.anim.slide_up_out);
-        this.inMonthAnimationFuture = AnimationUtils.loadAnimation(this, R.anim.slide_down_in);
-        this.outMonthAnimationFuture = AnimationUtils.loadAnimation(this, R.anim.slide_down_out);        
-        this.inMonthAnimationFuture.setAnimationListener(this);
-        this.inMonthAnimationPast.setAnimationListener(this);
     }
     
     @Override
@@ -54,6 +43,7 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
     	menu.add(0, MENU_SELECT_TODAY, 0, "Hôm nay").setIcon(android.R.drawable.ic_menu_today);    	
     	menu.add(0, MENU_MONTH_VIEW, 0, "Xem tháng").setIcon(android.R.drawable.ic_menu_month);
     	menu.add(0, MENU_ADD_EVENT, 0, "Thêm sự kiện").setIcon(android.R.drawable.ic_menu_add);
+    	menu.add(0, MENU_ABOUT, 0, "Giới thiệu");
     	//menu.add(0, MENU_SETTINGS, 0, "Tùy chọn").setIcon(android.R.drawable.ic_menu_preferences);
     	return true;
     }
@@ -66,6 +56,8 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
     		selectDate();
     	} else if (item.getItemId() == MENU_SELECT_TODAY) {
     		gotoTime(new Date());
+    	} else if (item.getItemId() == MENU_ABOUT) {
+    		showDialog(ABOUT_DIALOG);
     	} else if (item.getItemId() == MENU_ADD_EVENT) {
     		addEvent();
     	}
@@ -83,27 +75,13 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
 	public void gotoTime(Date date) {
 		VNMDayViewer currentView = (VNMDayViewer)this.switcher.getCurrentView();
 		Date currentDate = currentView.getDisplayDate();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(currentDate);
-		int currentDayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
-		cal.setTime(date);
-		int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
+		
 		if (date.after(currentDate)) {
-			if (dayOfMonth == currentDayOfMonth) {
-				this.switcher.setInAnimation(this.inMonthAnimationPast);
-				this.switcher.setOutAnimation(this.outMonthAnimationPast);
-			} else {
-				this.switcher.setInAnimation(this.inAnimationPast);
-				this.switcher.setOutAnimation(this.outAnimationPast);
-			}
+			this.switcher.setInAnimation(this.inAnimationPast);
+			this.switcher.setOutAnimation(this.outAnimationPast);
 		} else if (date.before(currentDate)) {
-			if (dayOfMonth == currentDayOfMonth) {
-				this.switcher.setInAnimation(this.inMonthAnimationFuture);
-				this.switcher.setOutAnimation(this.outAnimationFuture);
-			} else {
-				this.switcher.setInAnimation(this.inAnimationFuture);
-				this.switcher.setOutAnimation(this.outAnimationFuture);
-			}
+			this.switcher.setInAnimation(this.inAnimationFuture);
+			this.switcher.setOutAnimation(this.outAnimationFuture);
 		}
 		
 		VNMDayViewer next = (VNMDayViewer)this.switcher.getNextView();
@@ -153,14 +131,23 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
 	    	case DATE_DIALOG_ID:
 	    		Calendar cal = Calendar.getInstance();
 	    		cal.setTime(this.date);
-	    		return new DatePickerDialog(this, mDateSetListener, 
-	    				cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));	                    
+	    		return new VNMDatePickerDialog(this, mDateSetListener, 
+	    				cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+	    	//case ABOUT_DIALOG:
+	    		//this.aboutDialog = new Dialog(getApplicationContext());
+	            //this.aboutDialog.setContentView(R.layout.about);
+	            //this.aboutDialog.setTitle("Giới thiệu");
+	            //TextView text = (TextView) this.aboutDialog.findViewById(R.id.text);
+	            //text.setText("Lịch Việt \n Bản beta \n Phát triển bởi: Nguyễn Phạm Hải Châu \n License: GPL3");
+	            //ImageView image = (ImageView) this.aboutDialog.findViewById(R.id.image);
+	            //image.setImageResource(R.drawable.icon);
+	    		//return this.aboutDialog;
 	    }
 	    return null;
 	}
 	
 	// the callback received when the user "sets" the date in the dialog
-	private DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
+	private VNMDatePickerDialog.OnDateSetListener mDateSetListener = new VNMDatePickerDialog.OnDateSetListener() {
 		public void onDateSet(DatePicker view, int year, int monthOfYear,
 				int dayOfMonth) {
 			VNMDayViewer currentView = (VNMDayViewer)switcher.getCurrentView();
