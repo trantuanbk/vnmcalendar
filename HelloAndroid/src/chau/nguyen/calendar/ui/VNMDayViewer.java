@@ -24,6 +24,7 @@ import chau.nguyen.calendar.VietCalendar;
 import chau.nguyen.calendar.VietCalendar.Holiday;
 
 public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuListener {
+	private static int HORIZONTAL_FLING_THRESHOLD = 5;
 	private static int VERTICAL_FLING_THRESHOLD = 5;
 	private static final int CREATE_NEW_EVENT = 1;
 	private static final int SELECT_DATE = 2;
@@ -118,22 +119,35 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
                 // Setting mLaunchDayView to false prevents the long-press.
                 int distanceX = Math.abs((int) e2.getX() - (int) e1.getX());
                 int distanceY = Math.abs((int) e2.getY() - (int) e1.getY());
-                if (distanceX < VERTICAL_FLING_THRESHOLD || distanceX < distanceY) {
+                if (distanceX < HORIZONTAL_FLING_THRESHOLD && distanceY < VERTICAL_FLING_THRESHOLD) {
                     return false;
                 }
 
                 // Switch to a different month
                 Calendar calendar = Calendar.getInstance();
     			calendar.setTime(displayDate);
-                if (velocityX < 0) {
-					calendar.add(Calendar.DAY_OF_MONTH, 1);
-					Date afterDate = calendar.getTime();
-					VNMDayViewer.this.navigator.gotoTime(afterDate);
-				} else {
-					calendar.add(Calendar.DAY_OF_MONTH, -1);
-					Date beforeDate = calendar.getTime();
-					VNMDayViewer.this.navigator.gotoTime(beforeDate);
-				}
+    			if (distanceX > distanceY) {
+    				if (velocityX < 0) {
+    					calendar.add(Calendar.DAY_OF_MONTH, 1);
+    					Date afterDate = calendar.getTime();
+    					VNMDayViewer.this.navigator.gotoTime(afterDate);
+    				} else {
+    					calendar.add(Calendar.DAY_OF_MONTH, -1);
+    					Date beforeDate = calendar.getTime();
+    					VNMDayViewer.this.navigator.gotoTime(beforeDate);
+    				}
+    			} else {
+	                if (velocityY < 0) {
+						calendar.add(Calendar.MONTH, 1);
+						Date afterDate = calendar.getTime();
+						VNMDayViewer.this.navigator.gotoTime(afterDate);
+					} else {
+						calendar.add(Calendar.MONTH, -1);
+						Date beforeDate = calendar.getTime();
+						VNMDayViewer.this.navigator.gotoTime(beforeDate);
+					}
+                }
+                
 
                 return true;
             }
