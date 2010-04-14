@@ -40,7 +40,7 @@ public class VNMMonthActivity extends VNMCalendarViewActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
     	menu.add(0, MENU_DAY_VIEW, 0, "Xem theo ngày").setIcon(android.R.drawable.ic_menu_day);
-    	menu.add(0, MENU_SETTINGS, 0, "Tùy chọn").setIcon(android.R.drawable.ic_menu_preferences);
+    	//menu.add(0, MENU_SETTINGS, 0, "Tùy chọn").setIcon(android.R.drawable.ic_menu_preferences);
     	return true;
     }
     
