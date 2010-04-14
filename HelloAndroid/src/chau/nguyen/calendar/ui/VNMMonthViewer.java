@@ -33,6 +33,9 @@ public class VNMMonthViewer extends View {
 	private boolean reDrawScreen = true;
 	
 	Bitmap cellBackground;
+	Bitmap cellHeaderBackground;
+	Bitmap cellHighlightBackground;
+	
 	int dayColor = 0;
 	int dayOfWeekColor = 0;
 	int weekendColor = 0;
@@ -55,6 +58,8 @@ public class VNMMonthViewer extends View {
 		this.navigator = navigator;
 		this.monthActivity = context;
 		this.cellBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.cell_bg);
+		this.cellHeaderBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.cell_header_bg);
+		this.cellHighlightBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.cell_highlight_bg);
 		this.dayColor = context.getResources().getColor(R.color.dayColor);
 		this.dayOfWeekColor = context.getResources().getColor(R.color.dayOfWeekColor);
 		this.weekendColor = context.getResources().getColor(R.color.weekendColor);
@@ -170,37 +175,45 @@ public class VNMMonthViewer extends View {
 
 		if (cal.isLeapYear(cal.get(Calendar.YEAR)) && mm == 1) {
 			++daysInMonth;
-		}
+		}				
 	       
+		Calendar todayCal = Calendar.getInstance();
+		int todayYear = todayCal.get(Calendar.YEAR);
+		int todayMonth = todayCal.get(Calendar.MONTH);
+		int todayDay = todayCal.get(Calendar.DAY_OF_MONTH);
+		
 		int count = 1;	       
 		for (int i = 0; i < 7; i++) {
     	   if (i == 0) {
     		   for (int j = 0; j < 7; j++) {
     			   drawHeader(canvas, startX + j * cellWidth, startY + i * cellHeight, cellWidth, cellHeight, j + 2);
     		   }
-    	   } else if (i == 1) {
-    		   for (int j = 0; j < 7 && count <= daysInMonth; j++) {
+    	   } else if (i == 1) {    		   
+    		   for (int j = 0; j < 7 && count <= daysInMonth; j++) {    			          		   
     			   if (j >= leadSpaces) {
-    				   drawCellContent(canvas, startX + j * cellWidth, startY + i * cellHeight, cellWidth, cellHeight, count, mm + 1, yy, j);
+    				   drawCellContent(canvas, startX + j * cellWidth, startY + i * cellHeight, cellWidth, cellHeight, count, mm + 1, yy, j, false);
     				   count++;
-    			   } else {
-    				   drawCellContent(canvas, startX + j * cellWidth, startY + i * cellHeight, cellWidth, cellHeight, 0, 0, yy, j);   
+    			   } else {        				   
+            		   boolean highlight = isSameDate(todayYear, todayMonth, todayDay, yy, mm, count);
+    				   drawCellContent(canvas, startX + j * cellWidth, startY + i * cellHeight, cellWidth, cellHeight, 0, 0, yy, j, highlight);   
     			   }
     		   }
     	   } else {
     		   for (int j = 0; j < 7; j++) {
     			   if (count <= daysInMonth) {
-    				   drawCellContent(canvas, startX + j * cellWidth, startY + i * cellHeight, cellWidth, cellHeight, count, mm + 1, yy, j);
+    				   boolean highlight = isSameDate(todayYear, todayMonth, todayDay, yy, mm, count);
+    				   drawCellContent(canvas, startX + j * cellWidth, startY + i * cellHeight, cellWidth, cellHeight, count, mm + 1, yy, j, highlight);
     				   count++;
     			   } else {
-    				   drawCellContent(canvas, startX + j * cellWidth, startY + i * cellHeight, cellWidth, cellHeight, 0, 0, yy, j);
+    				   drawCellContent(canvas, startX + j * cellWidth, startY + i * cellHeight, cellWidth, cellHeight, 0, 0, yy, j, false);
     			   }
         	   }
     	   }
 		}
 	}
 	
-	private void drawCellContent(Canvas canvas, float cellX, float cellY, float cellWidth, float cellHeight, int day, int month, int year, int dayOfWeek) {		
+	private void drawCellContent(Canvas canvas, float cellX, float cellY, float cellWidth, float cellHeight, 
+			int day, int month, int year, int dayOfWeek, boolean highlight) {		
 		Paint paint = new Paint();
 		paint.setColor(dayColor);
 		if (dayOfWeek == 6) {
@@ -209,10 +222,11 @@ public class VNMMonthViewer extends View {
 		paint.setAntiAlias(true);
 		paint.setTextAlign(Align.CENTER);	
 		paint.setTextSize(25);
-		paint.setDither(true);
-				
-		canvas.drawBitmap(cellBackground, new Rect(0, 0, 45, 65),
-				new Rect((int)cellX, (int)cellY,  (int)cellX + (int)cellWidth, (int)cellY + (int)cellHeight), paint);
+		paint.setDither(true);		
+		
+		Rect srcRect = new Rect(0, 0, 1, 1);
+		Rect destRect = new Rect((int)cellX + 1, (int)cellY + 1,  (int)cellX + (int)cellWidth, (int)cellY + (int)cellHeight);
+		canvas.drawBitmap((highlight ? cellHighlightBackground : cellBackground), srcRect, destRect, paint);		
 		
 		float x = cellX + cellWidth / 2;
 		float y = cellY + cellHeight / 2;
@@ -241,8 +255,8 @@ public class VNMMonthViewer extends View {
 		paint.setAntiAlias(true);
 		paint.setTextSize(25);
 		paint.setDither(true);
-		canvas.drawBitmap(cellBackground, new Rect(46, 0, 90, 65),
-				new Rect((int)cellX, (int)cellY,  (int)cellX + (int)cellWidth, (int)cellY + (int)cellHeight), paint);
+		canvas.drawBitmap(cellHeaderBackground, new Rect(0, 0, 1, 1),
+				new Rect((int)cellX + 1, (int)cellY + 1,  (int)cellX + (int)cellWidth, (int)cellY + (int)cellHeight), paint);
 		
 		float x = cellX + cellWidth / 2;
 		float y = cellY + cellHeight / 2;
@@ -285,4 +299,7 @@ public class VNMMonthViewer extends View {
 		return true;
 	}
 
+	private boolean isSameDate(int year1, int month1, int day1, int year2, int month2, int day2) {
+		return year1 == year2 && month1 == month2 && day1 == day2;
+	}
 }
