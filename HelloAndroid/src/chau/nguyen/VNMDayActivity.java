@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.DatePicker;
+import android.widget.LinearLayout;
 import android.widget.ViewSwitcher;
 import android.widget.Gallery.LayoutParams;
 import chau.nguyen.calendar.ui.VNMDayViewer;
@@ -24,6 +25,7 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
 	private static int MENU_ABOUT = 5;
 	public static final int DATE_DIALOG_ID = 0;
 	public static final int ABOUT_DIALOG = 1;
+	private LinearLayout dayView;
 	
 	private Date date;
 	
@@ -33,6 +35,8 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vnm_day_activity);
         this.date = new Date();
+        this.dayView = (LinearLayout)findViewById(R.id.dayView);
+        this.dayView.setBackgroundDrawable(getResources().getDrawable(R.drawable.body));
         this.switcher = (ViewSwitcher)findViewById(R.id.switcher);
         this.switcher.setFactory(this);
     }
