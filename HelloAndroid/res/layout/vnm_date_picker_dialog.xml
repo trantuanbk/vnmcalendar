@@ -1,0 +1,11 @@
+<LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
+              a:orientation="horizontal"
+              a:layout_width="fill_parent"
+              a:layout_height="fill_parent"
+              >
+    <DatePicker a:id="@+id/datePicker"
+               a:layout_width="fill_parent"
+               a:layout_height="wrap_content"
+               />
+    
+</LinearLayout>
