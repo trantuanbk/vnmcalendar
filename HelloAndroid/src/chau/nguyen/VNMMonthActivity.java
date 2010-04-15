@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.LinearLayout;
 import android.widget.ViewSwitcher;
 import android.widget.Gallery.LayoutParams;
 import chau.nguyen.calendar.ui.VNMMonthViewer;
@@ -20,6 +21,7 @@ public class VNMMonthActivity extends VNMCalendarViewActivity {
 	protected Animation inYearAnimationFuture;
 	protected Animation outYearAnimationPast;
 	protected Animation outYearAnimationFuture;
+	private LinearLayout monthView;
 	
 	/** Called when the activity is first created. */
     @Override
@@ -27,7 +29,9 @@ public class VNMMonthActivity extends VNMCalendarViewActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vnm_month_activity);
         this.switcher = (ViewSwitcher)findViewById(R.id.monthSwitcher);
-        this.switcher.setFactory(this);                
+        this.switcher.setFactory(this);
+        this.monthView = (LinearLayout)findViewById(R.id.monthView);
+        this.monthView.setBackgroundResource(BackgroundManager.getRandomBackgroundId());
         
         this.inYearAnimationPast = AnimationUtils.loadAnimation(this, R.anim.slide_up_in);
         this.outYearAnimationPast = AnimationUtils.loadAnimation(this, R.anim.slide_up_out);

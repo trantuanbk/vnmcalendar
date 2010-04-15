@@ -44,8 +44,7 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
         this.switcher.setFactory(this);
         
         this.dayView = (LinearLayout)findViewById(R.id.dayView);
-        this.dayView.setBackgroundDrawable(getResources().getDrawable(R.drawable.body));
-        
+        this.dayView.setBackgroundDrawable(getResources().getDrawable(BackgroundManager.getRandomBackgroundId()));
         this.inMonthAnimationPast = AnimationUtils.loadAnimation(this, R.anim.slide_up_in);
         this.outMonthAnimationPast = AnimationUtils.loadAnimation(this, R.anim.slide_up_out);
         this.inMonthAnimationFuture = AnimationUtils.loadAnimation(this, R.anim.slide_down_in);
