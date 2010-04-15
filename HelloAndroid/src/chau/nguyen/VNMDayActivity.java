@@ -29,16 +29,29 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
 	
 	private Date date;
 	
+	private LinearLayout dayView;
+	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vnm_day_activity);
+        
         this.date = new Date();
         this.dayView = (LinearLayout)findViewById(R.id.dayView);
         this.dayView.setBackgroundDrawable(getResources().getDrawable(R.drawable.body));
         this.switcher = (ViewSwitcher)findViewById(R.id.switcher);
         this.switcher.setFactory(this);
+        
+        this.dayView = (LinearLayout)findViewById(R.id.dayView);
+        this.dayView.setBackgroundDrawable(getResources().getDrawable(R.drawable.body));
+        
+        this.inMonthAnimationPast = AnimationUtils.loadAnimation(this, R.anim.slide_up_in);
+        this.outMonthAnimationPast = AnimationUtils.loadAnimation(this, R.anim.slide_up_out);
+        this.inMonthAnimationFuture = AnimationUtils.loadAnimation(this, R.anim.slide_down_in);
+        this.outMonthAnimationFuture = AnimationUtils.loadAnimation(this, R.anim.slide_down_out);        
+        this.inMonthAnimationFuture.setAnimationListener(this);
+        this.inMonthAnimationPast.setAnimationListener(this);
     }
     
     @Override
@@ -84,8 +97,13 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
 			this.switcher.setInAnimation(this.inAnimationPast);
 			this.switcher.setOutAnimation(this.outAnimationPast);
 		} else if (date.before(currentDate)) {
-			this.switcher.setInAnimation(this.inAnimationFuture);
-			this.switcher.setOutAnimation(this.outAnimationFuture);
+			if (dayOfMonth == currentDayOfMonth) {
+				this.switcher.setInAnimation(this.inMonthAnimationFuture);
+				this.switcher.setOutAnimation(this.outMonthAnimationFuture);
+			} else {
+				this.switcher.setInAnimation(this.inAnimationFuture);
+				this.switcher.setOutAnimation(this.outAnimationFuture);
+			}
 		}
 		
 		VNMDayViewer next = (VNMDayViewer)this.switcher.getNextView();
@@ -136,16 +154,8 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
 	    		Calendar cal = Calendar.getInstance();
 	    		cal.setTime(this.date);
 	    		return new VNMDatePickerDialog(this, mDateSetListener, 
-	    				cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
-	    	//case ABOUT_DIALOG:
-	    		//this.aboutDialog = new Dialog(getApplicationContext());
-	            //this.aboutDialog.setContentView(R.layout.about);
-	            //this.aboutDialog.setTitle("Giới thiệu");
-	            //TextView text = (TextView) this.aboutDialog.findViewById(R.id.text);
-	            //text.setText("Lịch Việt \n Bản beta \n Phát triển bởi: Nguyễn Phạm Hải Châu \n License: GPL3");
-	            //ImageView image = (ImageView) this.aboutDialog.findViewById(R.id.image);
-	            //image.setImageResource(R.drawable.icon);
-	    		//return this.aboutDialog;
+	    				cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));	                    
+
 	    }
 	    return null;
 	}
