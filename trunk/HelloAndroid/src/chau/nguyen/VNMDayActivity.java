@@ -66,7 +66,7 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
     	menu.add(0, MENU_SELECT_TODAY, 0, "Hôm nay").setIcon(android.R.drawable.ic_menu_today);    	
     	menu.add(0, MENU_MONTH_VIEW, 0, "Xem tháng").setIcon(android.R.drawable.ic_menu_month);
     	menu.add(0, MENU_ADD_EVENT, 0, "Thêm sự kiện").setIcon(android.R.drawable.ic_menu_add);
-    	menu.add(0, MENU_ABOUT, 0, "Giới thiệu");
+    	menu.add(0, MENU_ABOUT, 0, "Giới thiệu").setIcon(android.R.drawable.ic_menu_info_details);
     	//menu.add(0, MENU_SETTINGS, 0, "Tùy chọn").setIcon(android.R.drawable.ic_menu_preferences);
     	return true;
     }
