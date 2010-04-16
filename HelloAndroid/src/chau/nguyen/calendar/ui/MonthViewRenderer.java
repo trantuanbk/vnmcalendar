@@ -16,7 +16,7 @@ import chau.nguyen.calendar.VietCalendar.Holiday;
 public class MonthViewRenderer {
 	Config config;
 	
-	private final static int dom[] = { 
+	public final static int dom[] = { 
 		31, 28, 31, /* jan, feb, mar */
 		30, 31, 30, /* apr, may, jun */
 		31, 31, 30, /* jul, aug, sep */
@@ -169,7 +169,7 @@ public class MonthViewRenderer {
 		}
 	}		
 	
-	private int getDayOfWeekVNLocale(int dayOfWeekUSLocale) {
+	public static int getDayOfWeekVNLocale(int dayOfWeekUSLocale) {
 		if (dayOfWeekUSLocale == 1) return 7;
 		else return dayOfWeekUSLocale - 1;
 	}
