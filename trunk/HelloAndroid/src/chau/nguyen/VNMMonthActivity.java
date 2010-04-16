@@ -65,6 +65,8 @@ public class VNMMonthActivity extends VNMCalendarViewActivity {
 	}
 
 	public void gotoTime(Date date) {
+		this.monthView.setBackgroundResource(BackgroundManager.getRandomBackgroundId());
+		
 		VNMMonthViewer currentView = (VNMMonthViewer)this.switcher.getCurrentView();
 		Date currentDate = currentView.getDisplayDate(); 
 		if (date.after(currentDate)) {

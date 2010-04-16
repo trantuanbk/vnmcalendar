@@ -102,7 +102,7 @@ public class MonthViewRenderer {
 		paint.setTextSize(25);		
 		if (config.titleHeaderBackground != null) {
 			paint.setDither(true);
-			canvas.drawBitmap(config.titleHeaderBackground, new Rect(0, 0, 1, 1),
+			canvas.drawBitmap(config.titleHeaderBackground, new Rect(0, 0, config.titleHeaderBackground.getWidth(), config.titleHeaderBackground.getHeight()),
 					new Rect((int)cellX + 1, (int)cellY + 1,  (int)cellX + (int)cellWidth, (int)cellY + (int)cellHeight), paint);
 		}
 		Rect textBounds = new Rect();
@@ -119,7 +119,7 @@ public class MonthViewRenderer {
 		paint.setAntiAlias(true);
 		paint.setTextSize(18);
 		paint.setDither(true);
-		canvas.drawBitmap(config.cellHeaderBackground, new Rect(0, 0, 1, 1),
+		canvas.drawBitmap(config.cellHeaderBackground, new Rect(0, 0, config.cellHeaderBackground.getWidth(), config.cellHeaderBackground.getHeight()),
 				new Rect((int)cellX + 1, (int)cellY + 1,  (int)cellX + (int)cellWidth, (int)cellY + (int)cellHeight), paint);
 		
 		Rect textBounds = new Rect();
@@ -145,9 +145,10 @@ public class MonthViewRenderer {
 		paint.setTextSize(25);
 		paint.setDither(true);		
 		
-		Rect srcRect = new Rect(0, 0, 1, 1);
+		Bitmap bitmap = highlight ? config.cellHighlightBackground : config.cellBackground;
+		Rect srcRect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
 		Rect destRect = new Rect((int)cellX + 1, (int)cellY + 1,  (int)cellX + (int)cellWidth, (int)cellY + (int)cellHeight);
-		canvas.drawBitmap((highlight ? config.cellHighlightBackground : config.cellBackground), srcRect, destRect, paint);		
+		canvas.drawBitmap(bitmap, srcRect, destRect, paint);		
 		
 		float x = cellX + cellWidth / 2;
 		float y = cellY + cellHeight / 2;
