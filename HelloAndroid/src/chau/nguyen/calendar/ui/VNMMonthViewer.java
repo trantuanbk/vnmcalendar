@@ -62,7 +62,7 @@ public class VNMMonthViewer extends View {
 				cal.setTime(displayDate);
 				cal.set(Calendar.DAY_OF_MONTH, selectedDayOfMonth);
 				Date selectedDate = cal.getTime();
-				Log.i("MonthView", "Longpress");
+				Log.i("Selected month: ", "" + selectedDayOfMonth);
 				VNMMonthViewer.this.monthActivity.showDateInDayView(selectedDate);
 				return true;
 			}
@@ -128,7 +128,7 @@ public class VNMMonthViewer extends View {
 		int xOrder = (int) (x / cellWidth) + 1;
 		int yOrder = (int) (y / cellHeight) + 1;
 		int leadSpaces = MonthViewRenderer.getDayOfWeekVNLocale(cal.get(Calendar.DAY_OF_WEEK)) - 1;
-		int dayOfMonth = 7 * (yOrder - 2) + xOrder - leadSpaces;
+		int dayOfMonth = 7 * (yOrder - 3) + xOrder - leadSpaces;
 		int daysInMonth = MonthViewRenderer.dom[cal.get(Calendar.MONTH)];
 		if (cal.get(Calendar.YEAR) % 4  == 0) dayOfMonth++;
 		if (dayOfMonth <= 0 || dayOfMonth > daysInMonth)
