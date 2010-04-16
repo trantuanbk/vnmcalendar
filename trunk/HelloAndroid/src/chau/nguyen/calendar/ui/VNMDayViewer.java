@@ -31,6 +31,7 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 	private static final int SWITCH_TO_MONTH = 3;
 	protected INavigator navigator;
 	
+	private TextView monthText;
 	private TextView dayOfMonthText;
 	private TextView dayOfWeekText;
 	private TextView noteText;
@@ -78,6 +79,7 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 		this.dayViewActivity = dayViewActivity;
 		this.navigator = navigator;
 		
+		this.monthText = (TextView)findViewById(R.id.monthText);
 		this.dayOfMonthText = (TextView)findViewById(R.id.dayOfMonthText);
 		this.dayOfWeekText = (TextView)findViewById(R.id.dayOfWeekText);
 		this.noteText = (TextView)findViewById(R.id.noteText);
@@ -167,7 +169,6 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 	
 	public void setDate(Date date) {
 		this.displayDate = date;
-		this.dayViewActivity.setTitle(this.getDisplayDayText());
 		String famousSaying = getFamousSaying();
 		this.noteText.setText(famousSaying);
 		Calendar calendar = Calendar.getInstance();
@@ -185,15 +186,19 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 			this.dayOfMonthText.setTextColor(this.weekendColor);
 			this.dayOfWeekText.setTextColor(this.weekendColor);
 			this.noteText.setTextColor(this.weekendColor);
+			this.monthText.setTextColor(this.weekendColor);
 		} else if (holiday != null ) {
 			this.dayOfMonthText.setTextColor(this.holidayColor);
 			this.dayOfWeekText.setTextColor(this.holidayColor);
 			this.noteText.setTextColor(this.holidayColor);
+			this.monthText.setTextColor(this.holidayColor);
 		} else {
 			this.dayOfMonthText.setTextColor(this.dayOfWeekColor);
 			this.dayOfWeekText.setTextColor(this.dayOfWeekColor);
 			this.noteText.setTextColor(this.dayOfWeekColor);
+			this.monthText.setTextColor(this.dayOfWeekColor);
 		}
+		this.monthText.setText("Tháng " + month + " năm " + year);
 		this.dayOfMonthText.setText(dayOfMonth + "");
 		this.dayOfWeekText.setText(dayInVietnamese[dayOfWeek - 1]);
 		if (holiday != null) {
