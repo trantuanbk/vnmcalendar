@@ -3,12 +3,15 @@ package chau.nguyen;
 import java.util.Calendar;
 import java.util.Date;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.DatePicker;
@@ -24,8 +27,10 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
 	private static final int MENU_SELECT_TODAY = 2;
 	private static final int MENU_MONTH_VIEW = 3;
 	private static final int MENU_ADD_EVENT = 4;
+	private static final int MENU_ABOUT = 5;
 	//private static int MENU_SETTINGS = 4;
 	public static final int DATE_DIALOG_ID = 0;
+	public static final int ABOUT_DIALOG_ID = 1;
 	
 	private Date date;
 	protected Animation inMonthAnimationPast;
@@ -61,6 +66,7 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
     	menu.add(0, MENU_SELECT_TODAY, 0, "Hôm nay").setIcon(android.R.drawable.ic_menu_today);    	
     	menu.add(0, MENU_MONTH_VIEW, 0, "Xem tháng").setIcon(android.R.drawable.ic_menu_month);
     	menu.add(0, MENU_ADD_EVENT, 0, "Thêm sự kiện").setIcon(android.R.drawable.ic_menu_add);
+    	menu.add(0, MENU_ABOUT, 0, "Giới thiệu");
     	//menu.add(0, MENU_SETTINGS, 0, "Tùy chọn").setIcon(android.R.drawable.ic_menu_preferences);
     	return true;
     }
@@ -75,6 +81,8 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
     		gotoTime(new Date());
     	} else if (item.getItemId() == MENU_ADD_EVENT) {
     		addEvent();
+    	} else if (item.getItemId() == MENU_ABOUT) {
+    		showDialog(ABOUT_DIALOG_ID);
     	}
     	return true;
     }
@@ -181,7 +189,21 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
 	    		Calendar cal = Calendar.getInstance();
 	    		cal.setTime(this.date);
 	    		return new VNMDatePickerDialog(this, mDateSetListener, 
-	    				cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));	                    
+	    				cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+	    	case ABOUT_DIALOG_ID:
+	    		AlertDialog.Builder builder;
+	    		AlertDialog aboutDialog;
+
+	    		LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
+	    		View layout = inflater.inflate(R.layout.about,
+	    		                               (ViewGroup) findViewById(R.id.layoutRoot));
+
+	    		builder = new AlertDialog.Builder(this);
+	    		builder.setView(layout);
+	    		aboutDialog = builder.create();
+	    		aboutDialog.setTitle("Về 'Lịch Việt'");
+	    		aboutDialog.setIcon(R.drawable.icon);
+	    		return aboutDialog;
 	    }
 	    return null;
 	}
