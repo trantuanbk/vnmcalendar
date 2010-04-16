@@ -1,4 +1,4 @@
-package chau.nguyen;
+package chau.nguyen.appwidget;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,6 +19,8 @@ import android.graphics.Color;
 import android.graphics.Bitmap.CompressFormat;
 import android.net.Uri;
 import android.widget.RemoteViews;
+import chau.nguyen.R;
+import chau.nguyen.VNMDayActivity;
 import chau.nguyen.calendar.ui.MonthViewRenderer;
 import chau.nguyen.content.LocalFileContentProvider;
 
