@@ -58,6 +58,7 @@ public class VNMMonthViewer extends View {
 				float x = e.getX();
 				float y = e.getY();
 				int selectedDayOfMonth = guessDaySelected(x, y);
+				if (selectedDayOfMonth == 0) return true;
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(displayDate);
 				cal.set(Calendar.DAY_OF_MONTH, selectedDayOfMonth);
