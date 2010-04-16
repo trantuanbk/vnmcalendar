@@ -15,7 +15,7 @@ import chau.nguyen.calendar.ui.VNMMonthViewer;
 
 public class VNMMonthActivity extends VNMCalendarViewActivity {
 	private static int MENU_DAY_VIEW = 1;
-	private static int MENU_SETTINGS = 2;
+	//private static int MENU_SETTINGS = 2;
 	
 	protected Animation inYearAnimationPast;
 	protected Animation inYearAnimationFuture;
