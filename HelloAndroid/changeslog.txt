@@ -1,1 +1,6 @@
-﻿14/04/2010: Test trên Milestone, Nexus One -> chạy tốt. Hiện thị ngày hiện tại trong month view. Vuốt lên vuốt xuông để tăng giảm tháng trong day view
+﻿16/04/2010:
+* Có thêm widget cho Home screen
+* Chọn được ngày khi xem trên tháng
+* Thay đổi hình nền ngẫu nhiên
+
+14/04/2010: Test trên Milestone, Nexus One -> chạy tốt. Hiện thị ngày hiện tại trong month view. Vuốt lên vuốt xuông để tăng giảm tháng trong day view
