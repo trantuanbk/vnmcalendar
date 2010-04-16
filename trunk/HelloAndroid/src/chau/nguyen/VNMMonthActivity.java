@@ -60,8 +60,6 @@ public class VNMMonthActivity extends VNMCalendarViewActivity {
     }
     
     public void showDateInDayView(Date date) {
-    	Calendar cal = Calendar.getInstance();
-    	cal.setTime(date);
     	Intent data = new Intent();
     	data.putExtra(SELECTED_DATE_RETURN, date.getTime());
     	setResult(RESULT_OK, data);
