@@ -10,6 +10,13 @@
 		a:layout_height="wrap_content"
 		a:layout_weight="1">
 		
+		<TextView a:id="@+id/monthText" 
+		      a:layout_width="fill_parent" 
+		      a:layout_height="wrap_content" 
+		      a:text="Tháng 2 năm 2012" 
+		      a:gravity="center_horizontal" 
+		      a:textSize="18sp"
+		      a:paddingTop="10sp"/>
 		<TextView a:id="@+id/dayOfMonthText"
 			a:layout_width="fill_parent" 
 			a:layout_height="wrap_content" 
