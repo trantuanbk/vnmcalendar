@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.PorterDuff;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,6 +25,7 @@ public class VNMMonthViewer extends View {
 	private GestureDetector gestureDetector;
 	private Canvas mCanvas;
 	private Bitmap mBitmap;
+	private VNMMonthActivity monthActivity;
 	private boolean reDrawScreen = true;
 	
 	MonthViewRenderer.Config config;	
@@ -35,6 +37,7 @@ public class VNMMonthViewer extends View {
 	}
 	
 	private void init(VNMMonthActivity context, INavigator navigator) {
+		this.monthActivity = context;
 		this.displayDate = new Date();		
 		this.navigator = navigator;
 		
@@ -52,7 +55,16 @@ public class VNMMonthViewer extends View {
 		
 		this.gestureDetector = new GestureDetector(getContext(), new GestureDetector.OnGestureListener() {			
 			public boolean onSingleTapUp(MotionEvent e) {
-				return false;
+				float x = e.getX();
+				float y = e.getY();
+				int selectedDayOfMonth = guessDaySelected(x, y);
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(displayDate);
+				cal.set(Calendar.DAY_OF_MONTH, selectedDayOfMonth);
+				Date selectedDate = cal.getTime();
+				Log.i("MonthView", "Longpress");
+				VNMMonthViewer.this.monthActivity.showDateInDayView(selectedDate);
+				return true;
 			}
 			public void onShowPress(MotionEvent e) {
 			}
@@ -61,6 +73,7 @@ public class VNMMonthViewer extends View {
 				return false;
 			}
 			public void onLongPress(MotionEvent e) {
+				
 			}
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
                 // The user might do a slow "fling" after touching the screen
@@ -96,14 +109,32 @@ public class VNMMonthViewer extends View {
 			@Override
 			public boolean onDown(MotionEvent e) {
 				return true;
-			}
-			
-		});		
+			}	
+		});
 	}
 
 	public VNMMonthViewer(VNMMonthActivity context, INavigator navigator) {
 		super(context);
 		init(context, navigator);
+	}
+	
+	private int guessDaySelected(float x, float y) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(displayDate);
+		cal.set(Calendar.DAY_OF_MONTH, 1);
+		cal.getTime();
+		float cellHeight = getHeight() / 7;
+		float cellWidth = getWidth() / 7;
+		int xOrder = (int) (x / cellWidth) + 1;
+		int yOrder = (int) (y / cellHeight) + 1;
+		int leadSpaces = MonthViewRenderer.getDayOfWeekVNLocale(cal.get(Calendar.DAY_OF_WEEK)) - 1;
+		int dayOfMonth = 7 * (yOrder - 2) + xOrder - leadSpaces;
+		int daysInMonth = MonthViewRenderer.dom[cal.get(Calendar.MONTH)];
+		if (cal.get(Calendar.YEAR) % 4  == 0) dayOfMonth++;
+		if (dayOfMonth <= 0 || dayOfMonth > daysInMonth)
+			return 0;
+		else 
+			return dayOfMonth;
 	}
 
 	@Override

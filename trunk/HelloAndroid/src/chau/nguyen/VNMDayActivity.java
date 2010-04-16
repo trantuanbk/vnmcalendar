@@ -18,10 +18,12 @@ import android.widget.Gallery.LayoutParams;
 import chau.nguyen.calendar.ui.VNMDayViewer;
 
 public class VNMDayActivity extends VNMCalendarViewActivity {
-	private static int MENU_SELECT_DATE = 1;
-	private static int MENU_SELECT_TODAY = 2;
-	private static int MENU_MONTH_VIEW = 3;
-	private static int MENU_ADD_EVENT = 4;
+	public static final int SELECT_DATE = 1;
+	
+	private static final int MENU_SELECT_DATE = 1;
+	private static final int MENU_SELECT_TODAY = 2;
+	private static final int MENU_MONTH_VIEW = 3;
+	private static final int MENU_ADD_EVENT = 4;
 	//private static int MENU_SETTINGS = 4;
 	public static final int DATE_DIALOG_ID = 0;
 	
@@ -125,7 +127,8 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
 	
 	public void showMonthView() {
 		Intent monthIntent = new Intent(this, VNMMonthActivity.class);
-		startActivity(monthIntent);
+		//startActivity(monthIntent);
+		startActivityForResult(monthIntent, SELECT_DATE);
 	}	
 	
 	public void addEvent() {
@@ -140,6 +143,23 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
         intent.putExtra("endTime", eventCal.getTimeInMillis()); 
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		startActivity(intent);
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (requestCode) {
+			case SELECT_DATE:
+			if (resultCode == RESULT_CANCELED)
+				return;
+			long result = data.getLongExtra(VNMMonthActivity.SELECTED_DATE_RETURN, 0);
+			Calendar cal = Calendar.getInstance();
+			cal.setTimeInMillis(result);
+			gotoTime(cal.getTime());
+			break;
+		default:
+			
+			break;
+		}
 	}
 
 	@Override

@@ -1,7 +1,9 @@
 package chau.nguyen;
 
+import java.util.Calendar;
 import java.util.Date;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,6 +16,7 @@ import android.widget.Gallery.LayoutParams;
 import chau.nguyen.calendar.ui.VNMMonthViewer;
 
 public class VNMMonthActivity extends VNMCalendarViewActivity {
+	public static final String SELECTED_DATE_RETURN = "selectedDateReturn";
 	private static int MENU_DAY_VIEW = 1;
 	//private static int MENU_SETTINGS = 2;
 	
@@ -54,6 +57,16 @@ public class VNMMonthActivity extends VNMCalendarViewActivity {
     		this.finish();
     	}    	
     	return true;
+    }
+    
+    public void showDateInDayView(Date date) {
+    	Calendar cal = Calendar.getInstance();
+    	cal.setTime(date);
+    	Intent data = new Intent();
+    	data.putExtra(SELECTED_DATE_RETURN, date.getTime());
+    	setResult(RESULT_OK, data);
+    	this.finish();
+    	//this.finishActivity(VNMDayActivity.SELECT_DATE);
     }
     
 	public View makeView() {
