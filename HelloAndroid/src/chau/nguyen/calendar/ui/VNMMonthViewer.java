@@ -124,12 +124,12 @@ public class VNMMonthViewer extends View {
 		cal.setTime(displayDate);
 		cal.set(Calendar.DAY_OF_MONTH, 1);
 		cal.getTime();
-		float cellHeight = getHeight() / 7;
+		float cellHeight = getHeight() / 8;
 		float cellWidth = getWidth() / 7;
 		int xOrder = (int) (x / cellWidth) + 1;
-		int yOrder = (int) (y / cellHeight) + 1;
+		int yOrder = (int) (y / cellHeight) - 2; // title & day of week row
 		int leadSpaces = MonthViewRenderer.getDayOfWeekVNLocale(cal.get(Calendar.DAY_OF_WEEK)) - 1;
-		int dayOfMonth = 7 * (yOrder - 3) + xOrder - leadSpaces;
+		int dayOfMonth = 7 * yOrder + xOrder - leadSpaces;
 		int daysInMonth = MonthViewRenderer.dom[cal.get(Calendar.MONTH)];
 		if (cal.get(Calendar.YEAR) % 4  == 0) dayOfMonth++;
 		if (dayOfMonth <= 0 || dayOfMonth > daysInMonth)
