@@ -9,7 +9,7 @@
               a:layout_width="wrap_content"
               a:layout_height="wrap_content"
               a:textColor="#FFF"
-              a:text="Lịch Việt 1.1"
+              a:text="Phiên bản 1.1.2"
               />
     <TextView a:id="@+id/appNameText"
               a:layout_width="wrap_content"
