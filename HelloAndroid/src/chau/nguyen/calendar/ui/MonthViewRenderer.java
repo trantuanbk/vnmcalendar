@@ -9,12 +9,13 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Paint.Align;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import chau.nguyen.calendar.VietCalendar;
 import chau.nguyen.calendar.VietCalendar.Holiday;
 
 public class MonthViewRenderer {
-	Config config;
+	Config config;	
 	
 	public final static int dom[] = { 
 		31, 28, 31, /* jan, feb, mar */
@@ -180,10 +181,13 @@ public class MonthViewRenderer {
 	
 	public static class Config {
 		public Date date;
+		public Date selectedDate;
+		
 		public Bitmap titleHeaderBackground;
 		public Bitmap cellBackground;
 		public Bitmap cellHeaderBackground;
-		public Bitmap cellHighlightBackground;	
+		public Bitmap cellHighlightBackground;
+		public Drawable selectedCellDrawable;
 		public int dayColor = 0;
 		public int dayOfWeekColor = 0;
 		public int weekendColor = 0;
