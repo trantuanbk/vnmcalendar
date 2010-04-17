@@ -5,25 +5,26 @@ import java.util.Date;
 import java.util.TimeZone;
 
 /**
-* @author duc
+* @author Hồ Ngọc Đức
 *
 */
 public class VietCalendar {
     public static final double PI = Math.PI;
-    public static final byte YEAR = 0;
-    public static final byte MONTH = 1;
-    public static final byte DAY = 2;
+    public static final byte DAY = 0;
+    public static final byte MONTH = 1;    
+    public static final byte YEAR = 2;
+    public static final byte LUNAR = 3;    
     public static final byte HOUR = 3;
     public static final byte TIET_KHI = 4;
     
-    private static String[] CAN = new String[] {"Giáp", "Ất", "Bính", "Đinh", "Mậu", "Kỷ", "Canh", "Tân", "Nhâm", "Quý"};
-    private static String[] CHI = new String[] {"Tý", "Sửu", "Dần", "Mẹo", "Thìn", "Tỵ", "Ngọ", "Mùi", "Thân", "Dậu", "Tuất", "Hợi"};
-    private static String[] TIETKHI = new String[] {"Xuân phân", "Thanh minh", "C\u1ED1c v\u0169", "L\u1EADp h\u1EA1", "Ti\u1EC3u m\u00E3n", "Mang ch\u1EE7ng",
+    public static String[] CAN = new String[] {"Giáp", "Ất", "Bính", "Đinh", "Mậu", "Kỷ", "Canh", "Tân", "Nhâm", "Quý"};
+    public static String[] CHI = new String[] {"Tý", "Sửu", "Dần", "Mẹo", "Thìn", "Tỵ", "Ngọ", "Mùi", "Thân", "Dậu", "Tuất", "Hợi"};
+    public static String[] TIETKHI = new String[] {"Xuân phân", "Thanh minh", "C\u1ED1c v\u0169", "L\u1EADp h\u1EA1", "Ti\u1EC3u m\u00E3n", "Mang ch\u1EE7ng",
     		"H\u1EA1 ch\u00ED", "Ti\u1EC3u th\u1EED", "\u0110\u1EA1i th\u1EED", "L\u1EADp thu", "X\u1EED th\u1EED", "B\u1EA1ch l\u1ED9",
     		"Thu ph\u00E2n", "H\u00E0n l\u1ED9", "S\u01B0\u01A1ng gi\u00E1ng", "L\u1EADp \u0111\u00F4ng", "Ti\u1EC3u tuy\u1EBFt", "\u0110\u1EA1i tuy\u1EBFt",
     		"\u0110\u00F4ng ch\u00ED", "Ti\u1EC3u h\u00E0n", "\u0110\u1EA1i h\u00E0n", "L\u1EADp xu\u00E2n", "V\u0169 Th\u1EE7y", "Kinh tr\u1EADp"
-    };
-    private static Holiday[] HOLIDAYS = new Holiday[] {new Holiday(1, 1, 0, 0, "Mồng một tết âm lịch"),
+    };    
+    public static Holiday[] HOLIDAYS = new Holiday[] {new Holiday(1, 1, 0, 0, "Mồng một tết âm lịch"),
     													new Holiday(2, 1, 0, 0, "Mồng hai tết âm lịch"),
     													new Holiday(3, 1, 0, 0, "Mồng ba tết âm lịch"),
     													new Holiday(10, 3, 0, 0, "Giỗ tổ Hùng Vương"),
@@ -37,10 +38,10 @@ public class VietCalendar {
      * mm : 1 - 12
      * yy : 1800 -  
      */
-    public static String[] getCanChiInfo(int lunarDay, int lunarMonth, 
-    		int lunarYear, int sunDay, int sunMonth, int sunYear) {
+    public static String[] getCanChiInfo(int lunarDay, int lunarMonth, int lunarYear, 
+    		int solarDay, int solarMonth, int solarYear) {
 		String[] results = new String[5];
-		int jd = jdFromDate(sunDay, sunMonth, sunYear);
+		int jd = jdFromDate(solarDay, solarMonth, solarYear);
 		results[YEAR] = CAN[(lunarYear + 6) % 10] + " " + CHI[(lunarYear + 8) % 12];
 		results[MONTH] = CAN[(lunarYear * 12 + lunarMonth + 3) % 10] + " " + CHI[(lunarMonth + 1) % 12];
 		results[DAY] = CAN[(jd + 9) % 10] + " " + CHI[(jd + 1) % 12];
@@ -56,7 +57,7 @@ public class VietCalendar {
      * @param yy
      * @return the number of days since 1 January 4713 BC (Julian calendar)
      */
-    public static int jdFromDate(int dd, int mm, int yy) {
+    private static int jdFromDate(int dd, int mm, int yy) {
         int a = (14 - mm) / 12;
         int y = yy+4800-a;
         int m = mm+12*a-3;
@@ -73,7 +74,7 @@ public class VietCalendar {
      * @param jd - the number of days since 1 January 4713 BC (Julian calendar)
      * @return
      */
-    public static int[] jdToDate(int jd) {
+    private static int[] jdToDate(int jd) {
         int a, b, c;
         if (jd > 2299160) { // After 5/10/1582, Gregorian calendar
             a = jd + 32044;
@@ -97,11 +98,11 @@ public class VietCalendar {
      * @param jdn - number of days since noon UTC on 1 January 4713 BC
      * @return
      */
-    public static double SunLongitude(double jdn) {
+    private static double SunLongitude(double jdn) {
         //return CC2K.sunLongitude(jdn);
         return SunLongitudeAA98(jdn);
     }
-    public static double SunLongitudeAA98(double jdn) {
+    private static double SunLongitudeAA98(double jdn) {
         double T = (jdn - 2451545.0 ) / 36525; // Time in Julian centuries from 2000-01-01 12:00:00 GMT
         double T2 = T*T;
         double dr = PI/180; // degree to radian
@@ -117,6 +118,7 @@ public class VietCalendar {
         //return CC2K.newMoonTime(k);
         return NewMoonAA98(k);
     }
+    
     /**
      * Julian day number of the kth new moon after (or before) the New Moon of 1900-01-01 13:51 GMT.
      * Accuracy: 2 minutes
@@ -124,7 +126,6 @@ public class VietCalendar {
      * @param k
      * @return the Julian date number (number of days since noon UTC on 1 January 4713 BC) of the New Moon
      */
-
     public static double NewMoonAA98(int k) {
         double T = k/1236.85; // Time in Julian centuries from 1900 January 0.5
         double T2 = T * T;
@@ -151,17 +152,17 @@ public class VietCalendar {
         double JdNew = Jd1 + C1 - deltat;
         return JdNew;
     }
-    public static int INT(double d) {
+    private static int INT(double d) {
         return (int)Math.floor(d);
     }
-    public static double getSunLongitude(int dayNumber, double timeZone) {
+    private static double getSunLongitude(int dayNumber, double timeZone) {
         return SunLongitude(dayNumber - 0.5 - timeZone/24);
     }
-    public static int getNewMoonDay(int k, double timeZone) {
+    private static int getNewMoonDay(int k, double timeZone) {
         double jd = NewMoon(k);
         return INT(jd + 0.5 + timeZone/24);
     }
-    public static int getLunarMonth11(int yy, double timeZone) {
+    private static int getLunarMonth11(int yy, double timeZone) {
         double off = jdFromDate(31, 12, yy) - 2415021.076998695;
         int k = INT(off / 29.530588853);
         int nm = getNewMoonDay(k, timeZone);
@@ -171,7 +172,7 @@ public class VietCalendar {
         }
         return nm;
     }
-    public static int getLeapMonthOffset(int a11, double timeZone) {
+    private static int getLeapMonthOffset(int a11, double timeZone) {
         int k = INT(0.5 + (a11 - 2415021.076998695) / 29.530588853);
         int last; // Month 11 contains point of sun longutide 3*PI/2 (December solstice)
         int i = 1; // We start with the month following lunar month 11
@@ -183,12 +184,13 @@ public class VietCalendar {
         } while (arc != last && i < 14);
         return i-1;
     }
+    
     /**
-     *
-     * @param dd
-     * @param mm
-     * @param yy
-     * @param timeZone
+     * Hàm chuyển đổi từ Dương Lịch sang Âm Lịch
+     * @param dd : Ngày dương lịch 1 - 31
+     * @param mm : Tháng dương lịch 1 - 12
+     * @param yy : Năm dương lịch
+     * @param timeZone : Múi giờ 0 - 11
      * @return array of [lunarDay, lunarMonth, lunarYear, leapOrNot]
      */
     public static int[] convertSolar2Lunar(int dd, int mm, int yy, double timeZone) {
@@ -246,7 +248,34 @@ public class VietCalendar {
 		return VietCalendar.convertSolar2Lunar(day, month, year, timeZone);
     }
     
-    public static int[] convertLunar2Solar(int lunarDay, int lunarMonth, int lunarYear, int lunarLeap, double timeZone) {
+    /**
+     * Hàm chuyển đổi từ Âm Lịch sang Dương Lịch
+     * @param lunarDay : ngày Âm Lịch 0 - 30
+     * @param lunarMonth : tháng Âm Lịch 1 - 12
+     * @param lunarYear : năm Âm Lịch
+     * @param timeZone
+     * @return
+     */
+    public static int[] convertLunar2Solar(int lunarDay, int lunarMonth, int lunarYear, double timeZone) {
+    	// try to convert with lunarLeap = false
+    	int[] solars = convertLunar2Solar(lunarDay, lunarMonth, lunarYear, false, timeZone);
+    	// convert back to solar to check the result
+    	int[] lunars = convertSolar2Lunar(solars[DAY], solars[MONTH], solars[YEAR], timeZone);
+    	if (lunars[DAY] == lunarDay && lunars[MONTH] == lunarMonth && lunars[YEAR] == lunarYear) {
+    		return solars;
+    	} else return convertLunar2Solar(lunarDay, lunarMonth, lunarYear, true, timeZone);
+    }
+    
+    /**
+     * Hàm chuyển đổi từ Âm Lịch sang Dương Lịch
+     * @param lunarDay : ngày Âm Lịch 0 - 30
+     * @param lunarMonth : tháng Âm Lịch 1 - 12
+     * @param lunarYear : năm Âm Lịch
+     * @param lunarLeap : năm nhuận? 0 - 1
+     * @param timeZone
+     * @return
+     */
+    public static int[] convertLunar2Solar(int lunarDay, int lunarMonth, int lunarYear, boolean lunarLeap, double timeZone) {
         int a11, b11;
         if (lunarMonth < 11) {
             a11 = getLunarMonth11(lunarYear-1, timeZone);
@@ -266,46 +295,24 @@ public class VietCalendar {
             if (leapMonth < 0) {
                 leapMonth += 12;
             }
-            if (lunarLeap != 0 && lunarMonth != leapMonth) {
+            if (lunarLeap && lunarMonth != leapMonth) {
                 System.out.println("Invalid input!");
                 return new int[] {0, 0, 0};
-            } else if (lunarLeap != 0 || off >= leapOff) {
+            } else if (lunarLeap || off >= leapOff) {
                 off += 1;
             }
         }
         int monthStart = getNewMoonDay(k+off, timeZone);
-        return jdToDate(monthStart+lunarDay-1);
-    }
-
-    public static void main(String[] args) {
-//    	double TZ = 7.0;
-//    	int start = jdFromDate(1, 1, 2001);
-//    	int step = 15;
-//    	int count = -1;
-//    	while (count++ < 240) {
-//    		int jd = start + step*count;
-//    		int[] s = jdToDate(jd);
-//    		int[] l = convertSolar2Lunar(s[0], s[1], s[2], TZ);
-//    		int[] s2 = convertLunar2Solar(l[0], l[1], l[2], l[3], TZ);
-//    		if (s[0] == s2[0] && s[1] == s2[1] && s[2] == s2[2]) {
-//    			System.out.println("OK! "+s[0]+"/"+s[1]+"/"+s[2]+" -> "+l[0]+"/"+l[1]+"/"+l[2]+(l[3] == 0 ? "" : " leap"));
-//    		} else {
-//    			System.err.println("ERROR! "+s[0]+"/"+s[1]+"/"+s[2]+" -> "+l[0]+"/"+l[1]+"/"+l[2]+(l[3] == 0 ? "" : " leap"));
-//    		}
-//    	}
-    	
-    	for (int i = 0; i < TIETKHI.length; i++) {
-    		System.out.print("\"" + TIETKHI[i] + "\", ");
-    	}
-    }
+        return jdToDate(monthStart + lunarDay - 1);
+    }    
     
-    public static int getSolarTerm(int dd, double timeZone) {
+    protected static int getSolarTerm(int dd, double timeZone) {
     	return INT(SunLongitude(dd - 0.5 - timeZone/24.0) / PI * 12);    
     }
     
-    public static Holiday getHoliday(int lunar, int lunarMonth, int solar, int solarMonth) {
+    public static Holiday getHoliday(int lunarDay, int lunarMonth, int solarDay, int solarMonth) {
     	for (Holiday day : HOLIDAYS) {
-    		if (day.lunarMonth == lunarMonth && day.lunar == lunar || day.solarMonth == solarMonth && day.solar == solar) {
+    		if (day.lunarMonth == lunarMonth && day.lunarDay == lunarDay || day.solarMonth == solarMonth && day.solarDay == solarDay) {
     			return day;
     		}
 			
@@ -314,14 +321,14 @@ public class VietCalendar {
     }
     
     public static class Holiday {
-    	private int lunar;
-    	private int solar;
+    	private int lunarDay;
+    	private int solarDay;
     	private int lunarMonth;
     	private int solarMonth;
     	private String description;
-    	public Holiday(int lunar, int lunarMonth, int solar, int solarMonth, String description) {
-    		this.lunar = lunar;
-    		this.solar = solar;
+    	public Holiday(int lunarDay, int lunarMonth, int solarDay, int solarMonth, String description) {
+    		this.lunarDay = lunarDay;
+    		this.solarDay = solarDay;
     		this.description = description;
     		this.lunarMonth = lunarMonth;
     		this.setSolarMonth(solarMonth);
@@ -333,21 +340,21 @@ public class VietCalendar {
 			return description;
 		}
     	public void setLunar(int lunar) {
-			this.lunar = lunar;
+			this.lunarDay = lunar;
 		}
     	public int getLunar() {
-			return lunar;
+			return lunarDay;
 		}
-    	public void setSolar(int solar) {
-			this.solar = solar;
+    	public void setSolarDay(int solarDay) {
+			this.solarDay = solarDay;
 		}
-    	public int getSolar() {
-			return solar;
+    	public int getSolarDay() {
+			return solarDay;
 		}
-    	public void setMonth(int month) {
-			this.lunarMonth = month;
+    	public void setLunarMonth(int lunarMonth) {
+			this.lunarMonth = lunarMonth;
 		}
-    	public int getMonth() {
+    	public int getLunarMonth() {
 			return lunarMonth;
 		}
 		public void setSolarMonth(int solarMonth) {
