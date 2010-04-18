@@ -3,10 +3,12 @@ package chau.nguyen.calendar.ui;
 import java.util.Calendar;
 import java.util.Date;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.PorterDuff;
+import android.os.Vibrator;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -63,7 +65,8 @@ public class VNMMonthViewer extends View {
 				cal.setTime(displayDate);
 				cal.set(Calendar.DAY_OF_MONTH, selectedDayOfMonth);
 				Date selectedDate = cal.getTime();
-				Log.i("Selected month: ", "" + selectedDayOfMonth);
+				Log.i("Selected day: ", "" + selectedDayOfMonth);
+				((Vibrator)monthActivity.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(300);
 				VNMMonthViewer.this.monthActivity.showDateInDayView(selectedDate);
 				return true;
 			}
