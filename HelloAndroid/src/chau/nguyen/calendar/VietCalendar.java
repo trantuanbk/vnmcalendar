@@ -242,10 +242,14 @@ public class VietCalendar {
     }
     
     public static int[] convertSolar2LunarInVietnam(int day, int month, int year) {
+    		
+		return VietCalendar.convertSolar2Lunar(day, month, year, getTimeZone());
+    }
+    
+    public static double getTimeZone() {
     	Calendar calendar = Calendar.getInstance();
 		TimeZone tz = calendar.getTimeZone();
-		double timeZone = tz.getRawOffset() / 3600000;		
-		return VietCalendar.convertSolar2Lunar(day, month, year, timeZone);
+		return tz.getRawOffset() / 3600000;	
     }
     
     /**
@@ -308,6 +312,10 @@ public class VietCalendar {
     
     protected static int getSolarTerm(int dd, double timeZone) {
     	return INT(SunLongitude(dd - 0.5 - timeZone/24.0) / PI * 12);    
+    }
+    
+    public static void main(String args[]) {
+    	System.out.println("Hello");
     }
     
     public static Holiday getHoliday(int lunarDay, int lunarMonth, int solarDay, int solarMonth) {
