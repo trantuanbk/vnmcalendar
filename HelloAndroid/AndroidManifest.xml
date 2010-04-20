@@ -15,7 +15,7 @@
         </activity>
 		<activity android:name=".VNMMonthActivity" android:screenOrientation="portrait" />
 		
-		<receiver android:name=".appwidget.MonthWidgetProvider"
+		<receiver android:name=".calendar.appwidget.MonthWidgetProvider"
 		  android:label="@string/month_widget_name">
 		    <intent-filter>
 		        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -24,13 +24,13 @@
 		               android:resource="@xml/month_widget_info" />
 		</receiver>
 		
-		<provider android:name=".content.LocalFileContentProvider"
-	       android:authorities="chau.nguyen.localfile" />
+		<provider android:name=".calendar.content.LocalFileContentProvider"
+	       android:authorities="chau.nguyen.calendar.localfile" />
     </application>
     <supports-screens
           android:largeScreens="true"
           android:normalScreens="true"
           android:smallScreens="true"
           android:anyDensity="true" />
-    <uses-sdk android:minSdkVersion="4" />
+    <uses-sdk android:minSdkVersion="3" />
 </manifest> 

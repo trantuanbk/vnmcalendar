@@ -1,4 +1,4 @@
-package chau.nguyen.content;
+package chau.nguyen.calendar.content;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,7 +10,7 @@ import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 
 public class LocalFileContentProvider extends ContentProvider {
-	private static final String URI_PREFIX = "content://chau.nguyen.localfile";
+	private static final String URI_PREFIX = "content://chau.nguyen.calendar.localfile";
 	
 	public static String constructUri(String url) {
 		Uri uri = Uri.parse(url);
