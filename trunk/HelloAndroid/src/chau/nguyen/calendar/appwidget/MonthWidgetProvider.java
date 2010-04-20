@@ -1,4 +1,4 @@
-package chau.nguyen.appwidget;
+package chau.nguyen.calendar.appwidget;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -21,8 +21,8 @@ import android.net.Uri;
 import android.widget.RemoteViews;
 import chau.nguyen.R;
 import chau.nguyen.VNMDayActivity;
+import chau.nguyen.calendar.content.LocalFileContentProvider;
 import chau.nguyen.calendar.ui.MonthViewRenderer;
-import chau.nguyen.content.LocalFileContentProvider;
 
 public class MonthWidgetProvider extends AppWidgetProvider {
 	MonthViewRenderer.Config config;
