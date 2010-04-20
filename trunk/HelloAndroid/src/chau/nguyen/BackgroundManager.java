@@ -10,8 +10,9 @@ public class BackgroundManager {
 													R.drawable.body3, 
 													R.drawable.body4,
 													R.drawable.body5,
-													R.drawable.body6
-													
+													R.drawable.body6,
+													R.drawable.body7,
+													R.drawable.body8,
 													};
 	public static int getRandomBackgroundId() {
 		int index = Calendar.getInstance().get(Calendar.MILLISECOND) % backroundIds.length;
