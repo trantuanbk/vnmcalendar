@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,6 +19,7 @@ import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.ViewSwitcher;
 import android.widget.Gallery.LayoutParams;
+import chau.nguyen.calendar.ui.VNMDatePickerDialog;
 import chau.nguyen.calendar.ui.VNMDayViewer;
 
 public class VNMDayActivity extends VNMCalendarViewActivity {
@@ -210,14 +212,19 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
 	
 	// the callback received when the user "sets" the date in the dialog
 	private VNMDatePickerDialog.OnDateSetListener mDateSetListener = new VNMDatePickerDialog.OnDateSetListener() {
-		public void onDateSet(DatePicker view, int year, int monthOfYear,
+		public void onDateSet(DatePicker view, boolean isSolarSelected, int year, int monthOfYear,
 				int dayOfMonth) {
 			VNMDayViewer currentView = (VNMDayViewer)switcher.getCurrentView();
 			Calendar cal = Calendar.getInstance();
 			cal.set(Calendar.YEAR, year);
 			cal.set(Calendar.MONTH, monthOfYear);
 			cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-			currentView.setDate(cal.getTime());
+			Log.i("VNMDayActivity", "The day that you selected is: " + dayOfMonth + "/" + monthOfYear + "/" + year);
+			if (isSolarSelected) {
+				currentView.setDate(cal.getTime());
+			} else {
+				currentView.setLunarDate(dayOfMonth, monthOfYear, year);
+			}
 		}
 	};
 }
