@@ -243,10 +243,10 @@ public class VietCalendar {
     
     public static int[] convertSolar2LunarInVietnam(int day, int month, int year) {
     		
-		return VietCalendar.convertSolar2Lunar(day, month, year, getTimeZone());
+		return VietCalendar.convertSolar2Lunar(day, month, year, getVNMTimeZone());
     }
     
-    public static double getTimeZone() {
+    private static double getVNMTimeZone() {
     	Calendar calendar = Calendar.getInstance();
 		TimeZone tz = calendar.getTimeZone();
 		return tz.getRawOffset() / 3600000;	
@@ -268,6 +268,11 @@ public class VietCalendar {
     	if (lunars[DAY] == lunarDay && lunars[MONTH] == lunarMonth && lunars[YEAR] == lunarYear) {
     		return solars;
     	} else return convertLunar2Solar(lunarDay, lunarMonth, lunarYear, true, timeZone);
+    }
+    
+    public static int[] convertLunar2Solar(int lunarDay, int lunarMonth, int lunarYear) {
+    	double timeZone = getVNMTimeZone();
+    	return convertLunar2Solar(lunarDay, lunarMonth, lunarYear, timeZone);
     }
     
     /**
