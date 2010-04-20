@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
 
 import android.app.PendingIntent;
@@ -25,12 +26,13 @@ import chau.nguyen.calendar.content.LocalFileContentProvider;
 import chau.nguyen.calendar.ui.MonthViewRenderer;
 
 public class MonthWidgetProvider extends AppWidgetProvider {
-	MonthViewRenderer.Config config;
-	private Bitmap bitmap;	
-	private Canvas canvas;	
+	private static MonthViewRenderer.Config config = null;	
+	private static Bitmap bitmap;	
+	private static Canvas canvas;
+	private static String bitmapCacheFileName = null;
 	
 	private void init(Context context, AppWidgetProviderInfo providerInfo) {		
-		config = new MonthViewRenderer.Config();
+		config = new MonthViewRenderer.Config();		
 		config.cellBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.cell_bg);
 		config.cellHeaderBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.cell_header_bg);
 		config.cellHighlightBackground= BitmapFactory.decodeResource(context.getResources(), R.drawable.cell_highlight_bg);
@@ -51,7 +53,18 @@ public class MonthWidgetProvider extends AppWidgetProvider {
         	AppWidgetProviderInfo info = appWidgetManager.getAppWidgetInfo(appWidgetIds[0]);
         	init(context, info);
         }
-        Uri bitmapUri = renderWidget(context);        
+        // do we need to update the widgets?
+        Calendar today = Calendar.getInstance();
+        if (config.date != null) {
+	        Calendar currentDate = Calendar.getInstance();
+	        currentDate.setTime(config.date);
+	        if (MonthViewRenderer.isSameDate(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH),
+	        		currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH), currentDate.get(Calendar.DAY_OF_MONTH))) {
+	        	return;
+	        }
+        }
+        
+        Uri bitmapUri = renderWidget(context);
         // Perform this loop procedure for each App Widget that belongs to this provider
         for (int i = 0; i < N; i++) {
             int appWidgetId = appWidgetIds[i];        
@@ -67,16 +80,18 @@ public class MonthWidgetProvider extends AppWidgetProvider {
         }
     }
 
-	private Uri renderWidget(Context context) {
-		bitmap.eraseColor(Color.TRANSPARENT);			
-		config.date = new Date();
+	private Uri renderWidget(Context context) {		
+		bitmap.eraseColor(Color.TRANSPARENT);
+		config.date = new Date();		
 		MonthViewRenderer monthViewRenderer = new MonthViewRenderer(config);
-		monthViewRenderer.render(canvas);
-		
+		monthViewRenderer.render(canvas);		
 		// write the bitmap to temporary file		
-		String bitmapFileName = context.getCacheDir() + "/monthWidgetCache.png";
-		File file = new File(bitmapFileName);		
-		try {
+		if (bitmapCacheFileName != null) {
+			new File(bitmapCacheFileName).delete();
+		}
+		bitmapCacheFileName = context.getCacheDir() + "/monthWidgetCache" + config.date.getTime() + ".png";
+		File file = new File(bitmapCacheFileName);		
+		try {			
 			file.createNewFile();
             FileOutputStream ostream = new FileOutputStream(file);
             bitmap.compress(CompressFormat.PNG, 100, ostream);

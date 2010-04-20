@@ -6,7 +6,7 @@ import java.util.TimeZone;
 
 /**
 * @author Hồ Ngọc Đức
-*
+* 
 */
 public class VietCalendar {
     public static final double PI = Math.PI;
@@ -24,13 +24,13 @@ public class VietCalendar {
     		"Thu ph\u00E2n", "H\u00E0n l\u1ED9", "S\u01B0\u01A1ng gi\u00E1ng", "L\u1EADp \u0111\u00F4ng", "Ti\u1EC3u tuy\u1EBFt", "\u0110\u1EA1i tuy\u1EBFt",
     		"\u0110\u00F4ng ch\u00ED", "Ti\u1EC3u h\u00E0n", "\u0110\u1EA1i h\u00E0n", "L\u1EADp xu\u00E2n", "V\u0169 Th\u1EE7y", "Kinh tr\u1EADp"
     };    
-    public static Holiday[] HOLIDAYS = new Holiday[] {new Holiday(1, 1, 0, 0, "Mồng một tết âm lịch"),
-    													new Holiday(2, 1, 0, 0, "Mồng hai tết âm lịch"),
-    													new Holiday(3, 1, 0, 0, "Mồng ba tết âm lịch"),
+    public static Holiday[] HOLIDAYS = new Holiday[] {new Holiday(1, 1, 0, 0, "Mồng một tết Âm lịch"),
+    													new Holiday(2, 1, 0, 0, "Mồng hai tết Âm lịch"),
+    													new Holiday(3, 1, 0, 0, "Mồng ba tết Âm lịch"),
     													new Holiday(10, 3, 0, 0, "Giỗ tổ Hùng Vương"),
-    													new Holiday(0, 0, 1, 1, "Tết dương lịch"),
-    													new Holiday(0, 0, 30, 4, "Ngày giải phóng miền nam"),
-    													new Holiday(0, 0, 1, 5, "Ngày quốc tế lao động"),
+    													new Holiday(0, 0, 1, 1, "Tết Dương lịch"),
+    													new Holiday(0, 0, 30, 4, "Ngày giải phóng Miền Nam"),
+    													new Holiday(0, 0, 1, 5, "Ngày Quốc tế lao động"),
     													new Holiday(0, 0, 2, 9, "Ngày Quốc khánh")};
     
     /*
