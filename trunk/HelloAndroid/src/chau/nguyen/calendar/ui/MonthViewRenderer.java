@@ -175,7 +175,7 @@ public class MonthViewRenderer {
 		else return dayOfWeekUSLocale - 1;
 	}
 
-	private boolean isSameDate(int year1, int month1, int day1, int year2, int month2, int day2) {
+	public static boolean isSameDate(int year1, int month1, int day1, int year2, int month2, int day2) {
 		return year1 == year2 && month1 == month2 && day1 == day2;
 	}	
 	

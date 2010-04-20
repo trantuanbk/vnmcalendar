@@ -18,8 +18,8 @@ public class LocalFileContentProvider extends ContentProvider {
 	}
 
 	@Override
-	public ParcelFileDescriptor openFile(Uri uri, String mode)
-			throws FileNotFoundException {
+	public ParcelFileDescriptor openFile(Uri uri, String mode)		
+			throws FileNotFoundException {		
 		File file = new File(uri.getPath());
 		ParcelFileDescriptor parcel = ParcelFileDescriptor.open(file,
 				ParcelFileDescriptor.MODE_READ_ONLY);
