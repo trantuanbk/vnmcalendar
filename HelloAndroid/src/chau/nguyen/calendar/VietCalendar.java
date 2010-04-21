@@ -33,6 +33,8 @@ public class VietCalendar {
     													new Holiday(0, 0, 1, 5, "Ngày Quốc tế lao động"),
     													new Holiday(0, 0, 2, 9, "Ngày Quốc khánh")};
     
+    private static String[] dayOfWeekInVietnamese = new String[] {"Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"};
+	
     /*
      * dd : 1 - 31
      * mm : 1 - 12
@@ -48,6 +50,10 @@ public class VietCalendar {
 		results[HOUR] = CAN[(jd - 1) * 2 % 10] + " " + CHI[0];
     	results[TIET_KHI] = "";//TIETKHI[getSolarTerm(jd + 1, 7.0)]; 
     	return results;
+    }
+    
+    public static String getDayOfWeekText(int dayOfWeek) {
+    	return dayOfWeekInVietnamese[dayOfWeek - 1];
     }
     
     /**

@@ -53,12 +53,7 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 	private ContextMenuClickHandler contextMenuClickHandler;
 	private int dayOfWeekColor;
 	private int weekendColor;
-	private int holidayColor;
-	public static String[] dayOfWeekInVietnamese;
-	
-	static {
-		dayOfWeekInVietnamese = new String[] {"Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"};
-	}
+	private int holidayColor;	
 
 	public VNMDayViewer(VNMDayActivity context, INavigator navigator) {
 		super(context);
@@ -201,7 +196,7 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 		}
 		this.monthText.setText("Tháng " + month + " năm " + year);
 		this.dayOfMonthText.setText(dayOfMonth + "");
-		this.dayOfWeekText.setText(dayOfWeekInVietnamese[dayOfWeek - 1]);
+		this.dayOfWeekText.setText(VietCalendar.getDayOfWeekText(dayOfWeek));
 		if (holiday != null) {
 			this.noteText.setText(holiday.getDescription());
 		} else {

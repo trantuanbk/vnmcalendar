@@ -6,6 +6,7 @@ import java.util.Date;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -43,7 +44,8 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
         
         this.date = new Date();         
         this.switcher.addView(new VNMDayViewer(this, this));
-        this.switcher.getCurrentView().setBackgroundDrawable(BackgroundManager.getRandomBackground());
+        Drawable background = BackgroundManager.getRandomBackground();
+        this.switcher.getCurrentView().setBackgroundDrawable(background);
         this.switcher.addView(new VNMDayViewer(this, this));
         this.inAnimationLeft.initialize(this.switcher.getWidth(), this.switcher.getHeight(), this.switcher.getWidth(), this.switcher.getHeight());
         this.inAnimationRight.initialize(this.switcher.getWidth(), this.switcher.getHeight(), this.switcher.getWidth(), this.switcher.getHeight());
