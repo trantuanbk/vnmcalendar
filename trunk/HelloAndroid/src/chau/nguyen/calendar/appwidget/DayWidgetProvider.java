@@ -8,7 +8,6 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.widget.RemoteViews;
 import chau.nguyen.R;
 import chau.nguyen.VNMDayActivity;
@@ -42,8 +41,7 @@ public class DayWidgetProvider extends AppWidgetProvider {
 	        	return;
 	        }
         }
-        
-        Log.d("DEBUG", "Update day widget!");
+                
         currentDate = new Date();
         Calendar calendar = Calendar.getInstance();
 		calendar.setTime(currentDate);
