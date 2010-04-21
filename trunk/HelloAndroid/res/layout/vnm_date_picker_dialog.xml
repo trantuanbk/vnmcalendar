@@ -15,6 +15,7 @@
       <RadioButton a:id="@+id/radio_lunar"
           a:layout_width="wrap_content"
           a:layout_height="wrap_content"
+          a:layout_marginLeft="10sp"
           a:text="Ngày âm" />
     </RadioGroup>
     <chau.nguyen.calendar.widget.DatePicker a:id="@+id/datePicker"

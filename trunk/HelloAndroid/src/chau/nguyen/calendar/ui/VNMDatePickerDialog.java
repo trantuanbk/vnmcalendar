@@ -15,6 +15,7 @@ import android.widget.DatePicker;
 import android.widget.RadioButton;
 import android.widget.DatePicker.OnDateChangedListener;
 import chau.nguyen.R;
+import chau.nguyen.calendar.VietCalendar;
 
 public class VNMDatePickerDialog extends AlertDialog implements OnClickListener, OnDateChangedListener {
 	private static Locale vnLocale = new Locale("vi");
@@ -90,7 +91,7 @@ public class VNMDatePickerDialog extends AlertDialog implements OnClickListener,
         mInitialYear = year;
         mInitialMonth = monthOfYear;
         mInitialDay = dayOfMonth;
-        mTitleDateFormat = new SimpleDateFormat("EEEEE, dd-MM-yyyy", vnLocale);
+        mTitleDateFormat = new SimpleDateFormat("dd-MM-yyyy", vnLocale);
         mCalendar = Calendar.getInstance();
         updateTitle(mInitialYear, mInitialMonth, mInitialDay);
         setButton(context.getText(R.string.date_time_set), this);
@@ -153,7 +154,8 @@ public class VNMDatePickerDialog extends AlertDialog implements OnClickListener,
         mCalendar.set(Calendar.YEAR, year);
         mCalendar.set(Calendar.MONTH, month);
         mCalendar.set(Calendar.DAY_OF_MONTH, day);
-        setTitle(mTitleDateFormat.format(mCalendar.getTime()));
+        int dayOfWeek = mCalendar.get(Calendar.DAY_OF_WEEK);
+        setTitle(VietCalendar.getDayOfWeekText(dayOfWeek) + ", " + mTitleDateFormat.format(mCalendar.getTime()));
     }
 
      

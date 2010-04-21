@@ -14,7 +14,6 @@ import chau.nguyen.VNMDayActivity;
 import chau.nguyen.calendar.VietCalendar;
 import chau.nguyen.calendar.VietCalendar.Holiday;
 import chau.nguyen.calendar.ui.MonthViewRenderer;
-import chau.nguyen.calendar.ui.VNMDayViewer;
 
 public class DayWidgetProvider extends AppWidgetProvider {
 	private static Date currentDate = null;
@@ -68,7 +67,7 @@ public class DayWidgetProvider extends AppWidgetProvider {
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.day_widget);
             views.setTextViewText(R.id.dayOfMonthText, dayOfMonth + "");
             views.setTextColor(R.id.dayOfMonthText, dayColor);            
-            views.setTextViewText(R.id.dayOfWeekText, VNMDayViewer.dayOfWeekInVietnamese[dayOfWeek - 1] + "");
+            views.setTextViewText(R.id.dayOfWeekText, VietCalendar.getDayOfWeekText(dayOfWeek));
             views.setTextColor(R.id.dayOfWeekText, dayColor);            
             views.setTextViewText(R.id.vnmDayOfMonthText, lunars[VietCalendar.DAY] + "");
             views.setTextViewText(R.id.vnmDayOfMonthInText, vnmCalendarTexts[VietCalendar.DAY] + "");            

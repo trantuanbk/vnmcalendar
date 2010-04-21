@@ -3,6 +3,6 @@
     <string name="app_name">Lịch Việt</string>
     <string name="day_widget_name">Lịch Việt - Ngày</string>
     <string name="month_widget_name">Lịch Việt - Tháng</string>
-    <string name="cancel">Thoát</string>
+    <string name="cancel">Hủy</string>
     <string name="date_time_set">Đồng ý</string>
 </resources>
