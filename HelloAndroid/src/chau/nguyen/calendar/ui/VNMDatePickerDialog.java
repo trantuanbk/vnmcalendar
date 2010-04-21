@@ -1,8 +1,8 @@
 package chau.nguyen.calendar.ui;
 
-import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -17,6 +17,7 @@ import android.widget.DatePicker.OnDateChangedListener;
 import chau.nguyen.R;
 
 public class VNMDatePickerDialog extends AlertDialog implements OnClickListener, OnDateChangedListener {
+	private static Locale vnLocale = new Locale("vi");
      private static final String YEAR = "year";
      private static final String MONTH = "month";
      private static final String DAY = "day";
@@ -25,8 +26,7 @@ public class VNMDatePickerDialog extends AlertDialog implements OnClickListener,
      private final DatePicker mDatePicker;
      private final OnDateSetListener mCallBack;
      private final Calendar mCalendar;
-     private final java.text.SimpleDateFormat mTitleDateFormat;
-     private final String[] mWeekDays;
+     private final java.text.SimpleDateFormat mTitleDateFormat;     
      private int mInitialYear;
      private int mInitialMonth;
      private int mInitialDay;
@@ -90,19 +90,21 @@ public class VNMDatePickerDialog extends AlertDialog implements OnClickListener,
         mInitialYear = year;
         mInitialMonth = monthOfYear;
         mInitialDay = dayOfMonth;
-        DateFormatSymbols symbols = new DateFormatSymbols();
-        mWeekDays = symbols.getShortWeekdays();
-        mTitleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        mTitleDateFormat = new SimpleDateFormat("EEEEE, dd-MM-yyyy", vnLocale);
         mCalendar = Calendar.getInstance();
         updateTitle(mInitialYear, mInitialMonth, mInitialDay);
         setButton(context.getText(R.string.date_time_set), this);
         setButton2(context.getText(R.string.cancel), (OnClickListener) null);
         LayoutInflater inflater = 
                 (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.vnm_date_picker_dialog, null);
         
+        Locale defaultLocale = Locale.getDefault();
+		Locale.setDefault(vnLocale);
+        View view = inflater.inflate(R.layout.vnm_date_picker_dialog, null);                
         mDatePicker = (DatePicker) view.findViewById(R.id.datePicker);
         mDatePicker.init(mInitialYear, mInitialMonth, mInitialDay, this);
+        Locale.setDefault(defaultLocale);
+        
         this.lunarRadio = (RadioButton)view.findViewById(R.id.radio_lunar);
         this.solarRadio = (RadioButton)view.findViewById(R.id.radio_solar);
         this.solarRadio.setChecked(true);

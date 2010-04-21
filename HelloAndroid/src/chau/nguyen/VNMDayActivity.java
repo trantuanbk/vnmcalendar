@@ -14,11 +14,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.DatePicker;
-import android.widget.LinearLayout;
 import android.widget.ViewSwitcher;
-import android.widget.Gallery.LayoutParams;
 import chau.nguyen.calendar.ui.VNMDatePickerDialog;
 import chau.nguyen.calendar.ui.VNMDayViewer;
 
@@ -35,31 +32,23 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
 	public static final int ABOUT_DIALOG_ID = 1;
 	
 	private Date date;
-	protected Animation inMonthAnimationPast;
-	protected Animation inMonthAnimationFuture;
-	protected Animation outMonthAnimationPast;
-	protected Animation outMonthAnimationFuture;
-	
-	private LinearLayout dayView;
 	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.vnm_day_activity);
+        this.switcher = new ViewSwitcher(this);
+        setContentView(this.switcher);
+        BackgroundManager.init(this);
         
-        this.date = new Date();
-        this.switcher = (ViewSwitcher)findViewById(R.id.switcher);
-        this.switcher.setFactory(this);
-        
-        this.dayView = (LinearLayout)findViewById(R.id.dayView);
-        this.dayView.setBackgroundResource(BackgroundManager.getRandomBackgroundId());
-        this.inMonthAnimationPast = AnimationUtils.loadAnimation(this, R.anim.slide_up_in);
-        this.outMonthAnimationPast = AnimationUtils.loadAnimation(this, R.anim.slide_up_out);
-        this.inMonthAnimationFuture = AnimationUtils.loadAnimation(this, R.anim.slide_down_in);
-        this.outMonthAnimationFuture = AnimationUtils.loadAnimation(this, R.anim.slide_down_out);        
-        this.inMonthAnimationFuture.setAnimationListener(this);
-        this.inMonthAnimationPast.setAnimationListener(this);
+        this.date = new Date();         
+        this.switcher.addView(new VNMDayViewer(this, this));
+        this.switcher.getCurrentView().setBackgroundDrawable(BackgroundManager.getRandomBackground());
+        this.switcher.addView(new VNMDayViewer(this, this));
+        this.inAnimationLeft.initialize(this.switcher.getWidth(), this.switcher.getHeight(), this.switcher.getWidth(), this.switcher.getHeight());
+        this.inAnimationRight.initialize(this.switcher.getWidth(), this.switcher.getHeight(), this.switcher.getWidth(), this.switcher.getHeight());
+        this.outAnimationLeft.initialize(this.switcher.getWidth(), this.switcher.getHeight(), this.switcher.getWidth(), this.switcher.getHeight());
+        this.outAnimationRight.initialize(this.switcher.getWidth(), this.switcher.getHeight(), this.switcher.getWidth(), this.switcher.getHeight());                
     }
     
     @Override
@@ -87,20 +76,10 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
     		showDialog(ABOUT_DIALOG_ID);
     	}
     	return true;
-    }
-    
-	public View makeView() {
-		final VNMDayViewer viewer = new VNMDayViewer(this, this);
-		viewer.setLayoutParams(new ViewSwitcher.LayoutParams(
-                LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
-		
-		return viewer;
-	}
+    }    	
 
-	public void gotoTime(Date date) {
-		this.dayView.setBackgroundResource(BackgroundManager.getRandomBackgroundId());
-		
-		VNMDayViewer currentView = (VNMDayViewer)this.switcher.getCurrentView();
+	public void gotoTime(Date date) {		
+		VNMDayViewer currentView = (VNMDayViewer)this.switcher.getCurrentView();		
 		Date currentDate = currentView.getDisplayDate();
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(currentDate);
@@ -109,23 +88,24 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
 		int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
 		if (date.after(currentDate)) {
 			if (dayOfMonth == currentDayOfMonth) {
-				this.switcher.setInAnimation(this.inMonthAnimationPast);
-				this.switcher.setOutAnimation(this.outMonthAnimationPast);
+				this.switcher.setInAnimation(this.inAnimationUp);
+				this.switcher.setOutAnimation(this.outAnimationUp);
 			} else {
-				this.switcher.setInAnimation(this.inAnimationPast);
-				this.switcher.setOutAnimation(this.outAnimationPast);
+				this.switcher.setInAnimation(this.inAnimationLeft);
+				this.switcher.setOutAnimation(this.outAnimationLeft);
 			}
 		} else if (date.before(currentDate)) {
 			if (dayOfMonth == currentDayOfMonth) {
-				this.switcher.setInAnimation(this.inMonthAnimationFuture);
-				this.switcher.setOutAnimation(this.outMonthAnimationFuture);
+				this.switcher.setInAnimation(this.inAnimationDown);
+				this.switcher.setOutAnimation(this.outAnimationDown);
 			} else {
-				this.switcher.setInAnimation(this.inAnimationFuture);
-				this.switcher.setOutAnimation(this.outAnimationFuture);
+				this.switcher.setInAnimation(this.inAnimationRight);
+				this.switcher.setOutAnimation(this.outAnimationRight);
 			}
 		}
 		
 		VNMDayViewer next = (VNMDayViewer)this.switcher.getNextView();
+		next.setBackgroundDrawable(BackgroundManager.getRandomBackground());
 		next.setDate(date);
 		this.date = date;
 		this.switcher.showNext();
