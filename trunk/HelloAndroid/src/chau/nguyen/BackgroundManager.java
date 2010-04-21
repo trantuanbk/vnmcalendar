@@ -2,6 +2,10 @@ package chau.nguyen;
 
 import java.util.Calendar;
 
+import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
+
 public class BackgroundManager {
 	private static int[] backroundIds = new int[] {
 													R.drawable.body, 
@@ -14,8 +18,22 @@ public class BackgroundManager {
 													R.drawable.body7,
 													R.drawable.body8,
 													};
-	public static int getRandomBackgroundId() {
-		int index = Calendar.getInstance().get(Calendar.MILLISECOND) % backroundIds.length;
-		return backroundIds[index];
+	private static Drawable[] backgroundDrawables = null;
+	private static int currentIndex = -1; 
+	
+	public static void init(Context context) {
+		if (backgroundDrawables != null) return;
+		backgroundDrawables = new Drawable[backroundIds.length];
+		Resources resources = context.getResources();
+		for (int i = 0; i < backroundIds.length; i++) {
+			backgroundDrawables[i] = resources.getDrawable(backroundIds[i]);
+		}
+	}
+	
+	public static Drawable getRandomBackground() {
+		int randomIndex = Calendar.getInstance().get(Calendar.MILLISECOND) % backgroundDrawables.length;
+		if (randomIndex == currentIndex) randomIndex = ++randomIndex % backgroundDrawables.length;
+		currentIndex = randomIndex;
+		return backgroundDrawables[currentIndex];
 	}
 }
