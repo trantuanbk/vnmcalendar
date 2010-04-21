@@ -18,7 +18,6 @@ import chau.nguyen.R;
 import chau.nguyen.calendar.VietCalendar;
 
 public class VNMDatePickerDialog extends AlertDialog implements OnClickListener, OnDateChangedListener {
-	private static Locale vnLocale = new Locale("vi");
      private static final String YEAR = "year";
      private static final String MONTH = "month";
      private static final String DAY = "day";
@@ -27,7 +26,7 @@ public class VNMDatePickerDialog extends AlertDialog implements OnClickListener,
      private final DatePicker mDatePicker;
      private final OnDateSetListener mCallBack;
      private final Calendar mCalendar;
-     private final java.text.SimpleDateFormat mTitleDateFormat;     
+          
      private int mInitialYear;
      private int mInitialMonth;
      private int mInitialDay;
@@ -91,7 +90,6 @@ public class VNMDatePickerDialog extends AlertDialog implements OnClickListener,
         mInitialYear = year;
         mInitialMonth = monthOfYear;
         mInitialDay = dayOfMonth;
-        mTitleDateFormat = new SimpleDateFormat("dd-MM-yyyy", vnLocale);
         mCalendar = Calendar.getInstance();
         updateTitle(mInitialYear, mInitialMonth, mInitialDay);
         setButton(context.getText(R.string.date_time_set), this);
@@ -100,7 +98,7 @@ public class VNMDatePickerDialog extends AlertDialog implements OnClickListener,
                 (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         
         Locale defaultLocale = Locale.getDefault();
-		Locale.setDefault(vnLocale);
+		Locale.setDefault(VietCalendar.vnLocale);
         View view = inflater.inflate(R.layout.vnm_date_picker_dialog, null);                
         mDatePicker = (DatePicker) view.findViewById(R.id.datePicker);
         mDatePicker.init(mInitialYear, mInitialMonth, mInitialDay, this);
@@ -154,8 +152,8 @@ public class VNMDatePickerDialog extends AlertDialog implements OnClickListener,
         mCalendar.set(Calendar.YEAR, year);
         mCalendar.set(Calendar.MONTH, month);
         mCalendar.set(Calendar.DAY_OF_MONTH, day);
-        int dayOfWeek = mCalendar.get(Calendar.DAY_OF_WEEK);
-        setTitle(VietCalendar.getDayOfWeekText(dayOfWeek) + ", " + mTitleDateFormat.format(mCalendar.getTime()));
+        
+        setTitle(VietCalendar.formatVietnameseDate(mCalendar.getTime()));
     }
 
      
