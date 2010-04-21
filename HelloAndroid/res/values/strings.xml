@@ -5,4 +5,20 @@
     <string name="month_widget_name">Lịch Việt - Tháng</string>
     <string name="cancel">Hủy</string>
     <string name="date_time_set">Đồng ý</string>
+    <string name="what_label">Tên sự kiện</string>
+    <string name="hint_what">Sự kiện gì</string>
+    <string name="where_label">Ở đâu</string>
+    <string name="hint_where">Nơi xảy ra sự kiện</string>
+    <string name="edit_event_from_label">Từ</string>
+    <string name="edit_event_to_label">Đến</string>
+    <string name="edit_event_all_day_label">Tất cả</string>
+    <string name="description_label">Mô tả</string>
+    <string name="hint_description">Mô tả về sự kiện</string>
+    <string name="edit_event_calendar_label">Chỉnh sửa</string>
+    <string name="repeats_label">Lặp lại</string>
+    <string name="reminders_label">Nhắc nhở</string>
+    <string name="add_new_reminder">Thêm nhắc nhở</string>
+    <string name="save_label">Lưu</string>
+    <string name="delete_label">Xóa</string>
+    <string name="discard_label">Hủy</string>
 </resources>

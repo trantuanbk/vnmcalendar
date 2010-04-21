@@ -1,7 +1,9 @@
 package chau.nguyen.calendar;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 /**
@@ -9,6 +11,8 @@ import java.util.TimeZone;
 * 
 */
 public class VietCalendar {
+	public static final Locale vnLocale = new Locale("vi");
+	private static final java.text.SimpleDateFormat vnDateFormat = new SimpleDateFormat("dd-MM-yyyy", vnLocale);;
     public static final double PI = Math.PI;
     public static final byte DAY = 0;
     public static final byte MONTH = 1;    
@@ -50,6 +54,13 @@ public class VietCalendar {
 		results[HOUR] = CAN[(jd - 1) * 2 % 10] + " " + CHI[0];
     	results[TIET_KHI] = "";//TIETKHI[getSolarTerm(jd + 1, 7.0)]; 
     	return results;
+    }
+    
+    public static String formatVietnameseDate(Date date) {
+    	Calendar cal = Calendar.getInstance();
+    	cal.setTime(date);
+    	int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+    	return VietCalendar.getDayOfWeekText(dayOfWeek) + ", " + vnDateFormat.format(cal.getTime());
     }
     
     public static String getDayOfWeekText(int dayOfWeek) {
