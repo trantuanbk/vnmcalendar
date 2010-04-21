@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
+    a:id="@+id/dayWidget"
 	a:orientation="vertical"
 	a:layout_width="160sp"
-	a:layout_height="200sp"
-	a:layout_marginTop="5sp"
-	a:background="@drawable/body4">	
+	a:layout_height="200sp"		
+	a:layout_gravity="center"
+	a:background="@drawable/day_widget_bg">	
 	<TextView a:id="@+id/dayOfMonthText"
 		a:layout_width="fill_parent" 
 		a:layout_height="wrap_content" 
@@ -14,20 +15,22 @@
 		a:textSize="80sp"
 		a:textStyle="bold" 
 		a:layout_weight="1"/>
-    <TextView a:id="@+id/dayOfMonthText"
+    <TextView a:id="@+id/dayOfWeekText"
         a:layout_width="fill_parent" 
-        a:layout_height="wrap_content" 
+        a:layout_height="wrap_content"
         a:text="Thứ tư"
         a:textColor="@color/dayColor"
         a:gravity="center"
         a:textSize="20sp"
-        a:paddingBottom="5sp"/>
+        a:paddingBottom="5sp"
+        a:layout_marginRight="2sp"/>
         
     <LinearLayout
         a:orientation="horizontal"
         a:layout_width="fill_parent" 
         a:layout_height="wrap_content"
-        a:layout_marginBottom="1sp">            
+        a:layout_marginBottom="1sp"
+        a:layout_marginRight="2sp">            
         <TextView
             a:layout_width="fill_parent" 
             a:layout_height="fill_parent"
@@ -52,7 +55,9 @@
     <LinearLayout
         a:orientation="horizontal"
         a:layout_width="fill_parent" 
-        a:layout_height="wrap_content">          
+        a:layout_height="wrap_content"
+        a:layout_marginRight="2sp"
+        a:layout_marginBottom="2sp">          
         <LinearLayout
             a:orientation="vertical"
             a:layout_width="fill_parent"

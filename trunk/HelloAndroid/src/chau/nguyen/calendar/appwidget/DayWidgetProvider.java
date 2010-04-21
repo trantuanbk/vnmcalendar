@@ -8,18 +8,29 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.RemoteViews;
 import chau.nguyen.R;
 import chau.nguyen.VNMDayActivity;
 import chau.nguyen.calendar.VietCalendar;
+import chau.nguyen.calendar.VietCalendar.Holiday;
 import chau.nguyen.calendar.ui.MonthViewRenderer;
 import chau.nguyen.calendar.ui.VNMDayViewer;
 
 public class DayWidgetProvider extends AppWidgetProvider {
-	private static Date currentDate;
+	private static Date currentDate = null;
+	private static int dayOfWeekColor = 0;
+	private static int weekendColor = 0;
+	private static int holidayColor = 0;
 	
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {		
         final int N = appWidgetIds.length;
+        
+        if (currentDate == null) {        	
+        	dayOfWeekColor = context.getResources().getColor(R.color.dayOfWeekColor);
+    		weekendColor = context.getResources().getColor(R.color.weekendColor);
+    		holidayColor = context.getResources().getColor(R.color.holidayColor);
+        }
         
         // do we need to update the widgets?
         Calendar todayCal = Calendar.getInstance();
@@ -32,6 +43,7 @@ public class DayWidgetProvider extends AppWidgetProvider {
 	        }
         }
         
+        Log.d("DEBUG", "Update day widget!");
         currentDate = new Date();
         Calendar calendar = Calendar.getInstance();
 		calendar.setTime(currentDate);
@@ -41,8 +53,15 @@ public class DayWidgetProvider extends AppWidgetProvider {
 		int month = calendar.get(Calendar.MONTH) + 1;		
 		int year = calendar.get(Calendar.YEAR);
 		int[] lunars = VietCalendar.convertSolar2LunarInVietnam(currentDate);		
-		String[] vnmCalendarTexts = VietCalendar.getCanChiInfo(lunars[VietCalendar.DAY], lunars[VietCalendar.MONTH], lunars[VietCalendar.YEAR], dayOfMonth, month, year);				
-		        
+		String[] vnmCalendarTexts = VietCalendar.getCanChiInfo(lunars[VietCalendar.DAY], lunars[VietCalendar.MONTH], lunars[VietCalendar.YEAR], dayOfMonth, month, year);
+		Holiday holiday = VietCalendar.getHoliday(lunars[0], lunars[1], dayOfMonth, month);
+		int dayColor = dayOfWeekColor;
+		if (dayOfWeek == 1) {
+			dayColor = weekendColor;			
+		} else if (holiday != null ) {
+			dayColor = holidayColor;			
+		}
+		
         for (int i = 0; i < N; i++) {
             int appWidgetId = appWidgetIds[i];            
             Intent intent = new Intent(context, VNMDayActivity.class);
@@ -50,13 +69,15 @@ public class DayWidgetProvider extends AppWidgetProvider {
 
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.day_widget);
             views.setTextViewText(R.id.dayOfMonthText, dayOfMonth + "");
-            views.setTextViewText(R.id.dayOfWeekText, VNMDayViewer.dayOfWeekInVietnamese[dayOfWeek] + "");            
+            views.setTextColor(R.id.dayOfMonthText, dayColor);            
+            views.setTextViewText(R.id.dayOfWeekText, VNMDayViewer.dayOfWeekInVietnamese[dayOfWeek - 1] + "");
+            views.setTextColor(R.id.dayOfWeekText, dayColor);            
             views.setTextViewText(R.id.vnmDayOfMonthText, lunars[VietCalendar.DAY] + "");
-            views.setTextViewText(R.id.vnmDayOfMonthInText, vnmCalendarTexts[VietCalendar.DAY] + "");
+            views.setTextViewText(R.id.vnmDayOfMonthInText, vnmCalendarTexts[VietCalendar.DAY] + "");            
             views.setTextViewText(R.id.vnmMonthText, lunars[VietCalendar.MONTH] + "");
             views.setTextViewText(R.id.vnmMonthInText, vnmCalendarTexts[VietCalendar.MONTH] + "");            
             
-        	views.setOnClickPendingIntent(R.id.dayOfMonthText, pendingIntent);
+        	views.setOnClickPendingIntent(R.id.dayWidget, pendingIntent);
         	
             appWidgetManager.updateAppWidget(appWidgetId, views);
         }
