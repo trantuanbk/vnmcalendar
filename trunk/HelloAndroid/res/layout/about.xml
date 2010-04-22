@@ -5,13 +5,13 @@
               a:layout_height="fill_parent"
               a:padding="10sp"
               >
-    <TextView a:id="@+id/appNameText"
+    <TextView a:id="@+id/versionText"
               a:layout_width="wrap_content"
               a:layout_height="wrap_content"
               a:textColor="#FFF"
               a:text="Phiên bản 1.1.3"
               />
-    <TextView a:id="@+id/appNameText"
+    <TextView
               a:layout_width="wrap_content"
               a:layout_height="wrap_content"
               a:textColor="#FFF"
