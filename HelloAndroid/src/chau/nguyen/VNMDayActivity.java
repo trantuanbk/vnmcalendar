@@ -5,7 +5,10 @@ import java.util.Date;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.DatePicker;
+import android.widget.TextView;
 import android.widget.ViewSwitcher;
 import chau.nguyen.calendar.ui.VNMDatePickerDialog;
 import chau.nguyen.calendar.ui.VNMDayViewer;
@@ -185,7 +189,17 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
 	    		LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
 	    		View layout = inflater.inflate(R.layout.about,
 	    		                               (ViewGroup) findViewById(R.id.layoutRoot));
+	    		TextView version = (TextView)layout.findViewById(R.id.versionText);
+	    		try {
+	    			ComponentName comp = new ComponentName(this, VNMDayActivity.class);
+		    	    PackageInfo pinfo = this.getPackageManager().getPackageInfo(comp.getPackageName(), PackageManager.GET_ACTIVITIES);
+		    	    version.setText("Phiên bản: " + pinfo.versionName);
+				} catch (Exception e) {
+					version.setText("Phiên bản: 1.1");
+				}
+	    		
 
+	    		
 	    		builder = new AlertDialog.Builder(this);
 	    		builder.setView(layout);
 	    		aboutDialog = builder.create();
