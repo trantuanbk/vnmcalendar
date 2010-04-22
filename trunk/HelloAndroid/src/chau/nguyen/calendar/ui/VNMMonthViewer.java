@@ -46,9 +46,11 @@ public class VNMMonthViewer extends View {
 		config = new Config();
 		config.date = this.displayDate;
 		config.cellBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.cell_bg);
-		config.cellHeaderBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.cell_header_bg);
+		config.headerBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.cell_header_bg);
 		config.cellHighlightBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.cell_highlight_bg);
-		config.titleHeaderBackground = config.cellBackground;
+		config.titleBackground = config.cellBackground;
+		config.titleTextColor = context.getResources().getColor(R.color.titleColor);
+		config.headerTextColor = context.getResources().getColor(R.color.headerColor);
 		config.dayColor = context.getResources().getColor(R.color.dayColor);
 		config.dayOfWeekColor = context.getResources().getColor(R.color.dayOfWeekColor);
 		config.weekendColor = context.getResources().getColor(R.color.weekendColor);

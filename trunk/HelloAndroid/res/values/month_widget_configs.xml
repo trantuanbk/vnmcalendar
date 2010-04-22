@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>	
+    <dimen name="widgetWidth">301px</dimen>
+    <dimen name="widgetHeight">319px</dimen>
+    
+	<dimen name="widgetTitleOffsetX">0px</dimen>
+	<dimen name="widgetTitleOffsetY">0px</dimen>
+	<dimen name="widgetTitleWidth">301px</dimen>
+	<dimen name="widgetTitleHeight">45px</dimen>
+	<dimen name="widgetTitleTextSize">25sp</dimen>
+	<color name="widgetTitleTextColor">#FFF</color>
+	
+	<dimen name="widgetHeaderOffsetX">0px</dimen>
+	<dimen name="widgetHeaderOffsetY">46px</dimen>
+	<dimen name="widgetHeaderWidth">16px</dimen>
+	<dimen name="widgetHeaderHeight">16px</dimen>
+	<dimen name="widgetHeaderTextSize">18sp</dimen>
+	
+	<dimen name="widgetCellOffsetX">-1px</dimen>
+	<dimen name="widgetCellOffsetY">62px</dimen>
+	<dimen name="widgetCellWidth">43px</dimen>
+	<dimen name="widgetCellHeight">43px</dimen>
+	<dimen name="widgetCellMainTextSize">22sp</dimen>
+    <dimen name="widgetCellSubTextSize">13sp</dimen>    
+    
+	<color name="widgetDayColor">#666</color>
+    <color name="widgetDayOfWeekColor">#666</color>
+    <color name="widgetWeekendColor">#D00</color>
+    <color name="widgetHolidayColor">#D00</color>
+</resources>
