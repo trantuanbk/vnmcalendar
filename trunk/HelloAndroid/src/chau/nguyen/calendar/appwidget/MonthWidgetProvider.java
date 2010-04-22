@@ -49,7 +49,9 @@ public class MonthWidgetProvider extends AppWidgetProvider {
 		config.headerWidth = resources.getDimensionPixelOffset(R.dimen.widgetHeaderWidth);
 		config.headerHeight = resources.getDimensionPixelOffset(R.dimen.widgetHeaderHeight);
 		config.headerTextSize = resources.getDimensionPixelSize(R.dimen.widgetHeaderTextSize);
-		config.renderHeader = false;
+		config.headerTextColor = resources.getColor(R.color.widgetHeaderTextColor);
+		config.headerBackground = BitmapFactory.decodeResource(resources, R.drawable.cell_header_bg);
+		//config.renderHeader = false;
 		
 		config.cellOffsetX = resources.getDimensionPixelOffset(R.dimen.widgetCellOffsetX);;
 		config.cellOffsetY = resources.getDimensionPixelOffset(R.dimen.widgetCellOffsetY);;

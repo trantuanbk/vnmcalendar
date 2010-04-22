@@ -128,7 +128,6 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
 	}	
 	
 	public void addEvent() {
-		/*
 		Intent intent = new Intent(Intent.ACTION_EDIT);
 		intent.setClassName("com.android.calendar", "com.android.calendar.EditEvent");
 		Calendar eventCal = Calendar.getInstance();
@@ -140,9 +139,10 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
         intent.putExtra("endTime", eventCal.getTimeInMillis()); 
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		startActivity(intent);
-		*/
+		/*
 		Intent intent = new Intent(this, VNMEventDetailsActivity.class);
 		startActivity(intent);
+		*/
 	}
 	
 	@Override
