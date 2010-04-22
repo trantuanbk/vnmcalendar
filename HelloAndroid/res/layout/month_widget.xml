@@ -6,7 +6,7 @@
     a:layout_gravity="center">
 	<ImageView  
 	   a:layout_width="301px"    
-	   a:layout_height="319px"
+	   a:layout_height="344px"
 	   a:layout_gravity="center"
 	   a:id="@+id/monthViewImage"	   
 	/>
