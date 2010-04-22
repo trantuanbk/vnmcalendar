@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="titleColor">#222</color>
+    <color name="headerColor">#444</color>
     <color name="dayColor">#444</color>
     <color name="dayOfWeekColor">#444</color>
     <color name="weekendColor">#F00</color>
-    <color name="holidayColor">#F00</color>
-    
-    <color name="widgetDayColor">#666</color>
-    <color name="widgetDayOfWeekColor">#666</color>
-    <color name="widgetWeekendColor">#D00</color>
-    <color name="widgetHolidayColor">#D00</color>
+    <color name="holidayColor">#F00</color>        
 </resources>

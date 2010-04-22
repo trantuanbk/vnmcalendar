@@ -13,6 +13,7 @@ import android.appwidget.AppWidgetProvider;
 import android.appwidget.AppWidgetProviderInfo;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -26,23 +27,47 @@ import chau.nguyen.calendar.content.LocalFileContentProvider;
 import chau.nguyen.calendar.ui.MonthViewRenderer;
 
 public class MonthWidgetProvider extends AppWidgetProvider {
-	private static MonthViewRenderer.Config config = null;	
+	private static MonthViewRenderer.Config config = null;
 	private static Bitmap bitmap;	
 	private static Canvas canvas;
 	private static String bitmapCacheFileName = null;
 	
 	private void init(Context context, AppWidgetProviderInfo providerInfo) {		
 		config = new MonthViewRenderer.Config();		
-		config.cellBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.cell_bg);
-		config.cellHeaderBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.cell_header_bg);
-		config.cellHighlightBackground= BitmapFactory.decodeResource(context.getResources(), R.drawable.cell_highlight_bg);
-		config.dayColor = context.getResources().getColor(R.color.widgetDayColor);
-		config.dayOfWeekColor = context.getResources().getColor(R.color.widgetDayOfWeekColor);
-		config.weekendColor = context.getResources().getColor(R.color.widgetWeekendColor);
-		config.holidayColor = context.getResources().getColor(R.color.widgetHolidayColor);
+		config.autoCalculateOffsets = false;
+		
+		Resources resources = context.getResources();
+		config.titleOffsetX = resources.getDimensionPixelOffset(R.dimen.widgetTitleOffsetX);;
+		config.titleOffsetY = resources.getDimensionPixelOffset(R.dimen.widgetTitleOffsetY);;
+		config.titleWidth = resources.getDimensionPixelOffset(R.dimen.widgetTitleWidth);
+		config.titleHeight = resources.getDimensionPixelOffset(R.dimen.widgetTitleHeight);
+		config.titleTextSize = resources.getDimensionPixelSize(R.dimen.widgetTitleTextSize);	
+		config.titleTextColor = resources.getColor(R.color.widgetTitleTextColor);
+		
+		config.headerOffsetX = resources.getDimensionPixelOffset(R.dimen.widgetHeaderOffsetX);;
+		config.headerOffsetY = resources.getDimensionPixelOffset(R.dimen.widgetHeaderOffsetY);;
+		config.headerWidth = resources.getDimensionPixelOffset(R.dimen.widgetHeaderWidth);
+		config.headerHeight = resources.getDimensionPixelOffset(R.dimen.widgetHeaderHeight);
+		config.headerTextSize = resources.getDimensionPixelSize(R.dimen.widgetHeaderTextSize);
+		config.renderHeader = false;
+		
+		config.cellOffsetX = resources.getDimensionPixelOffset(R.dimen.widgetCellOffsetX);;
+		config.cellOffsetY = resources.getDimensionPixelOffset(R.dimen.widgetCellOffsetY);;
+		config.cellWidth = resources.getDimensionPixelOffset(R.dimen.widgetCellWidth);
+		config.cellHeight = resources.getDimensionPixelOffset(R.dimen.widgetCellHeight);
+		config.cellMainTextSize = resources.getDimensionPixelSize(R.dimen.widgetCellMainTextSize);
+		config.cellSubTextSize = resources.getDimensionPixelSize(R.dimen.widgetCellSubTextSize);		
+		config.cellBackground = BitmapFactory.decodeResource(resources, R.drawable.widget_cell_bg);		
+		config.cellHighlightBackground= BitmapFactory.decodeResource(resources, R.drawable.widget_cell_highlight_bg);
+		
+		config.dayColor = resources.getColor(R.color.widgetDayColor);
+		config.dayOfWeekColor = resources.getColor(R.color.widgetDayOfWeekColor);
+		config.weekendColor = resources.getColor(R.color.widgetWeekendColor);
+		config.holidayColor = resources.getColor(R.color.widgetHolidayColor);
 				
-		Bitmap backgroundBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.widget_bg);		
-		bitmap = Bitmap.createBitmap(backgroundBitmap.getWidth(), backgroundBitmap.getHeight(), Bitmap.Config.ARGB_8888);		
+		int widgetWidth = resources.getDimensionPixelSize(R.dimen.widgetWidth);
+		int widgetHeight = resources.getDimensionPixelSize(R.dimen.widgetHeight);
+		bitmap = Bitmap.createBitmap(widgetWidth, widgetHeight, Bitmap.Config.ARGB_8888);		
 		canvas = new Canvas(bitmap);
 	}
 	
@@ -53,6 +78,7 @@ public class MonthWidgetProvider extends AppWidgetProvider {
         	AppWidgetProviderInfo info = appWidgetManager.getAppWidgetInfo(appWidgetIds[0]);
         	init(context, info);
         }
+        Uri bitmapUri = null;
         // do we need to update the widgets?
         Calendar today = Calendar.getInstance();
         if (config.date != null) {
@@ -60,11 +86,13 @@ public class MonthWidgetProvider extends AppWidgetProvider {
 	        currentDate.setTime(config.date);
 	        if (MonthViewRenderer.isSameDate(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH),
 	        		currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH), currentDate.get(Calendar.DAY_OF_MONTH))) {
-	        	return;
+	        	bitmapUri = Uri.parse(LocalFileContentProvider.constructUri(bitmapCacheFileName));
 	        }
         }
+        if (bitmapUri == null) {
+        	bitmapUri = renderWidget(context);
+        }
         
-        Uri bitmapUri = renderWidget(context);
         // Perform this loop procedure for each App Widget that belongs to this provider
         for (int i = 0; i < N; i++) {
             int appWidgetId = appWidgetIds[i];        
@@ -84,7 +112,7 @@ public class MonthWidgetProvider extends AppWidgetProvider {
 		bitmap.eraseColor(Color.TRANSPARENT);
 		config.date = new Date();		
 		MonthViewRenderer monthViewRenderer = new MonthViewRenderer(config);
-		monthViewRenderer.render(canvas);		
+		monthViewRenderer.render(canvas);
 		// write the bitmap to temporary file		
 		if (bitmapCacheFileName != null) {
 			new File(bitmapCacheFileName).delete();
