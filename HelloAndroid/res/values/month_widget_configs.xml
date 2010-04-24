@@ -10,15 +10,15 @@
 	<dimen name="widgetTitleTextSize">25px</dimen>
 	<color name="widgetTitleTextColor">#222</color>
 	
-	<dimen name="widgetHeaderOffsetX">-1px</dimen>
-	<dimen name="widgetHeaderOffsetY">44px</dimen>
+	<dimen name="widgetHeaderOffsetX">0px</dimen>
+	<dimen name="widgetHeaderOffsetY">43px</dimen>
 	<dimen name="widgetHeaderWidth">43px</dimen>
 	<dimen name="widgetHeaderHeight">43px</dimen>
 	<dimen name="widgetHeaderTextSize">18px</dimen>
 	<color name="widgetHeaderTextColor">#222</color>
 	
-	<dimen name="widgetCellOffsetX">-1px</dimen>
-	<dimen name="widgetCellOffsetY">87px</dimen>
+	<dimen name="widgetCellOffsetX">0px</dimen>
+	<dimen name="widgetCellOffsetY">86px</dimen>
 	<dimen name="widgetCellWidth">43px</dimen>
 	<dimen name="widgetCellHeight">43px</dimen>
 	<dimen name="widgetCellMainTextSize">22px</dimen>

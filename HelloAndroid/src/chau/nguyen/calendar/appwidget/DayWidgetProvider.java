@@ -13,7 +13,6 @@ import chau.nguyen.R;
 import chau.nguyen.VNMDayActivity;
 import chau.nguyen.calendar.VietCalendar;
 import chau.nguyen.calendar.VietCalendar.Holiday;
-import chau.nguyen.calendar.ui.MonthViewRenderer;
 
 public class DayWidgetProvider extends AppWidgetProvider {
 	private static Date currentDate = null;
@@ -28,18 +27,7 @@ public class DayWidgetProvider extends AppWidgetProvider {
         	dayOfWeekColor = context.getResources().getColor(R.color.dayOfWeekColor);
     		weekendColor = context.getResources().getColor(R.color.weekendColor);
     		holidayColor = context.getResources().getColor(R.color.holidayColor);
-        }
-        
-        // do we need to update the widgets?
-        Calendar todayCal = Calendar.getInstance();
-        if (currentDate != null) {
-	        Calendar currentCal = Calendar.getInstance();
-	        currentCal.setTime(currentDate);
-	        if (MonthViewRenderer.isSameDate(todayCal.get(Calendar.YEAR), todayCal.get(Calendar.MONTH), todayCal.get(Calendar.DAY_OF_MONTH),
-	        		currentCal.get(Calendar.YEAR), currentCal.get(Calendar.MONTH), currentCal.get(Calendar.DAY_OF_MONTH))) {
-	        	return;
-	        }
-        }
+        }                
                 
         currentDate = new Date();
         Calendar calendar = Calendar.getInstance();
@@ -65,6 +53,7 @@ public class DayWidgetProvider extends AppWidgetProvider {
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.day_widget);
+            views.setTextViewText(R.id.monthText, "Tháng " + month + " năm " + year);
             views.setTextViewText(R.id.dayOfMonthText, dayOfMonth + "");
             views.setTextColor(R.id.dayOfMonthText, dayColor);            
             views.setTextViewText(R.id.dayOfWeekText, VietCalendar.getDayOfWeekText(dayOfWeek));

@@ -185,6 +185,9 @@ public class MonthViewRenderer {
 		public Date selectedDate;
 		public boolean autoCalculateOffsets = true;
 		
+		public int width;
+		public int height;
+		
 		public int titleOffsetX;
 		public int titleOffsetY;
 		public int titleWidth;
@@ -218,6 +221,8 @@ public class MonthViewRenderer {
 		public int holidayColor = 0;
 		
 		public void calculate(int width, int height) {
+			this.width = width;
+			this.height = height;
 			this.cellWidth = width / 7;
 			this.cellHeight = height / 8;
 			
