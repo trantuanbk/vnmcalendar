@@ -6,7 +6,6 @@ import java.util.Date;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
-import android.appwidget.AppWidgetProviderInfo;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
@@ -15,7 +14,7 @@ import chau.nguyen.VNMDayActivity;
 import chau.nguyen.calendar.VietCalendar;
 import chau.nguyen.calendar.VietCalendar.Holiday;
 
-public class DayWidgetProvider extends AppWidgetProvider {
+public class SmallDayWidgetProvider extends AppWidgetProvider {
 	private static Date currentDate = null;
 	private static int dayOfWeekColor = 0;
 	private static int weekendColor = 0;
@@ -50,11 +49,10 @@ public class DayWidgetProvider extends AppWidgetProvider {
 		
         for (int i = 0; i < N; i++) {
             int appWidgetId = appWidgetIds[i];            
-            AppWidgetProviderInfo info = appWidgetManager.getAppWidgetInfo(appWidgetId);
             Intent intent = new Intent(context, VNMDayActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
-            RemoteViews views = new RemoteViews(context.getPackageName(), info.initialLayout);
+            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.small_day_widget);
             views.setTextViewText(R.id.monthText, "Tháng " + month + " năm " + year);
             views.setTextViewText(R.id.dayOfMonthText, dayOfMonth + "");
             views.setTextColor(R.id.dayOfMonthText, dayColor);            
