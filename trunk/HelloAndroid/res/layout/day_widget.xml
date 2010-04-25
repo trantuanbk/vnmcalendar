@@ -14,7 +14,8 @@
         a:gravity="center"
         a:textSize="12sp"
         a:paddingTop="5sp"
-        a:layout_marginRight="5sp"/>
+        a:layout_marginLeft="2sp"
+        a:layout_marginRight="3sp"/>
 	<TextView a:id="@+id/dayOfMonthText"
 		a:layout_width="fill_parent" 
 		a:layout_height="wrap_content" 
@@ -27,7 +28,8 @@
 	    a:padding="0sp"
 		a:layout_weight="1"
 		a:layout_marginTop="-10sp"
-		a:layout_marginRight="5sp"/>
+		a:layout_marginLeft="2sp"
+		a:layout_marginRight="3sp"/>
     <TextView a:id="@+id/dayOfWeekText"
         a:layout_width="fill_parent" 
         a:layout_height="wrap_content"
@@ -37,13 +39,15 @@
         a:textSize="18sp"
         a:paddingTop="8sp"
         a:paddingBottom="2sp"
-        a:layout_marginRight="5sp"/>                
+        a:layout_marginLeft="2sp"
+        a:layout_marginRight="3sp"/>                
     <LinearLayout
         a:orientation="horizontal"
         a:layout_width="fill_parent" 
         a:layout_height="wrap_content"
         a:layout_marginBottom="1sp"
-        a:layout_marginRight="5sp">            
+        a:layout_marginLeft="2sp"
+        a:layout_marginRight="3sp">            
         <TextView
             a:layout_width="fill_parent" 
             a:layout_height="fill_parent"
@@ -71,7 +75,8 @@
         a:orientation="horizontal"
         a:layout_width="fill_parent" 
         a:layout_height="wrap_content"
-        a:layout_marginRight="5sp"
+        a:layout_marginLeft="2sp"
+        a:layout_marginRight="3sp"
         a:layout_marginBottom="5sp">          
         <LinearLayout
             a:orientation="vertical"
