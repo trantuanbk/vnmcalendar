@@ -30,8 +30,9 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
 	private static final int MENU_SELECT_DATE = 1;
 	private static final int MENU_SELECT_TODAY = 2;
 	private static final int MENU_MONTH_VIEW = 3;
-	private static final int MENU_ADD_EVENT = 4;
-	private static final int MENU_ABOUT = 5;
+	private static final int MENU_DAY_INFO = 4;
+	private static final int MENU_ADD_EVENT = 5;
+	private static final int MENU_ABOUT = 6;
 	//private static int MENU_SETTINGS = 4;
 	public static final int DATE_DIALOG_ID = 0;
 	public static final int ABOUT_DIALOG_ID = 1;
@@ -59,11 +60,12 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-    	menu.add(0, MENU_SELECT_DATE, 0, "Chọn ngày").setIcon(android.R.drawable.ic_menu_day);
-    	menu.add(0, MENU_SELECT_TODAY, 0, "Hôm nay").setIcon(android.R.drawable.ic_menu_today);    	
-    	menu.add(0, MENU_MONTH_VIEW, 0, "Xem tháng").setIcon(android.R.drawable.ic_menu_month);
+    	menu.add(0, MENU_DAY_INFO, 0, "Thông tin").setIcon(android.R.drawable.ic_menu_info_details);
     	menu.add(0, MENU_ADD_EVENT, 0, "Thêm sự kiện").setIcon(android.R.drawable.ic_menu_add);
-    	menu.add(0, MENU_ABOUT, 0, "Giới thiệu").setIcon(android.R.drawable.ic_menu_info_details);;
+    	menu.add(0, MENU_MONTH_VIEW, 0, "Xem tháng").setIcon(android.R.drawable.ic_menu_month);
+    	menu.add(0, MENU_SELECT_DATE, 0, "Chọn ngày").setIcon(android.R.drawable.ic_menu_day);
+    	menu.add(0, MENU_SELECT_TODAY, 0, "Hôm nay").setIcon(android.R.drawable.ic_menu_today);    	    	
+    	menu.add(0, MENU_ABOUT, 0, "Giới thiệu").setIcon(android.R.drawable.ic_menu_help);
     	//menu.add(0, MENU_SETTINGS, 0, "Tùy chọn").setIcon(android.R.drawable.ic_menu_preferences);
     	return true;
     }
@@ -76,8 +78,10 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
     		selectDate();
     	} else if (item.getItemId() == MENU_SELECT_TODAY) {
     		gotoTime(new Date());
+    	} else if (item.getItemId() == MENU_DAY_INFO) {
+    		showDayInfo();
     	} else if (item.getItemId() == MENU_ADD_EVENT) {
-    		addEvent();
+    		addEvent();    		
     	} else if (item.getItemId() == MENU_ABOUT) {
     		showDialog(ABOUT_DIALOG_ID);
     	}
@@ -127,6 +131,12 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
 		startActivityForResult(monthIntent, SELECT_DATE);
 	}	
 	
+	public void showDayInfo() {
+		Intent dayInfoIntent = new Intent(this, DayInfoActivity.class);
+		dayInfoIntent.putExtra("Date", this.date.getTime());
+		startActivity(dayInfoIntent);
+	}
+	
 	public void addEvent() {
 		Intent intent = new Intent(Intent.ACTION_EDIT);
 		intent.setClassName("com.android.calendar", "com.android.calendar.EditEvent");
@@ -156,8 +166,7 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
 			cal.setTimeInMillis(result);
 			gotoTime(cal.getTime());
 			break;
-		default:
-			
+		default:			
 			break;
 		}
 	}
@@ -221,9 +230,11 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
 			cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 			Log.i("VNMDayActivity", "The day that you selected is: " + dayOfMonth + "/" + monthOfYear + "/" + year);
 			if (isSolarSelected) {
-				currentView.setDate(cal.getTime());
+				date = cal.getTime();
+				currentView.setDate(cal.getTime());				
 			} else {
 				currentView.setLunarDate(dayOfMonth, monthOfYear, year);
+				date = currentView.getDisplayDate();
 			}
 		}
 	};

@@ -99,7 +99,8 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 		this.contextMenuClickHandler = new ContextMenuClickHandler();
 		this.gestureDetector = new GestureDetector(getContext(), new GestureDetector.OnGestureListener() {
 			public boolean onSingleTapUp(MotionEvent e) {
-				return false;
+				VNMDayViewer.this.dayViewActivity.showDayInfo();
+				return true;
 			}
 			public void onShowPress(MotionEvent e) {
 			}
