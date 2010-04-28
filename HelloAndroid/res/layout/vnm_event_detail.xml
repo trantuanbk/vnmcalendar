@@ -1,13 +1,14 @@
 <ScrollView xmlns:a="http://schemas.android.com/apk/res/android"
     a:id="@+id/scroll_view"
     a:layout_width="fill_parent"
-    a:layout_height="fill_parent">
-
+    a:layout_height="fill_parent"
+	>
     <LinearLayout a:id="@+id/event"
         a:background="#fafafa"
         a:orientation="vertical"
         a:layout_width="fill_parent"
-        a:layout_height="fill_parent">
+        a:layout_height="fill_parent"
+        a:padding="10sp">
 
         <!-- WHAT -->
         <LinearLayout
@@ -25,7 +26,8 @@
                 a:layout_width="fill_parent"
                 a:layout_height="wrap_content"
                 a:hint="@string/hint_what"
-                a:capitalize="words"/>
+                a:capitalize="words"
+                a:paddingLeft="5sp"/>
         </LinearLayout>
 
         <!-- WHEN -->
@@ -44,7 +46,8 @@
             <LinearLayout
                 a:orientation="horizontal"
                 a:layout_width="fill_parent"
-                a:layout_height="wrap_content">
+                a:layout_height="wrap_content"
+                >
 
                 <Button a:id="@+id/startDateButton"
                     a:layout_width="0px"
@@ -71,7 +74,8 @@
             <LinearLayout
                 a:orientation="horizontal"
                 a:layout_width="fill_parent"
-                a:layout_height="wrap_content">
+                a:layout_height="wrap_content"
+                >
 
                 <Button a:id="@+id/endDateButton"
                     a:layout_width="0px"
@@ -92,7 +96,7 @@
                 a:layout_width="fill_parent"
                 a:layout_height="wrap_content"
                 a:gravity="center_vertical|right"
-                a:paddingBottom="5dip">
+                >
                 <TextView
                     a:layout_width="wrap_content"
                     a:layout_height="wrap_content"
@@ -131,9 +135,14 @@
                 a:layout_width="fill_parent"
                 a:layout_height="wrap_content"
                 a:hint="@string/hint_where"
-                a:capitalize="sentences"/>
+                a:capitalize="sentences"
+                a:paddingLeft="5sp"/>
         </LinearLayout>
-
+		<View
+            a:layout_width="fill_parent"
+            a:layout_height="1dip"
+            a:background="@android:drawable/divider_horizontal_bright"
+        />
         <!-- DESCRIPTION -->
         <LinearLayout
             a:orientation="vertical"
@@ -151,8 +160,14 @@
                 a:layout_width="fill_parent"
                 a:layout_height="wrap_content"
                 a:hint="@string/hint_description"
-                a:capitalize="sentences"/>
+                a:capitalize="sentences"
+                a:paddingLeft="5sp"/>
         </LinearLayout>
+        <View
+            a:layout_width="fill_parent"
+            a:layout_height="1dip"
+            a:background="@android:drawable/divider_horizontal_bright"
+        />
         <!-- REPEATS -->
         <LinearLayout
             a:orientation="vertical"
@@ -169,9 +184,14 @@
             <Spinner a:id="@+id/repeatsDropDown"
                 a:layout_width="fill_parent"
                 a:layout_height="wrap_content"
-                a:prompt="@string/repeats_label"/>
+                a:prompt="@string/repeats_label"
+                a:paddingLeft="5sp"/>
         </LinearLayout>
-
+		<View
+            a:layout_width="fill_parent"
+            a:layout_height="1dip"
+            a:background="@android:drawable/divider_horizontal_bright"
+        />
         <!-- REMINDERS -->
         <View a:id="@+id/remindersSeparator"
             a:layout_width="fill_parent"
@@ -193,7 +213,8 @@
            <Spinner a:id="@+id/remindersDropDown"
                 a:layout_width="fill_parent"
                 a:layout_height="wrap_content"
-                a:prompt="@string/reminders_label"/> 
+                a:prompt="@string/reminders_label"
+                a:paddingLeft="5sp"/> 
         </LinearLayout>
 
         <!-- BUTTONS -->
