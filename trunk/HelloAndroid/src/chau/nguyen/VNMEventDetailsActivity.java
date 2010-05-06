@@ -39,6 +39,7 @@ public class VNMEventDetailsActivity extends Activity {
 	private static final int REMIND_1_DAY = 2; // one day = 1440 minutes
 	private static Map<Integer, String> reminds;
 	private static Map<Integer, String> repeations;
+	private static Map<Integer, CalTable> calendars;
 	private Date startDate;
 	private Date endDate;
 	protected EditText titleEditText;
@@ -52,6 +53,7 @@ public class VNMEventDetailsActivity extends Activity {
 	protected Button discardButton;
 	protected Spinner repeatsDropDown;
 	protected Spinner remindersDropDown;
+	protected Spinner calendarsDropDown;
 	
 	static {
 		reminds = new HashMap<Integer, String>();
@@ -64,6 +66,8 @@ public class VNMEventDetailsActivity extends Activity {
 		repeations.put(DAILY_REPEAT, "Hàng ngày");
 		repeations.put(MONTHLY_REPEAT, "Hàng tháng");
 		repeations.put(YEARLY_REPEAT, "Hàng năm");
+		
+		calendars = new HashMap<Integer, CalTable>();
 	}
 	
 	private static long getRemindTime(int id) {
@@ -95,6 +99,7 @@ public class VNMEventDetailsActivity extends Activity {
 		this.discardButton = (Button)findViewById(R.id.discardButton);
 		this.remindersDropDown = (Spinner)findViewById(R.id.remindersDropDown);
 		this.repeatsDropDown = (Spinner)findViewById(R.id.repeatsDropDown);
+		this.calendarsDropDown = (Spinner)findViewById(R.id.calendarsDropDown);
 		Calendar cal = Calendar.getInstance();
 		this.startDate = cal.getTime();
 		setDate(this.startDateButton, cal.getTime());
@@ -152,21 +157,58 @@ public class VNMEventDetailsActivity extends Activity {
 			}
 			
 		});
+		String[] projection = new String[] { "_id", "name" };
+		Uri cals = Uri.parse("content://calendar/calendars");
+		Cursor managedCursor = managedQuery(cals, projection, "selected=1", null, null);
+		if (managedCursor.moveToFirst()) {
+			 String calId;
+			 String calName;
+			 int idColumn = managedCursor.getColumnIndex("_id");
+			 int nameColumn = managedCursor.getColumnIndex("name");
+			 int index = 0;
+			 do {
+			    calId = managedCursor.getString(idColumn);
+			    calName = managedCursor.getString(nameColumn);
+			    calendars.put(index, new CalTable(calId, calName));
+			    index++;
+			 } while (managedCursor.moveToNext());
+			 calendars.put(index, new CalTable(CalTable.ALL, "Tất cả"));
+		}
+		ArrayAdapter<String> calAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
+		for (Integer item : calendars.keySet()) {
+			calAdapter.insert(calendars.get(item).name, item);
+		}
+		calAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		this.calendarsDropDown.setAdapter(calAdapter);
+		this.calendarsDropDown.setSelection(calAdapter.getCount() - 1);
+		this.calendarsDropDown.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View view,
+					int position, long arg3) {
+				calendarsDropDown.setSelection(position);
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
 		
 		this.saveButton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				String[] projection = new String[] { "_id", "name" };
-				Uri calendars = Uri.parse("content://calendar/calendars");
-				Cursor managedCursor = managedQuery(calendars, projection, "selected=1", null, null);
-				if (managedCursor.moveToFirst()) {
-					 String calId; 
-					 int idColumn = managedCursor.getColumnIndex("_id");
-					 do {
-					    calId = managedCursor.getString(idColumn);
-					    addEvent(calId);
-					 } while (managedCursor.moveToNext());
+				Integer selected = calendarsDropDown.getSelectedItemPosition();
+				String calId = ((CalTable)calendars.get(selected)).id;
+				if (CalTable.ALL.equals(calId)) {
+					for (int i = 0; i < calendars.size() - 1; i++) {
+						addEvent(((CalTable)calendars.get((Integer)i)).id);
+					}
+				} else {
+					addEvent(calId);
 				}
 				finish();
 			}
@@ -392,4 +434,13 @@ public class VNMEventDetailsActivity extends Activity {
 		
 	}
 	
+	private class CalTable {
+		public static final String ALL = "ALL";
+		public String id;
+		public String name;
+		public CalTable(String id, String name) {
+			this.id = id;
+			this.name = name;
+		}
+	}
 }
