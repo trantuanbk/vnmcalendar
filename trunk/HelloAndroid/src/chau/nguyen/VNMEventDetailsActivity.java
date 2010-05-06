@@ -247,24 +247,24 @@ public class VNMEventDetailsActivity extends Activity {
 		switch (this.repeatsDropDown.getSelectedItemPosition()) {
 		case YEARLY_REPEAT:
 			for (int i = 0; i <= 10; i++) {
-				calStart.add(Calendar.YEAR, i);
-				calEnd.add(Calendar.YEAR, i);
+				calStart.add(Calendar.YEAR, 1);
+				calEnd.add(Calendar.YEAR, 1);
 				createEvent(event, calStart.getTime(), calEnd.getTime());
 			}
 			break;
 		
 		case MONTHLY_REPEAT:
 			for (int i = 0; i <= 120; i++) {
-				calStart.add(Calendar.MONTH, i);
-				calEnd.add(Calendar.MONTH, i);
+				calStart.add(Calendar.MONTH, 1);
+				calEnd.add(Calendar.MONTH, 1);
 				createEvent(event, calStart.getTime(), calEnd.getTime());
 			}
 		break;
 			
 		case DAILY_REPEAT:
 			for (int i = 0; i <= 3600; i++) {
-				calStart.add(Calendar.DAY_OF_MONTH, i);
-				calEnd.add(Calendar.DAY_OF_MONTH, i);
+				calStart.add(Calendar.DAY_OF_MONTH, 1);
+				calEnd.add(Calendar.DAY_OF_MONTH, 1);
 				createEvent(event, calStart.getTime(), calEnd.getTime());
 			}
 			break;
@@ -281,22 +281,26 @@ public class VNMEventDetailsActivity extends Activity {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(startDate);
 		int lunarDay = cal.get(Calendar.DAY_OF_MONTH);
-		int lunarMonth = cal.get(Calendar.MONTH);
+		int lunarMonth = cal.get(Calendar.MONTH) + 1;
 		int lunarYear = cal.get(Calendar.YEAR);
+		Log.i("Event", "startLunarDay: " + lunarDay + "/" + lunarMonth + "/" + lunarYear);
 		int temp[] = VietCalendar.convertLunar2Solar(lunarDay, lunarMonth, lunarYear);
 		cal.set(Calendar.DAY_OF_MONTH, temp[0]);
-		cal.set(Calendar.MONTH, temp[1]);
+		cal.set(Calendar.MONTH, temp[1] - 1);
 		cal.set(Calendar.YEAR, temp[2]);
+		Log.i("Event", "startSolarDay: " + temp[0] + "/" + temp[1] + "/" + temp[2]);
 		Date solarStartDate = cal.getTime();
 		
 		cal.setTime(endDate);
 		lunarDay = cal.get(Calendar.DAY_OF_MONTH);
-		lunarMonth = cal.get(Calendar.MONTH);
+		lunarMonth = cal.get(Calendar.MONTH) + 1;
 		lunarYear = cal.get(Calendar.YEAR);
+		Log.i("Event", "endLunarDay: " + lunarDay + "/" + lunarMonth + "/" + lunarYear);
 		temp = VietCalendar.convertLunar2Solar(lunarDay, lunarMonth, lunarYear);
 		cal.set(Calendar.DAY_OF_MONTH, temp[0]);
-		cal.set(Calendar.MONTH, temp[1]);
+		cal.set(Calendar.MONTH, temp[1] - 1);
 		cal.set(Calendar.YEAR, temp[2]);
+		Log.i("Event", "endSolarDay: " + temp[0] + "/" + temp[1] + "/" + temp[2]);
 		Date solarEndDate = cal.getTime();
 		long startTime = solarStartDate.getTime();
 		long endTime = solarEndDate.getTime();
