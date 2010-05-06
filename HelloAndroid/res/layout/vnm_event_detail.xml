@@ -19,6 +19,7 @@
                 a:layout_width="wrap_content"
                 a:layout_height="wrap_content"
                 a:text="@string/calendars_label"
+                a:textColor="@color/commonTextView"
                 />
 	        <Spinner a:id="@+id/calendarsDropDown"
 	                a:layout_width="fill_parent"
@@ -36,6 +37,7 @@
                 a:layout_width="wrap_content"
                 a:layout_height="wrap_content"
                 a:text="@string/what_label"
+                a:textColor="@color/commonTextView"
                 />
 
             <EditText a:id="@+id/titleEditText"
@@ -57,6 +59,7 @@
                 a:layout_width="wrap_content"
                 a:layout_height="wrap_content"
                 a:text="@string/edit_event_from_label"
+                a:textColor="@color/commonTextView"
                 />
 
             <LinearLayout
@@ -85,6 +88,7 @@
                 a:layout_width="wrap_content"
                 a:layout_height="wrap_content"
                 a:text="@string/edit_event_to_label"
+                a:textColor="@color/commonTextView"
                 />
 
             <LinearLayout
@@ -146,6 +150,7 @@
                 a:layout_width="wrap_content"
                 a:layout_height="wrap_content"
                 a:text="@string/where_label"
+                a:textColor="@color/commonTextView"
                 />
 
             <EditText a:id="@+id/locationEditText"
@@ -171,6 +176,7 @@
                 a:layout_width="wrap_content"
                 a:layout_height="wrap_content"
                 a:text="@string/description_label"
+                a:textColor="@color/commonTextView"
                 />
 
             <EditText a:id="@+id/descriptionEditText"
@@ -196,6 +202,7 @@
                 a:layout_width="wrap_content"
                 a:layout_height="wrap_content"
                 a:text="@string/repeats_label"
+                a:textColor="@color/commonTextView"
                 />
 
             <Spinner a:id="@+id/repeatsDropDown"
@@ -226,6 +233,7 @@
                 a:layout_width="wrap_content"
                 a:layout_height="wrap_content"
                 a:text="@string/reminders_label"
+                a:textColor="@color/commonTextView"
                 />
            <Spinner a:id="@+id/remindersDropDown"
                 a:layout_width="fill_parent"
