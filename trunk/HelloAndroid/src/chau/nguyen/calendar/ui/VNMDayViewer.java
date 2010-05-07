@@ -6,7 +6,6 @@ import java.util.Date;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -129,21 +128,21 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
     				if (velocityX < 0) {
     					calendar.add(Calendar.DAY_OF_MONTH, 1);
     					Date afterDate = calendar.getTime();
-    					VNMDayViewer.this.navigator.gotoTime(afterDate);
+    					VNMDayViewer.this.navigator.gotoDate(afterDate);
     				} else {
     					calendar.add(Calendar.DAY_OF_MONTH, -1);
     					Date beforeDate = calendar.getTime();
-    					VNMDayViewer.this.navigator.gotoTime(beforeDate);
+    					VNMDayViewer.this.navigator.gotoDate(beforeDate);
     				}
     			} else {
 	                if (velocityY < 0) {
 						calendar.add(Calendar.MONTH, 1);
 						Date afterDate = calendar.getTime();
-						VNMDayViewer.this.navigator.gotoTime(afterDate);
+						VNMDayViewer.this.navigator.gotoDate(afterDate);
 					} else {
 						calendar.add(Calendar.MONTH, -1);
 						Date beforeDate = calendar.getTime();
-						VNMDayViewer.this.navigator.gotoTime(beforeDate);
+						VNMDayViewer.this.navigator.gotoDate(beforeDate);
 					}
                 }
                 
@@ -214,18 +213,10 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 		this.vnmHourInText.setText(vnmCalendarTexts[VietCalendar.HOUR]);
 		this.vnmDayOfMonthInText.setText(vnmCalendarTexts[VietCalendar.DAY]);
 		this.vnmMonthInText.setText(vnmCalendarTexts[VietCalendar.MONTH]);
-		this.vnmYearInText.setText(vnmCalendarTexts[VietCalendar.YEAR]);			
-	}
-	
-	public void setLunarDate(int day, int month, int year) {
-		int[] solar = VietCalendar.convertLunar2Solar(day, month + 1, year);
-		Log.i("VNMDayActivity", "Solar day is: " + solar[0] + "/" + solar[1] + "/" + solar[2]);
-		Calendar cal = Calendar.getInstance();
-		cal.set(Calendar.DAY_OF_MONTH, solar[0]);
-		cal.set(Calendar.MONTH, solar[1] - 1);
-		cal.set(Calendar.YEAR, solar[2]);
-		setDate(cal.getTime());
-	}
+		this.vnmYearInText.setText(vnmCalendarTexts[VietCalendar.YEAR]);	
+		
+		this.invalidate();
+	}		
 	
 	public void setNote(String note) {
 		this.noteText.setText(note);

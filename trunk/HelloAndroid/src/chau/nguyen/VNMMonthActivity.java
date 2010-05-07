@@ -56,7 +56,7 @@ public class VNMMonthActivity extends VNMCalendarViewActivity {
     	//this.finishActivity(VNMDayActivity.SELECT_DATE);
     }    
 
-	public void gotoTime(Date date) {		
+	public void gotoDate(Date date) {		
 		VNMMonthViewer currentView = (VNMMonthViewer)this.switcher.getCurrentView();
 		Date currentDate = currentView.getDisplayDate(); 
 		if (date.after(currentDate)) {

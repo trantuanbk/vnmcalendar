@@ -6,7 +6,9 @@ import java.util.GregorianCalendar;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.Paint.Align;
 import android.graphics.drawable.Drawable;
@@ -95,6 +97,7 @@ public class MonthViewRenderer {
 	
 	private void drawTitle(Canvas canvas, int cellX, int cellY, int cellWidth, int cellHeight, int month, int year) {
 		Paint paint = new Paint();
+		paint.setShadowLayer(1, 0, 0, Color.GRAY);
 		paint.setColor(config.titleTextColor);
 		paint.setTextAlign(Align.CENTER);
 		paint.setAntiAlias(true);
@@ -113,7 +116,8 @@ public class MonthViewRenderer {
 	
 	private void drawHeader(Canvas canvas, int cellX, int cellY, int cellWidth, int cellHeight, int j) {
 		Paint paint = new Paint();
-		paint.setColor(config.dayOfWeekColor);
+		paint.setShadowLayer(1, 0, 0, Color.GRAY);
+		paint.setColor(config.headerTextColor);
 		paint.setTextAlign(Align.CENTER);
 		paint.setAntiAlias(true);
 		paint.setTextSize(config.headerTextSize);
@@ -136,12 +140,13 @@ public class MonthViewRenderer {
 	private void drawCellContent(Canvas canvas, int cellX, int cellY, int cellWidth, int cellHeight, 
 			int day, int month, int year, int dayOfWeek, boolean highlight) {		
 		Paint paint = new Paint();
-		paint.setColor(config.dayColor);
+		paint.setShadowLayer(1, 0, 0, Color.GRAY);
+		paint.setColor(config.dayColor);		
 		if (dayOfWeek == 6) {
 			paint.setColor(config.weekendColor);
 		}
 		paint.setAntiAlias(true);
-		paint.setTextAlign(Align.CENTER);	
+		paint.setTextAlign(Align.CENTER);		
 		paint.setTextSize(config.cellMainTextSize);
 		paint.setDither(true);		
 		
@@ -161,12 +166,31 @@ public class MonthViewRenderer {
 			if (holiday != null) {
 				paint.setColor(config.holidayColor);
 			}
-			canvas.drawText(day + "", x, y, paint);
+			String dayText = "" + day;
+			canvas.drawText(dayText, x, y, paint);
+			
+//			Paint strokePaint = new Paint();
+//		    strokePaint.setColor(Color.WHITE);
+//		    strokePaint.setAntiAlias(true);
+//		    strokePaint.setTextAlign(Align.CENTER);
+//		    strokePaint.setTextSize(config.cellMainTextSize);		    
+//		    strokePaint.setStyle(Paint.Style.STROKE);
+//		    strokePaint.setStrokeWidth(2);
+//		    canvas.drawText(dayText, x, y, strokePaint);
+		    
+		    canvas.drawText(dayText, x, y, paint);
+			//Path path = new Path();
+			//paint.getTextPath(dayText, 0, dayText.length(), x, y, path);
+			//paint.setColor(Color.WHITE);
+			//canvas.drawPath(path, paint);
+			
+			paint.setColor(config.dayColor);
 			paint.setTextSize(config.cellSubTextSize);
+			paint.setTextAlign(Align.RIGHT);
 			if (lunars[0] == 1) {
-				canvas.drawText(lunars[0] + "/" + lunars[1], x + 10, y + 15, paint);
+				canvas.drawText(lunars[VietCalendar.DAY] + "/" + lunars[VietCalendar.MONTH], cellX + cellWidth - 5, y + config.cellSubTextSize + 2, paint);
 			} else {
-				canvas.drawText(lunars[0] + "", x + 10, y + 15, paint);
+				canvas.drawText(lunars[VietCalendar.DAY] + "", cellX + cellWidth - 5, y + config.cellSubTextSize + 2, paint);
 			}
 		}
 	}		
@@ -240,7 +264,12 @@ public class MonthViewRenderer {
 			this.headerHeight = this.cellHeight;
 			
 			this.cellOffsetX = startX;
-			this.cellOffsetY = this.headerOffsetY + this.headerHeight;			
+			this.cellOffsetY = this.headerOffsetY + this.headerHeight;
+			
+			this.cellMainTextSize = (int)((float)cellHeight * 2 / 5);
+			this.cellSubTextSize = (int)((float)this.cellMainTextSize * 3 / 5);
+			this.headerTextSize = (int)((float)this.cellMainTextSize * 2 / 3);
+			this.titleTextSize = (int)((float)this.cellMainTextSize);
 		}
 	}	
 }

@@ -11,7 +11,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +20,7 @@ import android.view.animation.Animation;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
+import chau.nguyen.calendar.VietCalendar;
 import chau.nguyen.calendar.ui.VNMDatePickerDialog;
 import chau.nguyen.calendar.ui.VNMDayViewer;
 
@@ -77,7 +77,7 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
     	} else if (item.getItemId() == MENU_SELECT_DATE) {
     		selectDate();
     	} else if (item.getItemId() == MENU_SELECT_TODAY) {
-    		gotoTime(new Date());
+    		gotoDate(new Date());
     	} else if (item.getItemId() == MENU_DAY_INFO) {
     		showDayInfo();
     	} else if (item.getItemId() == MENU_ADD_EVENT) {
@@ -88,7 +88,7 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
     	return true;
     }    	
 
-	public void gotoTime(Date date) {		
+	public void gotoDate(Date date) {		
 		VNMDayViewer currentView = (VNMDayViewer)this.switcher.getCurrentView();		
 		Date currentDate = currentView.getDisplayDate();
 		Calendar cal = Calendar.getInstance();
@@ -119,6 +119,12 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
 		next.setDate(date);
 		this.date = date;
 		this.switcher.showNext();
+	}
+	
+	private void setDate(Date date) {
+		this.date = date;
+		VNMDayViewer currentView = (VNMDayViewer)switcher.getCurrentView();		
+		currentView.setDate(date);
 	}
 	
 	public void selectDate() {
@@ -166,7 +172,7 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
 			long result = data.getLongExtra(VNMMonthActivity.SELECTED_DATE_RETURN, 0);
 			Calendar cal = Calendar.getInstance();
 			cal.setTimeInMillis(result);
-			gotoTime(cal.getTime());
+			setDate(cal.getTime());
 			break;
 		default:			
 			break;
@@ -191,6 +197,8 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
 	    	case DATE_DIALOG_ID:
 	    		Calendar cal = Calendar.getInstance();
 	    		cal.setTime(this.date);
+	    		//return new DatePickerDialog(this, null, 
+	    		//		cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
 	    		return new VNMDatePickerDialog(this, mDateSetListener, 
 	    				cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
 	    	case ABOUT_DIALOG_ID:
@@ -221,22 +229,21 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
 	    return null;
 	}
 	
-	// the callback received when the user "sets" the date in the dialog
 	private VNMDatePickerDialog.OnDateSetListener mDateSetListener = new VNMDatePickerDialog.OnDateSetListener() {
 		public void onDateSet(DatePicker view, boolean isSolarSelected, int year, int monthOfYear,
-				int dayOfMonth) {
-			VNMDayViewer currentView = (VNMDayViewer)switcher.getCurrentView();
-			Calendar cal = Calendar.getInstance();
-			cal.set(Calendar.YEAR, year);
-			cal.set(Calendar.MONTH, monthOfYear);
-			cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-			Log.i("VNMDayActivity", "The day that you selected is: " + dayOfMonth + "/" + monthOfYear + "/" + year);
+				int dayOfMonth) {			
+			Calendar cal = Calendar.getInstance();						
 			if (isSolarSelected) {
-				date = cal.getTime();
-				currentView.setDate(cal.getTime());				
+				cal.set(Calendar.YEAR, year);
+				cal.set(Calendar.MONTH, monthOfYear);
+				cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+				setDate(cal.getTime());								
 			} else {
-				currentView.setLunarDate(dayOfMonth, monthOfYear, year);
-				date = currentView.getDisplayDate();
+				int[] solar = VietCalendar.convertLunar2Solar(dayOfMonth, monthOfYear + 1, year);				
+				cal.set(Calendar.DAY_OF_MONTH, solar[VietCalendar.DAY]);
+				cal.set(Calendar.MONTH, solar[VietCalendar.MONTH] - 1);
+				cal.set(Calendar.YEAR, solar[VietCalendar.YEAR]);
+				setDate(cal.getTime());				
 			}
 		}
 	};

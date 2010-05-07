@@ -66,7 +66,6 @@ public class VNMDatePickerDialog extends AlertDialog implements OnClickListener,
      public VNMDatePickerDialog(Context context, OnDateSetListener callBack, int year, int monthOfYear, int dayOfMonth) {
          this(context, android.R.style.Theme_Dialog,
                  callBack, year, monthOfYear, dayOfMonth);
-
      }
      /**
 
@@ -84,7 +83,7 @@ public class VNMDatePickerDialog extends AlertDialog implements OnClickListener,
 
       */
      public VNMDatePickerDialog(Context context, int theme, OnDateSetListener callBack, int year, int monthOfYear, int dayOfMonth) {
-        super(context, theme);
+        super(context);        
         mCallBack = callBack;
         mInitialYear = year;
         mInitialMonth = monthOfYear;

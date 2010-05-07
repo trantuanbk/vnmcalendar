@@ -272,8 +272,6 @@ public class VNMEventDetailsActivity extends Activity {
 			createEvent(event, this.startDate, this.endDate);
 			break;
 		}
-		
-
 	}
 	
 	private void createEvent(ContentValues event, Date startDate, Date endDate) {

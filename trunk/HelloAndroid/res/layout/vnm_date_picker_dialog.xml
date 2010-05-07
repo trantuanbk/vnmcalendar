@@ -4,9 +4,10 @@
               a:layout_height="fill_parent"
               >
     <RadioGroup
-      a:layout_width="fill_parent"
+      a:layout_width="wrap_content"
       a:layout_height="wrap_content"
       a:orientation="horizontal"
+      a:layout_gravity="center_horizontal"
       a:layout_weight="1">
       <RadioButton a:id="@+id/radio_solar"
           a:layout_width="wrap_content"
