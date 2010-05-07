@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:a="http://schemas.android.com/apk/res/android"
     a:layout_width="320px"    
-    a:layout_height="400px"
-    a:background="@drawable/pattern_month_widget_bg"
+    a:layout_height="400px"    
     a:layout_gravity="center">
 	<ImageView  
 	   a:layout_width="301px"    

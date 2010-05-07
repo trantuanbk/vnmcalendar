@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.TimeZone;
 
 /**
 * @author Hồ Ngọc Đức
@@ -264,9 +263,10 @@ public class VietCalendar {
     }
     
     private static double getVNMTimeZone() {
-    	Calendar calendar = Calendar.getInstance();
-		TimeZone tz = calendar.getTimeZone();
-		return tz.getRawOffset() / 3600000;	
+    	return +7;
+    	//Calendar calendar = Calendar.getInstance();
+		//TimeZone tz = calendar.getTimeZone();
+		//return tz.getRawOffset() / 3600000;	
     }
     
     /**
@@ -287,6 +287,13 @@ public class VietCalendar {
     	} else return convertLunar2Solar(lunarDay, lunarMonth, lunarYear, true, timeZone);
     }
     
+    /**
+     * Hàm chuyển đổi từ Âm Lịch sang Dương Lịch
+     * @param lunarDay ngày Âm Lịch 1-30
+     * @param lunarMonth tháng Âm Lịch 1 - 12
+     * @param lunarYear năm Âm Lịch
+     * @return
+     */
     public static int[] convertLunar2Solar(int lunarDay, int lunarMonth, int lunarYear) {
     	double timeZone = getVNMTimeZone();
     	return convertLunar2Solar(lunarDay, lunarMonth, lunarYear, timeZone);
@@ -294,7 +301,7 @@ public class VietCalendar {
     
     /**
      * Hàm chuyển đổi từ Âm Lịch sang Dương Lịch
-     * @param lunarDay : ngày Âm Lịch 0 - 30
+     * @param lunarDay : ngày Âm Lịch 1 - 30
      * @param lunarMonth : tháng Âm Lịch 1 - 12
      * @param lunarYear : năm Âm Lịch
      * @param lunarLeap : năm nhuận? 0 - 1
