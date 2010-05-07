@@ -66,6 +66,35 @@ public class VietCalendar {
     	return dayOfWeekInVietnamese[dayOfWeek - 1];
     }
     
+    public static VNMDate addMonth(VNMDate date, int offset) {
+    	VNMDate newDate = new VNMDate();
+    	newDate.setDayOfMonth(date.getDayOfMonth());
+    	int month = date.getMonth() + offset;
+    	if (month > 12) {
+    		newDate.setMonth(month - 12);
+    		newDate.setYear(date.getYear() + 1);
+    	} else if (month < 1) {
+    		newDate.setMonth(month + 12);
+    		newDate.setYear(date.getYear() + 1);
+    	} else {
+    		newDate.setMonth(month);
+    		newDate.setYear(date.getYear());
+    	}
+    	newDate.setHourOfDay(date.getHourOfDay());
+    	newDate.setMinute(date.getMinute());
+    	return newDate;
+    }
+    
+    public static VNMDate addYear(VNMDate date, int offset) {
+    	VNMDate newDate = new VNMDate();
+    	newDate.setDayOfMonth(date.getDayOfMonth());
+    	newDate.setMonth(date.getMonth());
+    	newDate.setYear(date.getYear() + offset);
+    	newDate.setHourOfDay(date.getHourOfDay());
+    	newDate.setMinute(date.getMinute());
+    	return newDate;
+    }
+    
     /**
      *
      * @param dd
@@ -262,6 +291,19 @@ public class VietCalendar {
 		return VietCalendar.convertSolar2Lunar(day, month, year, getVNMTimeZone());
     }
     
+    public static VNMDate convertSolar2LunarInVietnamese(Date date) {
+    	Calendar cal = Calendar.getInstance();
+    	cal.setTime(date);
+    	int[] temp = convertSolar2LunarInVietnam(date);
+    	VNMDate result = new VNMDate();
+    	result.setDayOfMonth(temp[0]);
+    	result.setMonth(temp[1]);
+    	result.setYear(temp[2]);
+    	result.setHourOfDay(cal.get(Calendar.HOUR_OF_DAY));
+    	result.setMinute(cal.get(Calendar.MINUTE));
+    	return result;
+    }
+    
     private static double getVNMTimeZone() {
     	return +7;
     	//Calendar calendar = Calendar.getInstance();
@@ -297,6 +339,17 @@ public class VietCalendar {
     public static int[] convertLunar2Solar(int lunarDay, int lunarMonth, int lunarYear) {
     	double timeZone = getVNMTimeZone();
     	return convertLunar2Solar(lunarDay, lunarMonth, lunarYear, timeZone);
+    }
+    
+    public static Date convertLunar2Solar(VNMDate vnmDate) {
+    	int[] temp = convertLunar2Solar(vnmDate.getDayOfMonth(), vnmDate.getMonth(), vnmDate.getYear());
+    	Calendar cal = Calendar.getInstance();
+    	cal.set(Calendar.DAY_OF_MONTH, temp[0]);
+    	cal.set(Calendar.MONTH, temp[1] - 1);
+    	cal.set(Calendar.YEAR, temp[2]);
+    	cal.set(Calendar.HOUR_OF_DAY, vnmDate.getHourOfDay());
+    	cal.set(Calendar.MINUTE, vnmDate.getMinute());
+    	return cal.getTime();
     }
     
     /**
