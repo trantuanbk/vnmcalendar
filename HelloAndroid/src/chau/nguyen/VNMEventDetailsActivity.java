@@ -25,23 +25,32 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.AdapterView.OnItemSelectedListener;
+import chau.nguyen.calendar.VNMDate;
 import chau.nguyen.calendar.VietCalendar;
 import chau.nguyen.calendar.ui.VNMDatePickerDialog;
 import chau.nguyen.calendar.ui.VNMDatePickerDialog.OnDateSetListener;
 
 public class VNMEventDetailsActivity extends Activity {
+	private static Map<Integer, String> repeations;
 	private static final int NO_REPEAT = 0;
-	private static final int DAILY_REPEAT = 1;
-	private static final int MONTHLY_REPEAT = 2;
-	private static final int YEARLY_REPEAT = 3;
+	private static final int MONTHLY_REPEAT = 1;
+	private static final int YEARLY_REPEAT = 2;
+	
+	private static Map<Integer, String> reminds;
 	private static final int REMIND_10_MINUTES = 0; // ten minutes
 	private static final int REMIND_1_HOUR = 1; // one hour = 60 minutes
 	private static final int REMIND_1_DAY = 2; // one day = 1440 minutes
-	private static Map<Integer, String> reminds;
-	private static Map<Integer, String> repeations;
+	
+	private static Map<Integer, String> numberYears;
+	private static final int ONE_YEAR = 0;
+	private static final int TWO_YEARS = 1;
+	private static final int FIVE_YEARS = 2;
+	private static final int TEN_YEARS = 3;
+	private static final int TWENTY_YEARS = 4;
+	
 	private static Map<Integer, CalTable> calendars;
-	private Date startDate;
-	private Date endDate;
+	private VNMDate startDate;
+	private VNMDate endDate;
 	protected EditText titleEditText;
 	protected EditText locationEditText;
 	protected EditText descriptionEditText;
@@ -54,6 +63,7 @@ public class VNMEventDetailsActivity extends Activity {
 	protected Spinner repeatsDropDown;
 	protected Spinner remindersDropDown;
 	protected Spinner calendarsDropDown;
+	protected Spinner numberYearsDropDown;
 	
 	static {
 		reminds = new HashMap<Integer, String>();
@@ -63,9 +73,15 @@ public class VNMEventDetailsActivity extends Activity {
 		
 		repeations = new HashMap<Integer, String>();
 		repeations.put(NO_REPEAT, "Chỉ một lần");
-		repeations.put(DAILY_REPEAT, "Hàng ngày");
 		repeations.put(MONTHLY_REPEAT, "Hàng tháng");
 		repeations.put(YEARLY_REPEAT, "Hàng năm");
+		
+		numberYears = new HashMap<Integer, String>();
+		numberYears.put(ONE_YEAR, "Trong 1 năm");
+		numberYears.put(TWO_YEARS, "Trong 2 năm");
+		numberYears.put(FIVE_YEARS, "Trong 5 năm");
+		numberYears.put(TEN_YEARS, "Trong 10 năm");
+		numberYears.put(TWENTY_YEARS, "Trong 20 năm");
 		
 		calendars = new HashMap<Integer, CalTable>();
 	}
@@ -78,6 +94,25 @@ public class VNMEventDetailsActivity extends Activity {
 				return 60;
 			default:
 				return 10;
+		}
+	}
+	
+	private static int getNumberYears(int index) {
+		switch (index) {
+		case ONE_YEAR:
+			return 1;
+			
+		case TWO_YEARS:
+			return 2;
+			
+		case TEN_YEARS:
+			return 10;
+			
+		case TWENTY_YEARS:
+			return 20;
+
+		default:
+			return 5;
 		}
 	}
 	@Override
@@ -100,13 +135,15 @@ public class VNMEventDetailsActivity extends Activity {
 		this.remindersDropDown = (Spinner)findViewById(R.id.remindersDropDown);
 		this.repeatsDropDown = (Spinner)findViewById(R.id.repeatsDropDown);
 		this.calendarsDropDown = (Spinner)findViewById(R.id.calendarsDropDown);
+		this.numberYearsDropDown = (Spinner)findViewById(R.id.numberYearsDropDown);
 		Calendar cal = Calendar.getInstance();
-		this.startDate = cal.getTime();
-		setDate(this.startDateButton, cal.getTime());
+		
+		this.startDate =  VietCalendar.convertSolar2LunarInVietnamese(cal.getTime());
+		setDate(this.startDateButton, this.startDate);
 		setTime(this.startTimeButton, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE));
 		cal.add(Calendar.HOUR_OF_DAY, 1);
-		this.endDate = cal.getTime();
-		setDate(this.endDateButton, cal.getTime());
+		this.endDate = VietCalendar.convertSolar2LunarInVietnamese(cal.getTime());
+		setDate(this.endDateButton, this.endDate);
 		setTime(this.endTimeButton, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE));
 		this.startDateButton.setOnClickListener(new DateClickListener(this.startDateButton));
 		this.endDateButton.setOnClickListener(new DateClickListener(this.endDateButton));
@@ -148,6 +185,28 @@ public class VNMEventDetailsActivity extends Activity {
 			public void onItemSelected(AdapterView<?> arg0, View view,
 					int position, long arg3) {
 				remindersDropDown.setSelection(position);
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		ArrayAdapter<String> numberYearsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
+		for (Integer item : numberYears.keySet()) {
+			numberYearsAdapter.insert(numberYears.get(item), item);
+		}
+		numberYearsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		this.numberYearsDropDown.setAdapter(numberYearsAdapter);
+		this.numberYearsDropDown.setSelection(FIVE_YEARS);
+		this.numberYearsDropDown.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View view,
+					int position, long arg3) {
+				numberYearsDropDown.setSelection(position);
 			}
 
 			@Override
@@ -232,74 +291,43 @@ public class VNMEventDetailsActivity extends Activity {
 		event.put("description", this.descriptionEditText.getText().toString());
 		event.put("eventLocation", this.locationEditText.getText().toString());
 		Calendar calStart = Calendar.getInstance();
-		int currentYear = calStart.get(Calendar.YEAR);
-		calStart.setTime(this.startDate);
-		int startYear = calStart.get(Calendar.YEAR);
-		if (currentYear > startYear) {
-			calStart.set(Calendar.YEAR, currentYear);
+		VNMDate temp = VietCalendar.convertSolar2LunarInVietnamese(calStart.getTime());
+		int currentYear = temp.getYear();
+		if (currentYear > this.startDate.getYear()) {
+			this.startDate.setYear(currentYear);
 		}
-		Calendar calEnd = Calendar.getInstance();
-		calEnd.setTime(this.endDate);
-		int endYear = calEnd.get(Calendar.YEAR);
-		if (currentYear > endYear) {
-			calEnd.set(Calendar.YEAR, currentYear);
+		
+		if (currentYear > this.endDate.getYear()) {
+			this.endDate.setYear(currentYear);
 		}
+		int numberYears = getNumberYears(this.numberYearsDropDown.getSelectedItemPosition());
 		switch (this.repeatsDropDown.getSelectedItemPosition()) {
 		case YEARLY_REPEAT:
-			for (int i = 0; i <= 10; i++) {
-				calStart.add(Calendar.YEAR, 1);
-				calEnd.add(Calendar.YEAR, 1);
-				createEvent(event, calStart.getTime(), calEnd.getTime());
+			for (int i = 0; i <= numberYears; i++) {
+				createEvent(event, VietCalendar.addYear(this.startDate, i), VietCalendar.addYear(this.endDate, i));
 			}
 			break;
 		
 		case MONTHLY_REPEAT:
-			for (int i = 0; i <= 120; i++) {
-				calStart.add(Calendar.MONTH, 1);
-				calEnd.add(Calendar.MONTH, 1);
-				createEvent(event, calStart.getTime(), calEnd.getTime());
+			for (int i = 0; i <= 12 * numberYears; i++) {
+				createEvent(event, VietCalendar.addMonth(this.startDate, i), VietCalendar.addMonth(this.endDate, i));
 			}
 		break;
-			
-		case DAILY_REPEAT:
-			for (int i = 0; i <= 3600; i++) {
-				calStart.add(Calendar.DAY_OF_MONTH, 1);
-				calEnd.add(Calendar.DAY_OF_MONTH, 1);
-				createEvent(event, calStart.getTime(), calEnd.getTime());
-			}
-			break;
 		default:
 			createEvent(event, this.startDate, this.endDate);
 			break;
 		}
 	}
 	
-	private void createEvent(ContentValues event, Date startDate, Date endDate) {
+	private void createEvent(ContentValues event, VNMDate startDate, VNMDate endDate) {
 		ContentResolver cr = getContentResolver();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(startDate);
-		int lunarDay = cal.get(Calendar.DAY_OF_MONTH);
-		int lunarMonth = cal.get(Calendar.MONTH) + 1;
-		int lunarYear = cal.get(Calendar.YEAR);
-		Log.i("Event", "startLunarDay: " + lunarDay + "/" + lunarMonth + "/" + lunarYear);
-		int temp[] = VietCalendar.convertLunar2Solar(lunarDay, lunarMonth, lunarYear);
-		cal.set(Calendar.DAY_OF_MONTH, temp[0]);
-		cal.set(Calendar.MONTH, temp[1] - 1);
-		cal.set(Calendar.YEAR, temp[2]);
-		Log.i("Event", "startSolarDay: " + temp[0] + "/" + temp[1] + "/" + temp[2]);
-		Date solarStartDate = cal.getTime();
+		//Log.i("Event", "startLunarDay: " + startDate.getDayOfMonth() + "/" + startDate.getMonth() + "/" + startDate.getYear());
+		Date solarStartDate = VietCalendar.convertLunar2Solar(startDate);
+		//Log.i("Event", "startSolarDay: " + solarStartDate);
 		
-		cal.setTime(endDate);
-		lunarDay = cal.get(Calendar.DAY_OF_MONTH);
-		lunarMonth = cal.get(Calendar.MONTH) + 1;
-		lunarYear = cal.get(Calendar.YEAR);
-		Log.i("Event", "endLunarDay: " + lunarDay + "/" + lunarMonth + "/" + lunarYear);
-		temp = VietCalendar.convertLunar2Solar(lunarDay, lunarMonth, lunarYear);
-		cal.set(Calendar.DAY_OF_MONTH, temp[0]);
-		cal.set(Calendar.MONTH, temp[1] - 1);
-		cal.set(Calendar.YEAR, temp[2]);
-		Log.i("Event", "endSolarDay: " + temp[0] + "/" + temp[1] + "/" + temp[2]);
-		Date solarEndDate = cal.getTime();
+		//Log.i("Event", "endLunarDay: " + endDate.getDayOfMonth() + "/" + endDate.getMonth() + "/" + endDate.getYear());
+		Date solarEndDate = VietCalendar.convertLunar2Solar(endDate);
+		//Log.i("Event", "startSolarDay: " + solarEndDate);
 		long startTime = solarStartDate.getTime();
 		long endTime = solarEndDate.getTime();
 		event.put("dtstart", startTime);
@@ -333,8 +361,8 @@ public class VNMEventDetailsActivity extends Activity {
 		}
 	}
 	
-	private void setDate(TextView view, Date date) {
-		view.setText(VietCalendar.formatVietnameseDate(date));
+	private void setDate(TextView view, VNMDate date) {
+		view.setText(date.getDayOfMonth() + "-" + date.getMonth() + "-" + date.getYear() + " (Âm lịch)");
 	}
 	
 	private void setTime(TextView view, int hourOfDay, int minute) {
@@ -354,14 +382,11 @@ public class VNMEventDetailsActivity extends Activity {
 			 this.view = view;
 		 }
 		 public void onClick(View v) {
-			 Calendar cal = Calendar.getInstance();
-			 int year = cal.get(Calendar.YEAR);
-			 int month = cal.get(Calendar.MONTH);
-			 int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
+			 
 			 if (view == startDateButton) {
-				 new VNMDatePickerDialog(VNMEventDetailsActivity.this, new DateSetListener(DateSetListener.START_DATE), year, month, dayOfMonth).show();
+				 new VNMDatePickerDialog(VNMEventDetailsActivity.this, new DateSetListener(DateSetListener.START_DATE), startDate.getYear(), startDate.getMonth() - 1, startDate.getDayOfMonth()).show();
 			 } else {
-				 new VNMDatePickerDialog(VNMEventDetailsActivity.this, new DateSetListener(DateSetListener.END_DATE), year, month, dayOfMonth).show();
+				 new VNMDatePickerDialog(VNMEventDetailsActivity.this, new DateSetListener(DateSetListener.END_DATE), endDate.getYear(), endDate.getMonth() - 1, endDate.getDayOfMonth()).show();
 			 }
 		 }
 	}
@@ -378,16 +403,16 @@ public class VNMEventDetailsActivity extends Activity {
 		@Override
 		public void onDateSet(DatePicker view, boolean isSolarSelected,
 				int year, int monthOfYear, int dayOfMonth) {
-			Calendar cal = Calendar.getInstance();
-			cal.set(Calendar.YEAR, year);
-			cal.set(Calendar.MONTH, monthOfYear);
-			cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 			if (this.dialog.equals(START_DATE)) {
-				startDate = cal.getTime();
-				setDate(startDateButton, cal.getTime());
+				startDate.setDayOfMonth(dayOfMonth);
+				startDate.setMonth(monthOfYear);
+				startDate.setYear(year);
+				setDate(startDateButton, startDate);
 			} else {
-				endDate = cal.getTime();
-				setDate(endDateButton, cal.getTime());
+				endDate.setDayOfMonth(dayOfMonth);
+				endDate.setMonth(monthOfYear);
+				endDate.setYear(year);
+				setDate(endDateButton, endDate);
 			}
 		}
 		
@@ -400,9 +425,9 @@ public class VNMEventDetailsActivity extends Activity {
 		 }
 		 public void onClick(View v) {
 			 if (view == startTimeButton) {
-				 new TimePickerDialog(VNMEventDetailsActivity.this, new TimeSetListener(TimeSetListener.START_TIME), 7, 0, true).show();
+				 new TimePickerDialog(VNMEventDetailsActivity.this, new TimeSetListener(TimeSetListener.START_TIME), startDate.getHourOfDay(), startDate.getMinute(), true).show();
 			 } else {
-				 new TimePickerDialog(VNMEventDetailsActivity.this, new TimeSetListener(TimeSetListener.END_TIME), 7, 0, true).show();
+				 new TimePickerDialog(VNMEventDetailsActivity.this, new TimeSetListener(TimeSetListener.END_TIME), endDate.getHourOfDay(), endDate.getMinute(), true).show();
 			 }
 		 }
 	}
@@ -418,18 +443,13 @@ public class VNMEventDetailsActivity extends Activity {
 
 		@Override
 		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-			Calendar cal = Calendar.getInstance();
 			if (START_TIME.equals(this.dialog)) {
-				cal.setTime(startDate);
-				cal.set(Calendar.HOUR_OF_DAY, hourOfDay);
-				cal.set(Calendar.MINUTE, minute);
-				startDate = cal.getTime();
+				startDate.setHourOfDay(hourOfDay);
+				startDate.setMinute(minute);
 				setTime(startTimeButton, hourOfDay, minute);
 			} else {
-				cal.setTime(endDate);
-				cal.set(Calendar.HOUR_OF_DAY, hourOfDay);
-				cal.set(Calendar.MINUTE, minute);
-				endDate = cal.getTime();
+				endDate.setHourOfDay(hourOfDay);
+				endDate.setMinute(minute);
 				setTime(endTimeButton, hourOfDay, minute);
 			}
 		}

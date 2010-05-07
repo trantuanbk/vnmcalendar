@@ -21,6 +21,8 @@
     <string name="repeats_label">Lặp lại</string>
     <string name="reminders_label">Nhắc nhở</string>
     <string name="add_new_reminder">Thêm nhắc nhở</string>
+    <string name="number_years_label">Ghi nhận sự kiện</string>
+    <string name="select_number_years">Chọn số năm</string>
     <string name="save_label">Lưu</string>
     <string name="delete_label">Xóa</string>
     <string name="discard_label">Hủy</string>
