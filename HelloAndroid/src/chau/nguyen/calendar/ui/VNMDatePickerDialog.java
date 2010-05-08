@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.DatePicker.OnDateChangedListener;
 import chau.nguyen.R;
 import chau.nguyen.calendar.VietCalendar;
@@ -20,6 +21,7 @@ public class VNMDatePickerDialog extends AlertDialog implements OnClickListener,
      private static final String YEAR = "year";
      private static final String MONTH = "month";
      private static final String DAY = "day";
+     private RadioGroup radioGroup;
      private RadioButton solarRadio;
      private RadioButton lunarRadio;
      private final DatePicker mDatePicker;
@@ -102,6 +104,7 @@ public class VNMDatePickerDialog extends AlertDialog implements OnClickListener,
         mDatePicker.init(mInitialYear, mInitialMonth, mInitialDay, this);
         Locale.setDefault(defaultLocale);
         
+        this.radioGroup = (RadioGroup)view.findViewById(R.id.radio_group);
         this.lunarRadio = (RadioButton)view.findViewById(R.id.radio_lunar);
         this.solarRadio = (RadioButton)view.findViewById(R.id.radio_solar);
         this.solarRadio.setChecked(true);
@@ -174,5 +177,13 @@ public class VNMDatePickerDialog extends AlertDialog implements OnClickListener,
          int day = savedInstanceState.getInt(DAY);
          mDatePicker.init(year, month, day, this);
          updateTitle(year, month, day);
+    }
+    
+    public void setRadioGroupDateTypeVisible(boolean value) {
+    	if (value) {
+    		this.radioGroup.setVisibility(View.VISIBLE);
+    	} else {
+    		this.radioGroup.setVisibility(View.INVISIBLE);
+    	}
     }
 }

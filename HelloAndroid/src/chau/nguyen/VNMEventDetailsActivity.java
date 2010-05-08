@@ -262,7 +262,7 @@ public class VNMEventDetailsActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				ProgressDialog dialog = ProgressDialog.show(VNMEventDetailsActivity.this, "", 
-                        "Đang tạo sự kiện...", true);
+                        "Tạo sự kiện...", true);
 				dialog.show();
 				Integer selected = calendarsDropDown.getSelectedItemPosition();
 				String calId = ((CalTable)calendars.get(selected)).id;
@@ -388,9 +388,13 @@ public class VNMEventDetailsActivity extends Activity {
 		 public void onClick(View v) {
 			 
 			 if (view == startDateButton) {
-				 new VNMDatePickerDialog(VNMEventDetailsActivity.this, new DateSetListener(DateSetListener.START_DATE), startDate.getYear(), startDate.getMonth() - 1, startDate.getDayOfMonth()).show();
+				 VNMDatePickerDialog dialog = new VNMDatePickerDialog(VNMEventDetailsActivity.this, new DateSetListener(DateSetListener.START_DATE), startDate.getYear(), startDate.getMonth() - 1, startDate.getDayOfMonth());
+				 dialog.setRadioGroupDateTypeVisible(false);
+				 dialog.show();
 			 } else {
-				 new VNMDatePickerDialog(VNMEventDetailsActivity.this, new DateSetListener(DateSetListener.END_DATE), endDate.getYear(), endDate.getMonth() - 1, endDate.getDayOfMonth()).show();
+				 VNMDatePickerDialog dialog = new VNMDatePickerDialog(VNMEventDetailsActivity.this, new DateSetListener(DateSetListener.END_DATE), endDate.getYear(), endDate.getMonth() - 1, endDate.getDayOfMonth());
+				 dialog.setRadioGroupDateTypeVisible(false);
+				 dialog.show();
 			 }
 		 }
 	}

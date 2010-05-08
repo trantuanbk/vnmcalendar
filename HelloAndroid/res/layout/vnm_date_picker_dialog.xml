@@ -3,7 +3,7 @@
               a:layout_width="fill_parent"
               a:layout_height="fill_parent"
               >
-    <RadioGroup
+    <RadioGroup a:id="@+id/radio_group"
       a:layout_width="wrap_content"
       a:layout_height="wrap_content"
       a:orientation="horizontal"
