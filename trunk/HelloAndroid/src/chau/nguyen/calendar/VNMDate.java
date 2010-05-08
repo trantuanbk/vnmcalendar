@@ -6,6 +6,18 @@ public class VNMDate {
 	private int year;
 	private int hourOfDay;
 	private int minute;
+	
+	public VNMDate() {
+		
+	}
+	public VNMDate(int dayOfMonth, int month, int year, int hourOfDay, int minute) {
+		super();
+		this.dayOfMonth = dayOfMonth;
+		this.month = month;
+		this.year = year;
+		this.hourOfDay = hourOfDay;
+		this.minute = minute;
+	}
 	public int getDayOfMonth() {
 		return dayOfMonth;
 	}

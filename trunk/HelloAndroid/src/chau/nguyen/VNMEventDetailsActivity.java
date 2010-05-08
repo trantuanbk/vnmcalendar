@@ -140,12 +140,15 @@ public class VNMEventDetailsActivity extends Activity {
 		Calendar cal = Calendar.getInstance();
 		
 		this.startDate =  VietCalendar.convertSolar2LunarInVietnamese(cal.getTime());
+		this.startDate.setHourOfDay(7);
+		this.startDate.setMinute(0);
 		setDate(this.startDateButton, this.startDate);
-		setTime(this.startTimeButton, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE));
-		cal.add(Calendar.HOUR_OF_DAY, 1);
+		setTime(this.startTimeButton, this.startDate.getHourOfDay(), this.startDate.getMinute());
 		this.endDate = VietCalendar.convertSolar2LunarInVietnamese(cal.getTime());
+		this.endDate.setHourOfDay(this.startDate.getHourOfDay() + 1);
+		this.endDate.setMinute(0);
 		setDate(this.endDateButton, this.endDate);
-		setTime(this.endTimeButton, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE));
+		setTime(this.endTimeButton, this.endDate.getHourOfDay(), this.endDate.getMinute());
 		this.startDateButton.setOnClickListener(new DateClickListener(this.startDateButton));
 		this.endDateButton.setOnClickListener(new DateClickListener(this.endDateButton));
 		this.startTimeButton.setOnClickListener(new TimeClickListener(this.startTimeButton));
@@ -417,12 +420,20 @@ public class VNMEventDetailsActivity extends Activity {
 				startDate.setMonth(monthOfYear);
 				startDate.setYear(year);
 				setDate(startDateButton, startDate);
+				if (VietCalendar.compare(startDate, endDate) == 1) {
+					endDate.setDayOfMonth(dayOfMonth);
+					endDate.setMonth(monthOfYear);
+					endDate.setYear(year);
+					setDate(endDateButton, endDate);
+				}
 			} else {
-				endDate.setDayOfMonth(dayOfMonth);
-				endDate.setMonth(monthOfYear);
-				endDate.setYear(year);
-				setDate(endDateButton, endDate);
+				VNMDate temp = new VNMDate(dayOfMonth, monthOfYear, year, endDate.getHourOfDay(), endDate.getMinute());
+				if (VietCalendar.compare(startDate, temp) == -1) {
+					endDate = temp;
+					setDate(endDateButton, endDate);
+				}
 			}
+			
 		}
 		
 	}
@@ -456,10 +467,23 @@ public class VNMEventDetailsActivity extends Activity {
 				startDate.setHourOfDay(hourOfDay);
 				startDate.setMinute(minute);
 				setTime(startTimeButton, hourOfDay, minute);
+				int startTimeInMinutes = startDate.getHourOfDay() * 60 + startDate.getMinute();
+				int endTimeInMinutes = endDate.getHourOfDay() * 60 + endDate.getMinute();
+				if (startTimeInMinutes > endTimeInMinutes) {
+					endDate.setHourOfDay(hourOfDay + 1);
+					endDate.setMinute(minute);
+					setTime(endTimeButton, hourOfDay, minute);
+				}
 			} else {
-				endDate.setHourOfDay(hourOfDay);
-				endDate.setMinute(minute);
-				setTime(endTimeButton, hourOfDay, minute);
+				VNMDate temp = new VNMDate();
+				temp = endDate;
+				temp.setHourOfDay(hourOfDay);
+				temp.setMinute(minute);
+				if (VietCalendar.compare(startDate, temp) == -1) {
+					endDate.setHourOfDay(hourOfDay);
+					endDate.setMinute(minute);
+					setTime(endTimeButton, hourOfDay, minute);
+				}
 			}
 		}
 		
