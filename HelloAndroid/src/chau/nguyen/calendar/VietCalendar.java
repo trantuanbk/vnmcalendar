@@ -304,6 +304,40 @@ public class VietCalendar {
     	return result;
     }
     
+    public static int compare(VNMDate date1, VNMDate date2) {
+    	if (date1.getYear() > date2.getYear())
+    		return 1;
+    	else if (date1.getYear() < date2.getYear())
+    		return -1;
+    	else {
+    		if (date1.getMonth() > date2.getMonth())
+    			return 1;
+    		else if (date1.getMonth() < date2.getMonth())
+    			return -1;
+    		else {
+    			if (date1.getDayOfMonth() > date2.getDayOfMonth())
+        			return 1;
+        		else if (date1.getDayOfMonth() < date2.getDayOfMonth())
+        			return -1;
+        		else {
+        			if (date1.getHourOfDay() > date2.getHourOfDay())
+            			return 1;
+            		else if (date1.getHourOfDay() < date2.getHourOfDay())
+            			return -1;
+            		else {
+            			if (date1.getMinute() > date2.getMinute())
+                			return 1;
+                		else if (date1.getMinute() < date2.getMinute())
+                			return -1;
+                		else {
+                			return 0;
+                		}
+            		}
+        		}
+    		}
+    	}
+    }
+    
     private static double getVNMTimeZone() {
     	return +7;
     	//Calendar calendar = Calendar.getInstance();
