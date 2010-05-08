@@ -25,6 +25,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemSelectedListener;
 import chau.nguyen.calendar.VNMDate;
 import chau.nguyen.calendar.VietCalendar;
@@ -431,6 +432,8 @@ public class VNMEventDetailsActivity extends Activity {
 				if (VietCalendar.compare(startDate, temp) == -1) {
 					endDate = temp;
 					setDate(endDateButton, endDate);
+				} else {
+					Toast.makeText(VNMEventDetailsActivity.this, "Thời điểm kết thúc phải sau thời điểm bắt đầu", Toast.LENGTH_SHORT).show();
 				}
 			}
 			
@@ -483,6 +486,8 @@ public class VNMEventDetailsActivity extends Activity {
 					endDate.setHourOfDay(hourOfDay);
 					endDate.setMinute(minute);
 					setTime(endTimeButton, hourOfDay, minute);
+				} else {
+					Toast.makeText(VNMEventDetailsActivity.this, "Thời điểm kết thúc phải sau thời điểm bắt đầu", Toast.LENGTH_SHORT).show();
 				}
 			}
 		}
