@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.ContentResolver;
@@ -260,6 +261,9 @@ public class VNMEventDetailsActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
+				ProgressDialog dialog = ProgressDialog.show(VNMEventDetailsActivity.this, "", 
+                        "Đang tạo sự kiện...", true);
+				dialog.show();
 				Integer selected = calendarsDropDown.getSelectedItemPosition();
 				String calId = ((CalTable)calendars.get(selected)).id;
 				if (CalTable.ALL.equals(calId)) {
