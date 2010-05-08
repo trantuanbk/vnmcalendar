@@ -1,20 +1,19 @@
 package chau.nguyen;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -33,22 +32,23 @@ import chau.nguyen.calendar.ui.VNMDatePickerDialog;
 import chau.nguyen.calendar.ui.VNMDatePickerDialog.OnDateSetListener;
 
 public class VNMEventDetailsActivity extends Activity {
+	private static final int PROGRESS_DIALOG = 0;
 	private static Map<Integer, String> repeations;
-	private static final int NO_REPEAT = 0;
-	private static final int MONTHLY_REPEAT = 1;
-	private static final int YEARLY_REPEAT = 2;
+	public static final int NO_REPEAT = 0;
+	public static final int MONTHLY_REPEAT = 1;
+	public static final int YEARLY_REPEAT = 2;
 	
 	private static Map<Integer, String> reminds;
-	private static final int REMIND_10_MINUTES = 0; // ten minutes
-	private static final int REMIND_1_HOUR = 1; // one hour = 60 minutes
-	private static final int REMIND_1_DAY = 2; // one day = 1440 minutes
+	public static final int REMIND_10_MINUTES = 0; // ten minutes
+	public static final int REMIND_1_HOUR = 1; // one hour = 60 minutes
+	public static final int REMIND_1_DAY = 2; // one day = 1440 minutes
 	
 	private static Map<Integer, String> numberYears;
-	private static final int ONE_YEAR = 0;
-	private static final int TWO_YEARS = 1;
-	private static final int FIVE_YEARS = 2;
-	private static final int TEN_YEARS = 3;
-	private static final int TWENTY_YEARS = 4;
+	public static final int ONE_YEAR = 0;
+	public static final int TWO_YEARS = 1;
+	public static final int FIVE_YEARS = 2;
+	public static final int TEN_YEARS = 3;
+	public static final int TWENTY_YEARS = 4;
 	
 	private static Map<Integer, CalTable> calendars;
 	private VNMDate startDate;
@@ -66,6 +66,8 @@ public class VNMEventDetailsActivity extends Activity {
 	protected Spinner remindersDropDown;
 	protected Spinner calendarsDropDown;
 	protected Spinner numberYearsDropDown;
+	
+	private ProgressDialog progressDialog;
 	
 	static {
 		reminds = new HashMap<Integer, String>();
@@ -265,19 +267,45 @@ public class VNMEventDetailsActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				ProgressDialog dialog = ProgressDialog.show(VNMEventDetailsActivity.this, "", 
-                        "Tạo sự kiện...", true);
-				dialog.show();
+				showDialog(PROGRESS_DIALOG);
+				
 				Integer selected = calendarsDropDown.getSelectedItemPosition();
 				String calId = ((CalTable)calendars.get(selected)).id;
+				String[] calIds = new String[calendars.size()];
 				if (CalTable.ALL.equals(calId)) {
+					
 					for (int i = 0; i < calendars.size() - 1; i++) {
-						addEvent(((CalTable)calendars.get((Integer)i)).id);
+						calIds[i] = ((CalTable)calendars.get((Integer)i)).id;
 					}
 				} else {
-					addEvent(calId);
+					calIds[0] = calId;
 				}
-				finish();
+				final Handler createEventHandler = new Handler() {
+			        public void handleMessage(Message msg) {
+			            int status = msg.getData().getInt(CreatingEvent.STATUS);
+			            if (status == CreatingEvent.STATE_DONE){
+			                dismissDialog(PROGRESS_DIALOG);
+			                VNMEventDetailsActivity.this.finish();
+			            }
+			        }
+			    };
+			    //preparing data:
+			    int numberYears = getNumberYears(numberYearsDropDown.getSelectedItemPosition());
+			    long reminderMinutes = getRemindTime(remindersDropDown.getSelectedItemPosition());
+			    int repeat = repeatsDropDown.getSelectedItemPosition();
+				CreatingEvent creatingEvent = new CreatingEvent(createEventHandler);
+				creatingEvent.setTitle(titleEditText.getText().toString());
+				creatingEvent.setDescription(descriptionEditText.getText().toString());
+				creatingEvent.setEventLocation(locationEditText.getText().toString());
+				creatingEvent.setCalIds(calIds);
+				creatingEvent.setCr(getContentResolver());
+				creatingEvent.setEndDate(endDate);
+				creatingEvent.setStartDate(startDate);
+				creatingEvent.setNumberYears(numberYears);
+				creatingEvent.setReminderMinutes(reminderMinutes);
+				creatingEvent.setRepeat(repeat);
+				
+				new Thread(creatingEvent).start();
 			}
 			
 		});
@@ -292,82 +320,18 @@ public class VNMEventDetailsActivity extends Activity {
 		});
 	}
 	
-	private void addEvent(String calId) {
-		ContentValues event = new ContentValues();
-		event.put("calendar_id", calId);
-		event.put("title", this.titleEditText.getText().toString());
-		event.put("description", this.descriptionEditText.getText().toString());
-		event.put("eventLocation", this.locationEditText.getText().toString());
-		Calendar calStart = Calendar.getInstance();
-		VNMDate temp = VietCalendar.convertSolar2LunarInVietnamese(calStart.getTime());
-		int currentYear = temp.getYear();
-		if (currentYear > this.startDate.getYear()) {
-			this.startDate.setYear(currentYear);
-		}
-		
-		if (currentYear > this.endDate.getYear()) {
-			this.endDate.setYear(currentYear);
-		}
-		int numberYears = getNumberYears(this.numberYearsDropDown.getSelectedItemPosition());
-		switch (this.repeatsDropDown.getSelectedItemPosition()) {
-		case YEARLY_REPEAT:
-			for (int i = 0; i <= numberYears; i++) {
-				createEvent(event, VietCalendar.addYear(this.startDate, i), VietCalendar.addYear(this.endDate, i));
-			}
-			break;
-		
-		case MONTHLY_REPEAT:
-			for (int i = 0; i <= 12 * numberYears; i++) {
-				createEvent(event, VietCalendar.addMonth(this.startDate, i), VietCalendar.addMonth(this.endDate, i));
-			}
-		break;
-		default:
-			createEvent(event, this.startDate, this.endDate);
-			break;
-		}
-	}
-	
-	private void createEvent(ContentValues event, VNMDate startDate, VNMDate endDate) {
-		ContentResolver cr = getContentResolver();
-		Log.i("Event", "startLunarDay: " + startDate.getDayOfMonth() + "/" + startDate.getMonth() + "/" + startDate.getYear());
-		Date solarStartDate = VietCalendar.convertLunar2Solar(startDate);
-		Log.i("Event", "startSolarDay: " + solarStartDate);
-		
-		Log.i("Event", "endLunarDay: " + endDate.getDayOfMonth() + "/" + endDate.getMonth() + "/" + endDate.getYear());
-		Date solarEndDate = VietCalendar.convertLunar2Solar(endDate);
-		Log.i("Event", "startSolarDay: " + solarEndDate);
-		long startTime = solarStartDate.getTime();
-		long endTime = solarEndDate.getTime();
-		event.put("dtstart", startTime);
-		event.put("dtend", endTime);
-		
-		event.put("hasAlarm", 1);
-		try {
-			Uri eventsUri = Uri.parse("content://calendar/events");
-			Uri newEvent = cr.insert(eventsUri, event);
-			long id = Long.parseLong(newEvent.getLastPathSegment());
-			if(newEvent != null) {
-				long reminderMinutes = getRemindTime(remindersDropDown.getSelectedItemPosition());
-
-				ContentValues values = new ContentValues();
-				values.put("event_id", id);
-				values.put("method", 1);
-				values.put("minutes", reminderMinutes);
-				cr.insert(Uri.parse("content://calendar/reminders"), values);
-
-//				ContentValues alertValues = new ContentValues();
-//				alertValues.put("event_id", id);
-//				alertValues.put("begin", startTime);
-//				alertValues.put("end", endTime);
-//				alertValues.put( "alarmTime", startTime);
-//				alertValues.put( "state", 0 );
-//				alertValues.put( "minutes", reminderMinutes );
-//				cr.insert( Uri.parse( "content://calendar/calendar_alerts" ), alertValues );
-				} 
-		} catch (Exception e) {
-			Log.e("AddingCalendarEvent", e.getMessage());
-		}
-	}
+	protected Dialog onCreateDialog(int id) {
+        switch(id) {
+        case PROGRESS_DIALOG:
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setIndeterminate(true);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setMessage("Creating event...");
+            return progressDialog;
+        default:
+            return null;
+        }
+    }
 	
 	private void setDate(TextView view, VNMDate date) {
 		view.setText(date.getDayOfMonth() + "-" + date.getMonth() + "-" + date.getYear() + " (Âm lịch)");
