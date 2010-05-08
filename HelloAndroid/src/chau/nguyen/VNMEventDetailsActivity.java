@@ -325,13 +325,13 @@ public class VNMEventDetailsActivity extends Activity {
 	
 	private void createEvent(ContentValues event, VNMDate startDate, VNMDate endDate) {
 		ContentResolver cr = getContentResolver();
-		//Log.i("Event", "startLunarDay: " + startDate.getDayOfMonth() + "/" + startDate.getMonth() + "/" + startDate.getYear());
+		Log.i("Event", "startLunarDay: " + startDate.getDayOfMonth() + "/" + startDate.getMonth() + "/" + startDate.getYear());
 		Date solarStartDate = VietCalendar.convertLunar2Solar(startDate);
-		//Log.i("Event", "startSolarDay: " + solarStartDate);
+		Log.i("Event", "startSolarDay: " + solarStartDate);
 		
-		//Log.i("Event", "endLunarDay: " + endDate.getDayOfMonth() + "/" + endDate.getMonth() + "/" + endDate.getYear());
+		Log.i("Event", "endLunarDay: " + endDate.getDayOfMonth() + "/" + endDate.getMonth() + "/" + endDate.getYear());
 		Date solarEndDate = VietCalendar.convertLunar2Solar(endDate);
-		//Log.i("Event", "startSolarDay: " + solarEndDate);
+		Log.i("Event", "startSolarDay: " + solarEndDate);
 		long startTime = solarStartDate.getTime();
 		long endTime = solarEndDate.getTime();
 		event.put("dtstart", startTime);
@@ -411,6 +411,7 @@ public class VNMEventDetailsActivity extends Activity {
 		@Override
 		public void onDateSet(DatePicker view, boolean isSolarSelected,
 				int year, int monthOfYear, int dayOfMonth) {
+			monthOfYear ++;
 			if (this.dialog.equals(START_DATE)) {
 				startDate.setDayOfMonth(dayOfMonth);
 				startDate.setMonth(monthOfYear);
