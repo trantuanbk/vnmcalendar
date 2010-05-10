@@ -8,13 +8,10 @@ import java.util.UUID;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.net.Uri;
 import chau.nguyen.calendar.VNMDate;
 import chau.nguyen.calendar.VietCalendar;
 
 public class CreatingEvent implements Runnable {
-	private static Uri EVENTS_URI = Uri.parse("content://calendar/events");
-	private static Uri REMINDERS_URI = Uri.parse("content://calendar/reminders");
 	public final static int STATE_DONE = 0;
 	public final static int STATE_RUNNING = 1;
 	public final static String STATUS = "status";
@@ -67,11 +64,11 @@ public class CreatingEvent implements Runnable {
 				break;
 		}	
 		
-		contentResolver.bulkInsert(EVENTS_URI, values.toArray(new ContentValues[0]));		
+		contentResolver.bulkInsert(EventManager.EVENTS_URI, values.toArray(new ContentValues[0]));		
 		// query event_ids
 		values.clear();
 		Cursor managedCursor = contentResolver.query(
-                EVENTS_URI,
+				EventManager.EVENTS_URI,
                 new String[] { "_id" },    // Which columns to return.
                 "htmlUri = ?",          // WHERE clause.
                 new String[] { groupId },          // WHERE clause value substitution
@@ -86,7 +83,7 @@ public class CreatingEvent implements Runnable {
 				values.add(reminder);
 			} while (managedCursor.moveToNext());
 		}		
-		contentResolver.bulkInsert(REMINDERS_URI, values.toArray(new ContentValues[0]));
+		contentResolver.bulkInsert(EventManager.REMINDERS_URI, values.toArray(new ContentValues[0]));
 	}
 	
 	private ContentValues createEvent(String calId, VNMDate startDate, VNMDate endDate) {		
