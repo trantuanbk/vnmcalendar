@@ -8,7 +8,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.PorterDuff;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -65,8 +64,6 @@ public class VNMMonthViewer extends View {
 				cal.setTime(displayDate);
 				cal.set(Calendar.DAY_OF_MONTH, selectedDayOfMonth);
 				Date selectedDate = cal.getTime();
-				Log.i("Selected day: ", "" + selectedDayOfMonth);
-				//((Vibrator)monthActivity.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(300);
 				VNMMonthViewer.this.monthActivity.showDateInDayView(selectedDate);
 				return true;
 			}

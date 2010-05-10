@@ -20,6 +20,7 @@ import android.widget.TextView;
 import chau.nguyen.INavigator;
 import chau.nguyen.R;
 import chau.nguyen.VNMDayActivity;
+import chau.nguyen.calendar.VNMDate;
 import chau.nguyen.calendar.VietCalendar;
 import chau.nguyen.calendar.VietCalendar.Holiday;
 
@@ -176,8 +177,8 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 		int month = calendar.get(Calendar.MONTH) + 1;
 		
 		int year = calendar.get(Calendar.YEAR);
-		int[] lunars = VietCalendar.convertSolar2LunarInVietnam(date);
-		Holiday holiday = VietCalendar.getHoliday(lunars[0], lunars[1], dayOfMonth, month);
+		VNMDate vnmDate = VietCalendar.convertSolar2LunarInVietnamese(date);
+		Holiday holiday = VietCalendar.getHoliday(vnmDate.getDayOfMonth(), vnmDate.getMonth(), dayOfMonth, month);
 		if (dayOfWeek == 1) {
 			this.dayOfMonthText.setTextColor(this.weekendColor);
 			this.dayOfWeekText.setTextColor(this.weekendColor);
@@ -204,11 +205,11 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 		}
 		
 		this.vnmHourText.setText(hour + ":" + minute);
-		this.vnmDayOfMonthText.setText(lunars[0] + "");
-		this.vnmMonthText.setText(lunars[1] + "");
-		this.vnmYearText.setText(lunars[2] + "");
+		this.vnmDayOfMonthText.setText(vnmDate.getDayOfMonth() + "");
+		this.vnmMonthText.setText(vnmDate.getMonth() + "");
+		this.vnmYearText.setText(vnmDate.getYear() + "");
 		
-		String[] vnmCalendarTexts = VietCalendar.getCanChiInfo(lunars[VietCalendar.DAY], lunars[VietCalendar.MONTH], lunars[VietCalendar.YEAR], dayOfMonth, month, year);
+		String[] vnmCalendarTexts = VietCalendar.getCanChiInfo(vnmDate.getDayOfMonth(), vnmDate.getMonth(), vnmDate.getYear(), dayOfMonth, month, year);
 		
 		this.vnmHourInText.setText(vnmCalendarTexts[VietCalendar.HOUR]);
 		this.vnmDayOfMonthInText.setText(vnmCalendarTexts[VietCalendar.DAY]);
