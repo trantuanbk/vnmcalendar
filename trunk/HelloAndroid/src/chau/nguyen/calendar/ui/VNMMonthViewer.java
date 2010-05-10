@@ -161,18 +161,16 @@ public class VNMMonthViewer extends View {
 	
 	public void animationFinished() {
 		this.reDrawScreen = true;
-		invalidate();
 	}
 	
 	public void animationStart() {
 		this.reDrawScreen = true;
-		invalidate();
 	}
 	
-	public void setDisplayDate(Date displayDate) {
-		this.displayDate = displayDate;
-		this.config.date = displayDate;
-		this.invalidate();
+	public void setDisplayDate(Date displayDate) {		
+		this.displayDate = displayDate;		
+		this.config.date = displayDate;		
+		this.invalidate();		
 	}
 	
 	public Date getDisplayDate() {

@@ -70,18 +70,11 @@ public class VietCalendar {
     	VNMDate newDate = new VNMDate();
     	newDate.setDayOfMonth(date.getDayOfMonth());
     	int month = date.getMonth() + offset;
-    	if (month > 12) {
-    		newDate.setMonth(month - 12);
-    		newDate.setYear(date.getYear() + 1);
-    	} else if (month < 1) {
-    		newDate.setMonth(month + 12);
-    		newDate.setYear(date.getYear() + 1);
-    	} else {
-    		newDate.setMonth(month);
-    		newDate.setYear(date.getYear());
-    	}
+		newDate.setMonth(month % 12 > 0 ? month % 12 : 1);		
+		newDate.setYear(date.getYear() + month / 12);
+    	
     	newDate.setHourOfDay(date.getHourOfDay());
-    	newDate.setMinute(date.getMinute());
+    	newDate.setMinute(date.getMinute());    	
     	return newDate;
     }
     
@@ -286,8 +279,7 @@ public class VietCalendar {
 		return convertSolar2LunarInVietnam(dayOfMonth, month, year);
     }
     
-    public static int[] convertSolar2LunarInVietnam(int day, int month, int year) {
-    		
+    public static int[] convertSolar2LunarInVietnam(int day, int month, int year) {    		
 		return VietCalendar.convertSolar2Lunar(day, month, year, getVNMTimeZone());
     }
     
@@ -296,9 +288,9 @@ public class VietCalendar {
     	cal.setTime(date);
     	int[] temp = convertSolar2LunarInVietnam(date);
     	VNMDate result = new VNMDate();
-    	result.setDayOfMonth(temp[0]);
-    	result.setMonth(temp[1]);
-    	result.setYear(temp[2]);
+    	result.setDayOfMonth(temp[DAY]);
+    	result.setMonth(temp[MONTH]);
+    	result.setYear(temp[YEAR]);
     	result.setHourOfDay(cal.get(Calendar.HOUR_OF_DAY));
     	result.setMinute(cal.get(Calendar.MINUTE));
     	return result;

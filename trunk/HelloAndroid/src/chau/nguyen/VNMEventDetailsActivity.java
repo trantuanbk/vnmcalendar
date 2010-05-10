@@ -11,9 +11,8 @@ import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -248,75 +247,74 @@ public class VNMEventDetailsActivity extends Activity {
 		this.calendarsDropDown.setAdapter(calAdapter);
 		this.calendarsDropDown.setSelection(calAdapter.getCount() - 1);
 		this.calendarsDropDown.setOnItemSelectedListener(new OnItemSelectedListener() {
-
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View view,
 					int position, long arg3) {
 				calendarsDropDown.setSelection(position);
 			}
-
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-			
+			}			
 		});
 		
 		this.saveButton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				showDialog(PROGRESS_DIALOG);
-				
 				Integer selected = calendarsDropDown.getSelectedItemPosition();
 				String calId = ((CalTable)calendars.get(selected)).id;
-				String[] calIds = new String[calendars.size()];
+				String[] calIds;
 				if (CalTable.ALL.equals(calId)) {
-					
+					calIds = new String[calendars.size() - 1];
 					for (int i = 0; i < calendars.size() - 1; i++) {
 						calIds[i] = ((CalTable)calendars.get((Integer)i)).id;
 					}
 				} else {
+					calIds = new String[1];
 					calIds[0] = calId;
 				}
-				final Handler createEventHandler = new Handler() {
-			        public void handleMessage(Message msg) {
-			            int status = msg.getData().getInt(CreatingEvent.STATUS);
-			            if (status == CreatingEvent.STATE_DONE){
-			                dismissDialog(PROGRESS_DIALOG);
-			                VNMEventDetailsActivity.this.finish();
-			            }
-			        }
-			    };
-			    //preparing data:
-			    int numberYears = getNumberYears(numberYearsDropDown.getSelectedItemPosition());
+				
+				int numberYears = getNumberYears(numberYearsDropDown.getSelectedItemPosition());
 			    long reminderMinutes = getRemindTime(remindersDropDown.getSelectedItemPosition());
 			    int repeat = repeatsDropDown.getSelectedItemPosition();
-				CreatingEvent creatingEvent = new CreatingEvent(createEventHandler);
+				CreatingEvent creatingEvent = new CreatingEvent();
 				creatingEvent.setTitle(titleEditText.getText().toString());
 				creatingEvent.setDescription(descriptionEditText.getText().toString());
 				creatingEvent.setEventLocation(locationEditText.getText().toString());
 				creatingEvent.setCalIds(calIds);
-				creatingEvent.setCr(getContentResolver());
+				creatingEvent.setContentResolver(getContentResolver());
 				creatingEvent.setEndDate(endDate);
 				creatingEvent.setStartDate(startDate);
 				creatingEvent.setNumberYears(numberYears);
 				creatingEvent.setReminderMinutes(reminderMinutes);
 				creatingEvent.setRepeat(repeat);
-				
-				new Thread(creatingEvent).start();
-			}
-			
+				AsyncTask<CreatingEvent, Void, Void> creatingTask = new AsyncTask<CreatingEvent, Void, Void>() {
+					@Override
+					protected void onPreExecute() {						
+						super.onPreExecute();
+						showDialog(PROGRESS_DIALOG);
+					}
+					@Override
+					protected Void doInBackground(CreatingEvent... params) {
+						params[0].run();
+						return null;
+					}
+					@Override
+					protected void onPostExecute(Void result) {
+						super.onPostExecute(result);		
+						dismissDialog(PROGRESS_DIALOG);
+						VNMEventDetailsActivity.this.finish();
+					}
+				};
+				creatingTask.execute(creatingEvent);				
+			}			
 		});
 		
 		this.discardButton.setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
 				finish();
-			}
-			
+			}			
 		});
 	}
 	
@@ -326,7 +324,7 @@ public class VNMEventDetailsActivity extends Activity {
             progressDialog = new ProgressDialog(this);
             progressDialog.setIndeterminate(true);
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progressDialog.setMessage("Creating event...");
+            progressDialog.setMessage("Đang tạo sự kiện...");
             return progressDialog;
         default:
             return null;
