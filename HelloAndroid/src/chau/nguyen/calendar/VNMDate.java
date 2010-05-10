@@ -5,10 +5,9 @@ public class VNMDate {
 	private int month;
 	private int year;
 	private int hourOfDay;
-	private int minute;
+	private int minute;	
 	
-	public VNMDate() {
-		
+	public VNMDate() {		
 	}
 	public VNMDate(int dayOfMonth, int month, int year, int hourOfDay, int minute) {
 		super();
@@ -24,6 +23,10 @@ public class VNMDate {
 	public void setDayOfMonth(int dayOfMonth) {
 		this.dayOfMonth = dayOfMonth;
 	}
+	/**
+	 * 1 - 12
+	 * @return
+	 */
 	public int getMonth() {
 		return month;
 	}
@@ -47,6 +50,5 @@ public class VNMDate {
 	}
 	public void setMinute(int minute) {
 		this.minute = minute;
-	}
-	
+	}	
 }

@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.Paint.Align;
 import android.graphics.drawable.Drawable;
@@ -97,7 +96,9 @@ public class MonthViewRenderer {
 	
 	private void drawTitle(Canvas canvas, int cellX, int cellY, int cellWidth, int cellHeight, int month, int year) {
 		Paint paint = new Paint();
-		paint.setShadowLayer(1, 0, 0, Color.GRAY);
+		if (config.enableShadow) {
+			paint.setShadowLayer(1, 0, 0, Color.GRAY);
+		}
 		paint.setColor(config.titleTextColor);
 		paint.setTextAlign(Align.CENTER);
 		paint.setAntiAlias(true);
@@ -116,7 +117,9 @@ public class MonthViewRenderer {
 	
 	private void drawHeader(Canvas canvas, int cellX, int cellY, int cellWidth, int cellHeight, int j) {
 		Paint paint = new Paint();
-		paint.setShadowLayer(1, 0, 0, Color.GRAY);
+		if (config.enableShadow) {
+			paint.setShadowLayer(1, 0, 0, Color.GRAY);
+		}
 		paint.setColor(config.headerTextColor);
 		paint.setTextAlign(Align.CENTER);
 		paint.setAntiAlias(true);
@@ -140,7 +143,9 @@ public class MonthViewRenderer {
 	private void drawCellContent(Canvas canvas, int cellX, int cellY, int cellWidth, int cellHeight, 
 			int day, int month, int year, int dayOfWeek, boolean highlight) {		
 		Paint paint = new Paint();
-		paint.setShadowLayer(1, 0, 0, Color.GRAY);
+		if (config.enableShadow) {
+			paint.setShadowLayer(1, 0, 0, Color.GRAY);
+		}
 		paint.setColor(config.dayColor);		
 		if (dayOfWeek == 6) {
 			paint.setColor(config.weekendColor);
@@ -208,6 +213,7 @@ public class MonthViewRenderer {
 		public Date date;
 		public Date selectedDate;
 		public boolean autoCalculateOffsets = true;
+		public boolean enableShadow = false;
 		
 		public int width;
 		public int height;
