@@ -88,8 +88,17 @@ public class EventManager {
 		}
 	}
 	
-	public boolean hasEvent(Date date) {
-		
+	public boolean hasEvent(int dayOfMonth, int month, int year) {
+		for (Long item : dateHasEvents) {
+			Calendar cal = Calendar.getInstance();
+			cal.setTimeInMillis(item);
+			int dayOfMonthOfEvent = cal.get(Calendar.DAY_OF_MONTH);
+			int monthOfEvent = cal.get(Calendar.MONTH);
+			int yearOfEvent = cal.get(Calendar.YEAR);
+			
+			if (dayOfMonth == dayOfMonthOfEvent && month == monthOfEvent && year == yearOfEvent)
+				return true;
+		}
 		return false;
 	}
 	

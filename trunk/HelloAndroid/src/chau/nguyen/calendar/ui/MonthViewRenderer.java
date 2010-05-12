@@ -11,11 +11,13 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Paint.Align;
 import android.graphics.drawable.Drawable;
+import chau.nguyen.EventManager;
 import chau.nguyen.calendar.VietCalendar;
 import chau.nguyen.calendar.VietCalendar.Holiday;
 
 public class MonthViewRenderer {
-	Config config;	
+	Config config;
+	private EventManager eventManager;
 	
 	public final static int dom[] = { 
 		31, 28, 31, /* jan, feb, mar */
@@ -28,8 +30,12 @@ public class MonthViewRenderer {
 		"Hai", "Ba", "Tư", "Năm", "Sáu", "Bảy", "CN"
 	};
 	
-	public MonthViewRenderer(Config config) {
+	public MonthViewRenderer(Config config, EventManager eventManager) {
+		this.eventManager = eventManager;
 		this.config = config;
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(this.config.date);
+		this.eventManager.setMonth(cal.get(Calendar.MONTH), cal.get(Calendar.YEAR));
 	}
 	
 	public void render(Canvas canvas) {
@@ -40,7 +46,8 @@ public class MonthViewRenderer {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(config.date);
 		int mm = calendar.get(Calendar.MONTH);
-		int yy = calendar.get(Calendar.YEAR);		
+		int yy = calendar.get(Calendar.YEAR);
+		this.eventManager.setMonth(mm, yy);
 		
 		GregorianCalendar cal = new GregorianCalendar(yy, mm, 1);
 		
@@ -74,20 +81,22 @@ public class MonthViewRenderer {
     		   for (int j = 0; j < 7 && count <= daysInMonth; j++) {    			          		   
     			   if (j >= leadSpaces) {
     				   boolean highlight = isSameDate(todayYear, todayMonth, todayDay, yy, mm, count);
-    				   drawCellContent(canvas, config.cellOffsetX + j * config.cellWidth, config.cellOffsetY + (i - 2) * config.cellHeight, config.cellWidth, config.cellHeight, count, mm + 1, yy, j, highlight);
+    				   boolean hasEvent = this.eventManager.hasEvent(count, mm, yy);
+    				   drawCellContent(canvas, config.cellOffsetX + j * config.cellWidth, config.cellOffsetY + (i - 2) * config.cellHeight, config.cellWidth, config.cellHeight, count, mm + 1, yy, j, highlight, hasEvent);
     				   count++;
     			   } else {        				               		   
-    				   drawCellContent(canvas, config.cellOffsetX + j * config.cellWidth, config.cellOffsetY + (i - 2) * config.cellHeight, config.cellWidth, config.cellHeight, 0, 0, yy, j, false);   
+    				   drawCellContent(canvas, config.cellOffsetX + j * config.cellWidth, config.cellOffsetY + (i - 2) * config.cellHeight, config.cellWidth, config.cellHeight, 0, 0, yy, j, false, false);   
     			   }
     		   }
 			} else {
     		   for (int j = 0; j < 7; j++) {
     			   if (count <= daysInMonth) {
     				   boolean highlight = isSameDate(todayYear, todayMonth, todayDay, yy, mm, count);
-    				   drawCellContent(canvas, config.cellOffsetX + j * config.cellWidth, config.cellOffsetY + (i - 2) * config.cellHeight, config.cellWidth, config.cellHeight, count, mm + 1, yy, j, highlight);    				   
+    				   boolean hasEvent = this.eventManager.hasEvent(count, mm, yy);
+    				   drawCellContent(canvas, config.cellOffsetX + j * config.cellWidth, config.cellOffsetY + (i - 2) * config.cellHeight, config.cellWidth, config.cellHeight, count, mm + 1, yy, j, highlight, hasEvent);    				   
     				   count++;
     			   } else {
-    				   drawCellContent(canvas, config.cellOffsetX + j * config.cellWidth, config.cellOffsetY + (i - 2) * config.cellHeight, config.cellWidth, config.cellHeight, 0, 0, yy, j, false);
+    				   drawCellContent(canvas, config.cellOffsetX + j * config.cellWidth, config.cellOffsetY + (i - 2) * config.cellHeight, config.cellWidth, config.cellHeight, 0, 0, yy, j, false, false);
     			   }
         	   }
 			}
@@ -141,7 +150,7 @@ public class MonthViewRenderer {
 	}
 	
 	private void drawCellContent(Canvas canvas, int cellX, int cellY, int cellWidth, int cellHeight, 
-			int day, int month, int year, int dayOfWeek, boolean highlight) {		
+			int day, int month, int year, int dayOfWeek, boolean highlight, boolean hasEvent) {		
 		Paint paint = new Paint();
 		if (config.enableShadow) {
 			paint.setShadowLayer(1, 0, 0, Color.GRAY);
@@ -160,6 +169,11 @@ public class MonthViewRenderer {
 			Rect srcRect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
 			Rect destRect = new Rect(cellX + 1, cellY + 1,  cellX + cellWidth, cellY + cellHeight);
 			canvas.drawBitmap(bitmap, srcRect, destRect, paint);
+			if (hasEvent) {
+				Bitmap eventBitmap = config.cellEventBackground;
+				Rect eventRect = new Rect(cellX + 4, cellY + 4,  cellX + 8, cellY + 18);
+				canvas.drawBitmap(eventBitmap, srcRect, eventRect, paint);
+			}
 		}
 		
 		float x = cellX + cellWidth / 2;
@@ -242,6 +256,7 @@ public class MonthViewRenderer {
 		public int cellMainTextSize = 25;
 		public int cellSubTextSize = 14;
 		public Bitmap cellBackground;
+		public Bitmap cellEventBackground;
 		public Bitmap cellHighlightBackground;
 		public Drawable selectedCellDrawable;
 		

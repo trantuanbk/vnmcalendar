@@ -27,6 +27,7 @@ public class VNMMonthViewer extends View {
 	private Bitmap mBitmap;
 	private VNMMonthActivity monthActivity;
 	private boolean reDrawScreen = true;
+	private EventManager eventManager;
 	
 	MonthViewRenderer.Config config;	
 	MonthViewRenderer renderer;		
@@ -38,12 +39,14 @@ public class VNMMonthViewer extends View {
 	
 	private void init(VNMMonthActivity context, INavigator navigator) {
 		this.monthActivity = context;
+		this.eventManager = new EventManager(this.monthActivity.getContentResolver());
 		this.displayDate = new Date();		
 		this.navigator = navigator;
 		
 		config = new Config();
 		config.date = this.displayDate;
 		config.cellBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.cell_bg);
+		config.cellEventBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.cell_highlight_bg);
 		config.headerBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.cell_header_bg);
 		config.cellHighlightBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.cell_highlight_bg);
 		config.titleBackground = config.cellBackground;
@@ -53,7 +56,7 @@ public class VNMMonthViewer extends View {
 		config.dayOfWeekColor = context.getResources().getColor(R.color.dayOfWeekColor);
 		config.weekendColor = context.getResources().getColor(R.color.weekendColor);
 		config.holidayColor = context.getResources().getColor(R.color.holidayColor);		
-		renderer = new MonthViewRenderer(config);
+		renderer = new MonthViewRenderer(config, this.eventManager);
 		
 		this.gestureDetector = new GestureDetector(getContext(), new GestureDetector.OnGestureListener() {			
 			public boolean onSingleTapUp(MotionEvent e) {
@@ -166,10 +169,6 @@ public class VNMMonthViewer extends View {
 	}
 	
 	public void setDisplayDate(Date displayDate) {
-		EventManager eventManager = new EventManager(this.monthActivity.getContentResolver());
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(displayDate);
-		eventManager.setMonth(cal.get(Calendar.MONTH), cal.get(Calendar.YEAR));
 		this.displayDate = displayDate;		
 		this.config.date = displayDate;		
 		this.invalidate();		
