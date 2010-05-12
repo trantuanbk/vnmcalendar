@@ -11,6 +11,7 @@ import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import chau.nguyen.EventManager;
 import chau.nguyen.INavigator;
 import chau.nguyen.R;
 import chau.nguyen.VNMMonthActivity;
@@ -164,7 +165,11 @@ public class VNMMonthViewer extends View {
 		this.reDrawScreen = true;
 	}
 	
-	public void setDisplayDate(Date displayDate) {		
+	public void setDisplayDate(Date displayDate) {
+		EventManager eventManager = new EventManager(this.monthActivity.getContentResolver());
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(displayDate);
+		eventManager.setMonth(cal.get(Calendar.MONTH), cal.get(Calendar.YEAR));
 		this.displayDate = displayDate;		
 		this.config.date = displayDate;		
 		this.invalidate();		

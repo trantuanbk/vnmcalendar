@@ -17,6 +17,7 @@ import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View.OnCreateContextMenuListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import chau.nguyen.EventManager;
 import chau.nguyen.INavigator;
 import chau.nguyen.R;
 import chau.nguyen.VNMDayActivity;
@@ -165,6 +166,8 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 	}
 	
 	public void setDate(Date date) {
+		EventManager eventManager = new EventManager(this.dayViewActivity.getContentResolver());
+		String eventSumarize = eventManager.getSumarize(date);
 		this.displayDate = date;
 		String famousSaying = getFamousSaying();
 		this.noteText.setText(famousSaying);
@@ -215,7 +218,9 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 		this.vnmDayOfMonthInText.setText(vnmCalendarTexts[VietCalendar.DAY]);
 		this.vnmMonthInText.setText(vnmCalendarTexts[VietCalendar.MONTH]);
 		this.vnmYearInText.setText(vnmCalendarTexts[VietCalendar.YEAR]);	
-		
+		if (eventSumarize.length() > 0) {
+			this.noteText.setText(eventSumarize);
+		}
 		this.invalidate();
 	}		
 	
