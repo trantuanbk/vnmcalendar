@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:a="http://schemas.android.com/apk/res/android"
-    a:layout_width="300px"    
-    a:layout_height="380px"
-    a:background="@drawable/small_month_widget_bg"
-    a:layout_gravity="center">
-	<ImageView  
-	   a:layout_width="280px"    
+    a:layout_width="fill_parent"
+    a:layout_height="fill_parent">
+	<ImageView 
+	   a:layout_width="280px"
 	   a:layout_height="320px"
 	   a:layout_gravity="center"
 	   a:id="@+id/monthViewImage"	   

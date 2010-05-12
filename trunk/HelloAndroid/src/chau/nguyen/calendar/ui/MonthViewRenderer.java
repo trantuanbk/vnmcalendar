@@ -1,8 +1,11 @@
 package chau.nguyen.calendar.ui;
 
+import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+
+import org.json.JSONObject;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -11,9 +14,11 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Paint.Align;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import chau.nguyen.EventManager;
 import chau.nguyen.calendar.VietCalendar;
 import chau.nguyen.calendar.VietCalendar.Holiday;
+import chau.nguyen.calendar.util.StreamUtils;
 
 public class MonthViewRenderer {
 	Config config;
@@ -39,6 +44,7 @@ public class MonthViewRenderer {
 	}
 	
 	public void render(Canvas canvas) {
+		Log.d("DEBUG", "Canvas size: " + canvas.getWidth() + " x " + canvas.getHeight());
 		if (config.autoCalculateOffsets) {
 			config.calculate(canvas.getWidth(), canvas.getHeight());
 		}
@@ -106,7 +112,7 @@ public class MonthViewRenderer {
 	private void drawTitle(Canvas canvas, int cellX, int cellY, int cellWidth, int cellHeight, int month, int year) {
 		Paint paint = new Paint();
 		if (config.enableShadow) {
-			paint.setShadowLayer(1, 0, 0, Color.GRAY);
+			paint.setShadowLayer(1, 0, 0, config.titleTextShadowColor);
 		}
 		paint.setColor(config.titleTextColor);
 		paint.setTextAlign(Align.CENTER);
@@ -127,7 +133,7 @@ public class MonthViewRenderer {
 	private void drawHeader(Canvas canvas, int cellX, int cellY, int cellWidth, int cellHeight, int j) {
 		Paint paint = new Paint();
 		if (config.enableShadow) {
-			paint.setShadowLayer(1, 0, 0, Color.GRAY);
+			paint.setShadowLayer(1, 0, 0, config.headerTextShadowColor);
 		}
 		paint.setColor(config.headerTextColor);
 		paint.setTextAlign(Align.CENTER);
@@ -145,19 +151,26 @@ public class MonthViewRenderer {
 		float y = cellY + cellHeight - (cellHeight - textBounds.height()) / 2;
 		if (j == 6) {
 			paint.setColor(config.weekendColor);
+			if (config.enableShadow) {
+				paint.setShadowLayer(1, 0, 0, config.weekendShadowColor);
+			}
 		}	
 		canvas.drawText(dow[j], x, y, paint);
 	}
 	
 	private void drawCellContent(Canvas canvas, int cellX, int cellY, int cellWidth, int cellHeight, 
 			int day, int month, int year, int dayOfWeek, boolean highlight, boolean hasEvent) {		
-		Paint paint = new Paint();
-		if (config.enableShadow) {
-			paint.setShadowLayer(1, 0, 0, Color.GRAY);
-		}
-		paint.setColor(config.dayColor);		
+		Paint paint = new Paint();			
 		if (dayOfWeek == 6) {
 			paint.setColor(config.weekendColor);
+			if (config.enableShadow) {
+				paint.setShadowLayer(1, 0, 0, config.weekendShadowColor);
+			}
+		} else {			
+			paint.setColor(highlight ? config.todayColor : config.dayColor);
+			if (config.enableShadow) {
+				paint.setShadowLayer(1, 0, 0, highlight ? config.todayShadowColor : config.dayShadowColor);
+			}
 		}
 		paint.setAntiAlias(true);
 		paint.setTextAlign(Align.CENTER);		
@@ -184,26 +197,17 @@ public class MonthViewRenderer {
 			Holiday holiday = VietCalendar.getHoliday(lunars[VietCalendar.DAY], lunars[VietCalendar.MONTH], day, month);
 			if (holiday != null) {
 				paint.setColor(config.holidayColor);
+				if (config.enableShadow) {
+					paint.setShadowLayer(1, 0, 0, config.holidayShadowColor);
+				}
 			}
 			String dayText = "" + day;
 			canvas.drawText(dayText, x, y, paint);
-			
-//			Paint strokePaint = new Paint();
-//		    strokePaint.setColor(Color.WHITE);
-//		    strokePaint.setAntiAlias(true);
-//		    strokePaint.setTextAlign(Align.CENTER);
-//		    strokePaint.setTextSize(config.cellMainTextSize);		    
-//		    strokePaint.setStyle(Paint.Style.STROKE);
-//		    strokePaint.setStrokeWidth(2);
-//		    canvas.drawText(dayText, x, y, strokePaint);
-		    
-		    canvas.drawText(dayText, x, y, paint);
-			//Path path = new Path();
-			//paint.getTextPath(dayText, 0, dayText.length(), x, y, path);
-			//paint.setColor(Color.WHITE);
-			//canvas.drawPath(path, paint);
-			
+					    						
 			paint.setColor(config.dayColor);
+			if (config.enableShadow) {
+				paint.setShadowLayer(1, 0, 0, config.dayShadowColor);
+			}
 			paint.setTextSize(config.cellSubTextSize);
 			paint.setTextAlign(Align.RIGHT);
 			if (lunars[0] == 1) {
@@ -238,6 +242,7 @@ public class MonthViewRenderer {
 		public int titleHeight;
 		public int titleTextSize = 25;
 		public int titleTextColor = 0;
+		public int titleTextShadowColor = 0;
 		public Bitmap titleBackground;
 		
 		public boolean renderHeader = true;
@@ -247,6 +252,7 @@ public class MonthViewRenderer {
 		public int headerHeight;
 		public int headerTextSize = 18;
 		public int headerTextColor = 0;
+		public int headerTextShadowColor = 0;
 		public Bitmap headerBackground;
 		
 		public int cellOffsetX;
@@ -261,9 +267,15 @@ public class MonthViewRenderer {
 		public Drawable selectedCellDrawable;
 		
 		public int dayColor = 0;
+		public int dayShadowColor = 0;
+		public int todayColor = 0;
+		public int todayShadowColor = 0;
 		public int dayOfWeekColor = 0;
+		public int dayOfWeekShadowColor = 0;
 		public int weekendColor = 0;
+		public int weekendShadowColor = 0;
 		public int holidayColor = 0;
+		public int holidayShadowColor = 0;
 		
 		public void calculate(int width, int height) {
 			this.width = width;
@@ -291,6 +303,61 @@ public class MonthViewRenderer {
 			this.cellSubTextSize = (int)((float)this.cellMainTextSize * 3 / 5);
 			this.headerTextSize = (int)((float)this.cellMainTextSize * 2 / 3);
 			this.titleTextSize = (int)((float)this.cellMainTextSize);
+		}
+		
+		public static Config load(InputStream themeInputStream) {			
+			Config config = new Config();
+			try {
+				String themeJson = StreamUtils.readAllText(themeInputStream);
+				JSONObject themeObject = new JSONObject(themeJson);
+				config.width = themeObject.getInt("width");
+				config.height = themeObject.getInt("height");
+				config.enableShadow = themeObject.getBoolean("enableShadow");
+				config.autoCalculateOffsets = themeObject.getBoolean("autoCalculateOffsets");
+				
+				config.titleTextSize = themeObject.getInt("titleTextSize");
+				config.titleTextColor = Color.parseColor(themeObject.getString("titleTextColor"));
+				config.titleTextShadowColor = Color.parseColor(themeObject.getString("titleTextShadowColor"));
+				
+				config.headerTextSize = themeObject.getInt("headerTextSize");
+				config.headerTextColor = Color.parseColor(themeObject.getString("headerTextColor"));
+				config.headerTextShadowColor = Color.parseColor(themeObject.getString("headerTextShadowColor"));
+				
+				config.cellMainTextSize = themeObject.getInt("cellMainTextSize");
+				config.cellSubTextSize = themeObject.getInt("cellSubTextSize");
+				
+				config.dayColor = Color.parseColor(themeObject.getString("dayColor"));
+				config.dayShadowColor = Color.parseColor(themeObject.getString("dayShadowColor"));
+				config.todayColor = Color.parseColor(themeObject.getString("todayColor"));
+				config.todayShadowColor = Color.parseColor(themeObject.getString("todayShadowColor"));
+				config.holidayColor = Color.parseColor(themeObject.getString("holidayColor"));
+				config.holidayShadowColor = Color.parseColor(themeObject.getString("holidayShadowColor"));
+				config.dayOfWeekColor = Color.parseColor(themeObject.getString("dayOfWeekColor"));
+				config.dayOfWeekShadowColor = Color.parseColor(themeObject.getString("dayOfWeekShadowColor"));
+				config.weekendColor = Color.parseColor(themeObject.getString("weekendColor"));
+				config.weekendShadowColor = Color.parseColor(themeObject.getString("weekendShadowColor"));
+				
+				if (!config.autoCalculateOffsets) {
+					config.titleOffsetX = themeObject.getInt("titleOffsetX");
+					config.titleOffsetY = themeObject.getInt("titleOffsetY");
+					config.titleWidth = themeObject.getInt("titleWidth");
+					config.titleHeight = themeObject.getInt("titleHeight");					
+					
+					config.headerOffsetX = themeObject.getInt("headerOffsetX");
+					config.headerOffsetY = themeObject.getInt("headerOffsetY");
+					config.headerWidth = themeObject.getInt("headerWidth");
+					config.headerHeight = themeObject.getInt("headerHeight");
+					
+					
+					config.cellOffsetX = themeObject.getInt("cellOffsetX");
+					config.cellOffsetY = themeObject.getInt("cellOffsetY");
+					config.cellWidth = themeObject.getInt("cellWidth");
+					config.cellHeight = themeObject.getInt("cellHeight");					
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return config;
 		}
 	}	
 }

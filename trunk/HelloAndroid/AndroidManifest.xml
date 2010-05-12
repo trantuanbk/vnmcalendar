@@ -19,6 +19,14 @@
 		<activity android:name=".VNMMonthActivity" android:screenOrientation="portrait" />
 		<activity android:name=".VNMEventDetailsActivity" android:screenOrientation="portrait" />
 		<activity android:name=".DayInfoActivity" android:screenOrientation="portrait" />
+				
+		<activity android:name=".calendar.appwidget.MonthWidgetConfigure"
+		      android:theme="@android:style/Theme.Translucent.NoTitleBar">
+		    <intent-filter>
+		        <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+		    </intent-filter>
+		</activity>
+		
 		<receiver android:name=".calendar.appwidget.DayWidgetProvider"
 		  android:label="@string/day_widget_name">
 		    <intent-filter>

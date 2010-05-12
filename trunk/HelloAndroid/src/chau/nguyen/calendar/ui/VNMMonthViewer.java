@@ -53,6 +53,7 @@ public class VNMMonthViewer extends View {
 		config.titleTextColor = context.getResources().getColor(R.color.titleColor);
 		config.headerTextColor = context.getResources().getColor(R.color.headerColor);
 		config.dayColor = context.getResources().getColor(R.color.dayColor);
+		config.todayColor = config.dayColor;
 		config.dayOfWeekColor = context.getResources().getColor(R.color.dayOfWeekColor);
 		config.weekendColor = context.getResources().getColor(R.color.weekendColor);
 		config.holidayColor = context.getResources().getColor(R.color.holidayColor);		
