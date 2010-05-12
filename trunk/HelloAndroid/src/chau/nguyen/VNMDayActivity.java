@@ -46,8 +46,7 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
         this.switcher = new ViewSwitcher(this);
         setContentView(this.switcher);
         BackgroundManager.init(this);
-        
-        this.date = new Date();         
+        this.date = new Date();
         this.switcher.addView(new VNMDayViewer(this, this));
         Drawable background = BackgroundManager.getRandomBackground();
         this.switcher.getCurrentView().setBackgroundDrawable(background);
