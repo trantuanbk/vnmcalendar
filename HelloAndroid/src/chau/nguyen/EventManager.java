@@ -49,10 +49,11 @@ public class EventManager {
 			do {
 				title = cur.getString(titleColumn);
 				location = cur.getString(locationColumn);
+				location = (location == null || location.length() == 0 ? "" : " (" + location + ")");
 				if (sumarize.length() == 0) {
-					sumarize = title + " (" + location + ")";
+					sumarize = title + location;
 				} else {
-					sumarize = sumarize + ", " + title + " (" + location + ")";
+					sumarize = sumarize + ", " + title + location;
 				}
 			} while (cur.moveToNext());
 			
