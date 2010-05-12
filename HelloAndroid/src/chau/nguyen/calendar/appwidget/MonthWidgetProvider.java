@@ -21,6 +21,7 @@ import android.graphics.Bitmap.CompressFormat;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.RemoteViews;
+import chau.nguyen.EventManager;
 import chau.nguyen.R;
 import chau.nguyen.VNMDayActivity;
 import chau.nguyen.calendar.content.LocalFileContentProvider;
@@ -125,8 +126,11 @@ public class MonthWidgetProvider extends AppWidgetProvider {
 	protected Uri renderWidget(Context context) {
 		MonthViewRenderer.Config config = getConfig();
 		Bitmap bitmap = Bitmap.createBitmap(config.width, config.height, Bitmap.Config.ARGB_8888);		
-		config.date = new Date();		
-		MonthViewRenderer monthViewRenderer = new MonthViewRenderer(config);
+		config.date = new Date();
+		EventManager eventManager = new EventManager(context.getContentResolver());
+		Calendar cal = Calendar.getInstance();
+		eventManager.setMonth(cal.get(Calendar.MONTH), cal.get(Calendar.YEAR));
+		MonthViewRenderer monthViewRenderer = new MonthViewRenderer(config, eventManager);
 		monthViewRenderer.render(new Canvas(bitmap));
 		// write the bitmap to temporary file
 		String bitmapCacheFileName = getBitmapCacheFileName();
