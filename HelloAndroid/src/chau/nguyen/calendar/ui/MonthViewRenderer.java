@@ -18,7 +18,7 @@ import android.util.Log;
 import chau.nguyen.EventManager;
 import chau.nguyen.calendar.VietCalendar;
 import chau.nguyen.calendar.VietCalendar.Holiday;
-import chau.nguyen.calendar.util.StreamUtils;
+//import chau.nguyen.calendar.util.StreamUtils;
 
 public class MonthViewRenderer {
 	Config config;
@@ -184,7 +184,7 @@ public class MonthViewRenderer {
 			canvas.drawBitmap(bitmap, srcRect, destRect, paint);
 			if (hasEvent) {
 				Bitmap eventBitmap = config.cellEventBackground;
-				Rect eventRect = new Rect(cellX + 4, cellY + 4,  cellX + 8, cellY + 18);
+				Rect eventRect = new Rect(cellX + 4, cellY + 4,  cellX + 10, cellY + 20);
 				canvas.drawBitmap(eventBitmap, srcRect, eventRect, paint);
 			}
 		}
@@ -308,7 +308,7 @@ public class MonthViewRenderer {
 		public static Config load(InputStream themeInputStream) {			
 			Config config = new Config();
 			try {
-				String themeJson = StreamUtils.readAllText(themeInputStream);
+				String themeJson = null;// TODO: StreamUtils.readAllText(themeInputStream);
 				JSONObject themeObject = new JSONObject(themeJson);
 				config.width = themeObject.getInt("width");
 				config.height = themeObject.getInt("height");

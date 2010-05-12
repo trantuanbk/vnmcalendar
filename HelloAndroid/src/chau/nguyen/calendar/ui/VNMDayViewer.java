@@ -54,7 +54,8 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 	private ContextMenuClickHandler contextMenuClickHandler;
 	private int dayOfWeekColor;
 	private int weekendColor;
-	private int holidayColor;	
+	private int holidayColor;
+	private int eventColor;
 
 	public VNMDayViewer(VNMDayActivity context, INavigator navigator) {
 		super(context);
@@ -92,6 +93,7 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 		this.dayOfWeekColor = getResources().getColor(R.color.dayOfWeekColor);
 		this.weekendColor = getResources().getColor(R.color.weekendColor);
 		this.holidayColor = getResources().getColor(R.color.holidayColor);
+		this.eventColor = getResources().getColor(R.color.eventColor);
 		
 		this.displayDate = new Date();
 		this.setDate(this.displayDate);
@@ -219,6 +221,7 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 		this.vnmMonthInText.setText(vnmCalendarTexts[VietCalendar.MONTH]);
 		this.vnmYearInText.setText(vnmCalendarTexts[VietCalendar.YEAR]);	
 		if (eventSumarize.length() > 0) {
+			this.noteText.setTextColor(this.eventColor);
 			this.noteText.setText(eventSumarize);
 		}
 		this.invalidate();
