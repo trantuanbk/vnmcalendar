@@ -3,17 +3,19 @@ package chau.nguyen;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 
 public class EventManager {
 	public static Uri EVENTS_URI = Uri.parse("content://calendar/events");
 	public static Uri REMINDERS_URI = Uri.parse("content://calendar/reminders");
 	private Cursor monthCursor;
-	private List<Long> dateHasEvents;
+	private Set<Long> dateHasEvents;
 	
 	private ContentResolver contentResolver;
 	public EventManager(ContentResolver contentResolver) {
@@ -69,30 +71,27 @@ public class EventManager {
 		long beginDateOfMonth = cal.getTimeInMillis();
 		cal.add(Calendar.MONTH, 1);
 		long beginDateOfNextMonth = cal.getTimeInMillis();
-		monthCursor = this.contentResolver.query(EVENTS_URI, null, "dtstart >= ? AND dtstart < ?", new String[] { String.valueOf(beginDateOfMonth), String.valueOf(beginDateOfNextMonth) }, null);
-		dateHasEvents = new ArrayList<Long>();
+		monthCursor = this.contentResolver.query(EVENTS_URI, new String[] { "dtstart" }, "dtstart >= ? AND dtstart < ?", new String[] { String.valueOf(beginDateOfMonth), String.valueOf(beginDateOfNextMonth) }, null);
+		dateHasEvents = new HashSet<Long>();
 		if (monthCursor.moveToFirst()) {
 			int dateColumn = monthCursor.getColumnIndex("dtstart");
 			long date;
 			do {
 				date = monthCursor.getLong(dateColumn);
+				cal.setTimeInMillis(date);
+				date = cal.get(Calendar.DAY_OF_MONTH) + 
+					cal.get(Calendar.MONTH) * 100 + cal.get(Calendar.YEAR) * 10000;							
+				if (dateHasEvents.contains(date)) {
+					continue;
+				}
 				dateHasEvents.add(date);
 			} while (monthCursor.moveToNext());
 		}
 	}
 	
 	public boolean hasEvent(int dayOfMonth, int month, int year) {
-		for (Long item : dateHasEvents) {
-			Calendar cal = Calendar.getInstance();
-			cal.setTimeInMillis(item);
-			int dayOfMonthOfEvent = cal.get(Calendar.DAY_OF_MONTH);
-			int monthOfEvent = cal.get(Calendar.MONTH);
-			int yearOfEvent = cal.get(Calendar.YEAR);
-			
-			if (dayOfMonth == dayOfMonthOfEvent && month == monthOfEvent && year == yearOfEvent)
-				return true;
-		}
-		return false;
+		long date = dayOfMonth + month * 100 + year * 10000;		
+		return dateHasEvents.contains(date);		
 	}
 	
 }
