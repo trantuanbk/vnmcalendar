@@ -48,6 +48,10 @@ public class MonthViewRenderer {
 		if (config.autoCalculateOffsets) {
 			config.calculate(canvas.getWidth(), canvas.getHeight());
 		}
+		if (config.backgroundColor != 0) {
+			canvas.drawColor(config.backgroundColor);
+		}
+		
 		int leadSpaces = 0;
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(config.date);
@@ -235,6 +239,7 @@ public class MonthViewRenderer {
 		
 		public int width;
 		public int height;
+		public int backgroundColor = 0;
 		
 		public int titleOffsetX;
 		public int titleOffsetY;
@@ -312,8 +317,9 @@ public class MonthViewRenderer {
 				JSONObject themeObject = new JSONObject(themeJson);
 				config.width = themeObject.getInt("width");
 				config.height = themeObject.getInt("height");
+				config.backgroundColor = Color.parseColor(themeObject.getString("backgroundColor"));
 				config.enableShadow = themeObject.getBoolean("enableShadow");
-				config.autoCalculateOffsets = themeObject.getBoolean("autoCalculateOffsets");
+				config.autoCalculateOffsets = themeObject.getBoolean("autoCalculateOffsets");				
 				
 				config.titleTextSize = themeObject.getInt("titleTextSize");
 				config.titleTextColor = Color.parseColor(themeObject.getString("titleTextColor"));
