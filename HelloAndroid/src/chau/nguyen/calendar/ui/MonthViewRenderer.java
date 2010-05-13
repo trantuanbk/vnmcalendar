@@ -18,7 +18,7 @@ import android.util.Log;
 import chau.nguyen.EventManager;
 import chau.nguyen.calendar.VietCalendar;
 import chau.nguyen.calendar.VietCalendar.Holiday;
-//import chau.nguyen.calendar.util.StreamUtils;
+import chau.nguyen.calendar.util.StreamUtils;
 
 public class MonthViewRenderer {
 	Config config;
@@ -308,7 +308,7 @@ public class MonthViewRenderer {
 		public static Config load(InputStream themeInputStream) {			
 			Config config = new Config();
 			try {
-				String themeJson = null;// TODO: StreamUtils.readAllText(themeInputStream);
+				String themeJson = StreamUtils.readAllText(themeInputStream);
 				JSONObject themeObject = new JSONObject(themeJson);
 				config.width = themeObject.getInt("width");
 				config.height = themeObject.getInt("height");
