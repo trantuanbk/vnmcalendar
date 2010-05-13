@@ -2,6 +2,7 @@
     name: "Light",
     width: 350,
     height: 400,
+    backgroundColor: "#33333333",
     enableShadow: false,
     autoCalculateOffsets: false,
     

@@ -2,8 +2,9 @@
     name: "Light",
     width: 301,
     height: 344,
-    enableShadow: true,
-    autoCalculateOffsets: false,
+    backgroundColor: "#66333333",
+    enableShadow: true,    
+    autoCalculateOffsets: false,    
     
     titleOffsetX: 0,
     titleOffsetY: 0,

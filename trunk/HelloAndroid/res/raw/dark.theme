@@ -2,6 +2,7 @@
     name: "Dark",
     width: 301,
     height: 344,
+    backgroundColor: "#00000000",
     enableShadow: true,
     autoCalculateOffsets: false,
     
@@ -30,6 +31,8 @@
     
     dayColor: "#000000",
     dayShadowColor: "#FFFFFF",
+    todayColor: "#00FF00",
+    todayShadowColor: "#FFFFFF",
     dayOfWeekColor: "#000000",
     dayOfWeekShadowColor: "#FFFFFF",
     weekendColor: "#FF0000",

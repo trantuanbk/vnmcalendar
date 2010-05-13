@@ -2,6 +2,7 @@
     name: "Dark",
     width: 455,
     height: 520,
+    backgroundColor: "#33EEEEEE",
     enableShadow: true,
     autoCalculateOffsets: false,
     
