@@ -434,8 +434,9 @@ public class VNMEventDetailsActivity extends Activity {
 				setTime(startTimeButton, hourOfDay, minute);
 				int startTimeInMinutes = startDate.getHourOfDay() * 60 + startDate.getMinute();
 				int endTimeInMinutes = endDate.getHourOfDay() * 60 + endDate.getMinute();
-				if (startTimeInMinutes > endTimeInMinutes) {
-					endDate.setHourOfDay(hourOfDay + 1);
+				if (startTimeInMinutes >= endTimeInMinutes) {
+					hourOfDay++;
+					endDate.setHourOfDay(hourOfDay);
 					endDate.setMinute(minute);
 					setTime(endTimeButton, hourOfDay, minute);
 				}
