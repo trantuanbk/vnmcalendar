@@ -34,10 +34,13 @@
 			a:textSize="30sp"/>
 		<TextView a:id="@+id/noteText" 
 		      a:layout_width="fill_parent" 
-		      a:layout_height="wrap_content" 
-		      a:text="Chúc bạn một ngày vui vẻ" 
+		      a:layout_height="wrap_content"
+		      a:maxLines="3"
+		      a:ellipsize="end"
+		      a:text="Chúc bạn một ngày vui vẻ Chúc bạn một ngày vui vẻ Chúc bạn một ngày vui vẻ Chúc bạn một ngày vui vẻ Chúc bạn một ngày vui vẻ Chúc bạn một ngày vui vẻ" 
 		      a:gravity="center_horizontal" 
-		      a:textSize="16sp"/>
+		      a:textSize="16sp"
+		      a:padding="10sp"/>
 	</LinearLayout>
 	
 	<TableLayout 
