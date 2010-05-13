@@ -35,7 +35,7 @@ public class MonthWidgetProvider extends AppWidgetProvider {
 	
 	public static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId, String theme) {		
         AppWidgetProviderInfo info = appWidgetManager.getAppWidgetInfo(appWidgetId);        
-        MonthViewRenderer.Config config = null;// TODO: ThemeManager.getConfig(context, theme);
+        MonthViewRenderer.Config config = ThemeManager.getConfig(context, theme);
         
         Uri bitmapUri = null;
         bitmapUri = renderWidget(context, config, appWidgetId);  
