@@ -222,20 +222,23 @@ public class VNMEventDetailsActivity extends Activity {
 			}
 			
 		});
-		String[] projection = new String[] { "_id", "name" };
+		String[] projection = new String[] { "_id", "displayName" };
 		Uri cals = Uri.parse("content://calendar/calendars");
 		Cursor managedCursor = managedQuery(cals, projection, "selected=1", null, null);
 		if (managedCursor.moveToFirst()) {
 			 String calId;
 			 String calName;
 			 int idColumn = managedCursor.getColumnIndex("_id");
-			 int nameColumn = managedCursor.getColumnIndex("name");
+			 int nameColumn = managedCursor.getColumnIndex("displayName");
 			 int index = 0;
 			 do {
 			    calId = managedCursor.getString(idColumn);
 			    calName = managedCursor.getString(nameColumn);
-			    calendars.put(index, new CalTable(calId, calName));
-			    index++;
+			    if (calName != null) {
+			    	calendars.put(index, new CalTable(calId, calName));
+				    index++;
+			    }
+			    
 			 } while (managedCursor.moveToNext());
 			 calendars.put(index, new CalTable(CalTable.ALL, "Tất cả"));
 		}
