@@ -1,9 +1,8 @@
 {
-    name: "Đen",
+    name: "Trắng - Trong suốt",
     width: 301,
     height: 344,    
-    background: "dark_month_widget_bg",
-    enableShadow: false,    
+    enableShadow: true,    
     autoCalculateOffsets: false,
     
     titleOffsetX: 0,
@@ -26,7 +25,7 @@
     cellOffsetY: 86,
     cellWidth: 43,
     cellHeight: 43,
-    cellMainTextSize: 20,
+    cellMainTextSize: 22,
     cellSubTextSize: 13,    
     cellEventBackground: "event_cell_bg",
     

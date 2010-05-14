@@ -58,13 +58,14 @@ public class MonthWidgetConfigure extends Activity {
     protected Dialog onCreateDialog(int id) {
     	Dialog dialog;
         switch(id) {
-	        case SELECT_THEME_DIALOG:
-	        	final String[] items = {"Light", "Dark"};
+	        case SELECT_THEME_DIALOG:	        	
+	        	final String[] items = {"Chữ đen - Nền trắng", "Chữ trắng - Nền đen", "Chữ trắng - Trong suốt", "Chữ đen - Trong suốt"};
+	        	final String[] itemIds = {"light", "dark", "transparent_light", "transparent_dark"};
 	        	AlertDialog.Builder builder = new AlertDialog.Builder(this);
-	        	builder.setTitle("Pick a theme");
+	        	builder.setTitle("Chọn màu sắc");
 	        	builder.setItems(items, new DialogInterface.OnClickListener() {
 	        	    public void onClick(DialogInterface dialog, int item) {
-	        	    	MonthWidgetConfigure.this.setWidgetTheme(items[item]);
+	        	    	MonthWidgetConfigure.this.setWidgetTheme(itemIds[item]);
 	        	    }
 	        	});
 	        	builder.setOnCancelListener(new DialogInterface.OnCancelListener() {

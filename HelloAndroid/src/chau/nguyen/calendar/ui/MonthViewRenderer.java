@@ -7,7 +7,9 @@ import java.util.GregorianCalendar;
 
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -48,8 +50,9 @@ public class MonthViewRenderer {
 		if (config.autoCalculateOffsets) {
 			config.calculate(canvas.getWidth(), canvas.getHeight());
 		}
-		if (config.backgroundColor != 0) {
-			canvas.drawColor(config.backgroundColor);
+		if (config.background != null) {			
+			config.background.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+			config.background.draw(canvas);
 		}
 		
 		int leadSpaces = 0;
@@ -164,18 +167,7 @@ public class MonthViewRenderer {
 	
 	private void drawCellContent(Canvas canvas, int cellX, int cellY, int cellWidth, int cellHeight, 
 			int day, int month, int year, int dayOfWeek, boolean highlight, boolean hasEvent) {		
-		Paint paint = new Paint();			
-		if (dayOfWeek == 6) {
-			paint.setColor(config.weekendColor);
-			if (config.enableShadow) {
-				paint.setShadowLayer(1, 0, 0, config.weekendShadowColor);
-			}
-		} else {			
-			paint.setColor(highlight ? config.todayColor : config.dayColor);
-			if (config.enableShadow) {
-				paint.setShadowLayer(1, 0, 0, highlight ? config.todayShadowColor : config.dayShadowColor);
-			}
-		}
+		Paint paint = new Paint();					
 		paint.setAntiAlias(true);
 		paint.setTextAlign(Align.CENTER);		
 		paint.setTextSize(config.cellMainTextSize);
@@ -185,12 +177,13 @@ public class MonthViewRenderer {
 		if (bitmap != null) {
 			Rect srcRect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
 			Rect destRect = new Rect(cellX + 1, cellY + 1,  cellX + cellWidth, cellY + cellHeight);
-			canvas.drawBitmap(bitmap, srcRect, destRect, paint);
-			if (hasEvent) {
-				Bitmap eventBitmap = config.cellEventBackground;
-				Rect eventRect = new Rect(cellX + 4, cellY + 4,  cellX + 10, cellY + 20);
-				canvas.drawBitmap(eventBitmap, srcRect, eventRect, paint);
-			}
+			canvas.drawBitmap(bitmap, srcRect, destRect, paint);			
+		}
+		if (hasEvent && config.cellEventBackground != null) {
+			Bitmap eventBitmap = config.cellEventBackground;
+			Rect srcRect = new Rect(0, 0, eventBitmap.getWidth(), eventBitmap.getHeight());
+			Rect eventRect = new Rect(cellX + 4, cellY + 4,  cellX + 10, cellY + cellHeight/4);
+			canvas.drawBitmap(eventBitmap, srcRect, eventRect, paint);
 		}
 		
 		float x = cellX + cellWidth / 2;
@@ -204,9 +197,20 @@ public class MonthViewRenderer {
 				if (config.enableShadow) {
 					paint.setShadowLayer(1, 0, 0, config.holidayShadowColor);
 				}
-			}
-			String dayText = "" + day;
-			canvas.drawText(dayText, x, y, paint);
+			} else {
+				if (dayOfWeek == 6) {
+					paint.setColor(config.weekendColor);
+					if (config.enableShadow) {
+						paint.setShadowLayer(1, 0, 0, config.weekendShadowColor);
+					}
+				} else {			
+					paint.setColor(highlight ? config.todayColor : config.dayColor);
+					if (config.enableShadow) {
+						paint.setShadowLayer(1, 0, 0, highlight ? config.todayShadowColor : config.dayShadowColor);
+					}
+				}
+			}			
+			canvas.drawText("" + day, x, y, paint);
 					    						
 			paint.setColor(config.dayColor);
 			if (config.enableShadow) {
@@ -238,8 +242,8 @@ public class MonthViewRenderer {
 		public boolean enableShadow = false;
 		
 		public int width;
-		public int height;
-		public int backgroundColor = 0;
+		public int height;		
+		public Drawable background = null;
 		
 		public int titleOffsetX;
 		public int titleOffsetY;
@@ -310,16 +314,20 @@ public class MonthViewRenderer {
 			this.titleTextSize = (int)((float)this.cellMainTextSize);
 		}
 		
-		public static Config load(InputStream themeInputStream) {			
+		public static Config load(InputStream themeInputStream, Context context) {			
 			Config config = new Config();
 			try {
 				String themeJson = StreamUtils.readAllText(themeInputStream);
 				JSONObject themeObject = new JSONObject(themeJson);
 				config.width = themeObject.getInt("width");
-				config.height = themeObject.getInt("height");
-				config.backgroundColor = Color.parseColor(themeObject.getString("backgroundColor"));
+				config.height = themeObject.getInt("height");				
+				String background = themeObject.optString("background", null);
+				if (background != null && background.length() > 0) {
+					Log.d("DEBUG", "Background: " + background + "(" + background.length() + ")");
+					config.background = getDrawable(background, context);
+				}
 				config.enableShadow = themeObject.getBoolean("enableShadow");
-				config.autoCalculateOffsets = themeObject.getBoolean("autoCalculateOffsets");				
+				config.autoCalculateOffsets = themeObject.getBoolean("autoCalculateOffsets");
 				
 				config.titleTextSize = themeObject.getInt("titleTextSize");
 				config.titleTextColor = Color.parseColor(themeObject.getString("titleTextColor"));
@@ -331,6 +339,14 @@ public class MonthViewRenderer {
 				
 				config.cellMainTextSize = themeObject.getInt("cellMainTextSize");
 				config.cellSubTextSize = themeObject.getInt("cellSubTextSize");
+				String cellHighlightBackground = themeObject.optString("cellHighlightBackground", null);
+				if (cellHighlightBackground != null && cellHighlightBackground.length() > 0) {					
+					config.cellHighlightBackground = getBitmap(cellHighlightBackground, context);
+				}
+				String cellEventBackground = themeObject.optString("cellEventBackground", null);
+				if (cellEventBackground != null && cellEventBackground.length() > 0) {					
+					config.cellEventBackground = getBitmap(cellEventBackground, context);
+				}
 				
 				config.dayColor = Color.parseColor(themeObject.getString("dayColor"));
 				config.dayShadowColor = Color.parseColor(themeObject.getString("dayShadowColor"));
@@ -352,8 +368,7 @@ public class MonthViewRenderer {
 					config.headerOffsetX = themeObject.getInt("headerOffsetX");
 					config.headerOffsetY = themeObject.getInt("headerOffsetY");
 					config.headerWidth = themeObject.getInt("headerWidth");
-					config.headerHeight = themeObject.getInt("headerHeight");
-					
+					config.headerHeight = themeObject.getInt("headerHeight");					
 					
 					config.cellOffsetX = themeObject.getInt("cellOffsetX");
 					config.cellOffsetY = themeObject.getInt("cellOffsetY");
@@ -364,6 +379,16 @@ public class MonthViewRenderer {
 				e.printStackTrace();
 			}
 			return config;
+		}
+		
+		private static Drawable getDrawable(String name, Context context) {
+			int resId = context.getResources().getIdentifier(context.getPackageName() + ":drawable/" + name, null, null);					
+			return context.getResources().getDrawable(resId);
+		}
+		
+		private static Bitmap getBitmap(String name, Context context) {
+			int resId = context.getResources().getIdentifier(context.getPackageName() + ":drawable/" + name, null, null);					
+			return BitmapFactory.decodeResource(context.getResources(), resId);
 		}
 	}	
 }
