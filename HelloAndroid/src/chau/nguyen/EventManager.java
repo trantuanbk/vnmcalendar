@@ -1,6 +1,5 @@
 package chau.nguyen;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -9,7 +8,6 @@ import java.util.Set;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
-import android.util.Log;
 
 public class EventManager {
 	public static Uri EVENTS_URI = Uri.parse("content://calendar/events");
