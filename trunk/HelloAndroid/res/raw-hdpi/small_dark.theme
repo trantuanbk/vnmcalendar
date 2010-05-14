@@ -1,8 +1,7 @@
 {
-    name: "Light",
+    name: "Đen",
     width: 280,
     height: 320,
-    backgroundColor: "#33EEEEEE",
     enableShadow: false,
     autoCalculateOffsets: false,
     
@@ -27,11 +26,12 @@
     cellWidth: 40,
     cellHeight: 40,
     cellMainTextSize: 22,
-    cellSubTextSize: 18,    
+    cellSubTextSize: 18,
+    cellEventBackground: "event_cell_bg",    
         
     dayColor: "#FFFFFF",
     dayShadowColor: "#333333",
-    todayColor: "#00FF00",
+    todayColor: "#A5CA39",
     todayShadowColor: "#FFFFFF",
     dayOfWeekColor: "#666666",
     dayOfWeekShadowColor: "#333333",
