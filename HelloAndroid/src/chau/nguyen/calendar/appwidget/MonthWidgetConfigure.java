@@ -9,7 +9,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Gallery;
+import android.widget.AdapterView.OnItemClickListener;
+import chau.nguyen.R;
 
 public class MonthWidgetConfigure extends Activity {
 	static final int SELECT_THEME_DIALOG = 1;
@@ -32,7 +39,7 @@ public class MonthWidgetConfigure extends Activity {
 
         // Set the result to CANCELED.  This will cause the widget host to cancel
         // out of the widget placement if they press the back button.
-        setResult(RESULT_CANCELED);
+        setResult(RESULT_CANCELED);        
 
         // Find the widget id from the intent. 
         Intent intent = getIntent();
@@ -47,39 +54,46 @@ public class MonthWidgetConfigure extends Activity {
             finish();
         }
         
-        showDialog(SELECT_THEME_DIALOG);
+        setContentView(R.layout.month_widget_config);
+        
+        final Gallery gallery = (Gallery)findViewById(R.id.gallery);        
+        final ThemeAdapter themeAdapter = new ThemeAdapter(this);
+        gallery.setAdapter(themeAdapter);
+        gallery.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				MonthWidgetConfigure.this.setWidgetTheme((String)themeAdapter.getItem(position));
+			}			       
+        });
+        Button prevButton = (Button)findViewById(R.id.prev);
+        prevButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View arg0) {
+				int prev = gallery.getSelectedItemPosition() - 1;
+				if (prev >= 0) {
+					gallery.setSelection(prev, true);
+				}
+			}        	
+        });
+        Button nextButton = (Button)findViewById(R.id.next);
+        nextButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View arg0) {
+				int next = gallery.getSelectedItemPosition() + 1;
+				if (next < gallery.getCount()) { 
+					gallery.setSelection(next, true);
+				}
+			}        	
+        });
+        Button chooseButton = (Button)findViewById(R.id.choose);
+        chooseButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View arg0) {
+				MonthWidgetConfigure.this.setWidgetTheme((String)gallery.getSelectedItem());
+			}        	
+        });        
     }
     
     protected String getThemeName(String theme) {
     	return theme;
-    }        
-    
-    @Override
-    protected Dialog onCreateDialog(int id) {
-    	Dialog dialog;
-        switch(id) {
-	        case SELECT_THEME_DIALOG:	        	
-	        	final String[] items = {"Chữ đen - Nền trắng", "Chữ trắng - Nền đen", "Chữ trắng - Trong suốt", "Chữ đen - Trong suốt"};
-	        	final String[] itemIds = {"light", "dark", "transparent_light", "transparent_dark"};
-	        	AlertDialog.Builder builder = new AlertDialog.Builder(this);
-	        	builder.setTitle("Chọn màu sắc");
-	        	builder.setItems(items, new DialogInterface.OnClickListener() {
-	        	    public void onClick(DialogInterface dialog, int item) {
-	        	    	MonthWidgetConfigure.this.setWidgetTheme(itemIds[item]);
-	        	    }
-	        	});
-	        	builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-					public void onCancel(DialogInterface dialog) {
-						MonthWidgetConfigure.this.finish();
-					}	        		
-	        	});
-	        	dialog = builder.create();
-	            break;
-	        default:
-	            dialog = null;
-        }
-        return dialog;
-    }
+    }    
     
     private void setWidgetTheme(String theme) {
         // When the button is clicked, save the string in our prefs and return that they
