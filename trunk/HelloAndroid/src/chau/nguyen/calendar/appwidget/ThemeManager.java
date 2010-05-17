@@ -7,8 +7,7 @@ import chau.nguyen.R;
 import chau.nguyen.calendar.ui.MonthViewRenderer;
 
 public class ThemeManager {
-	static ThemeManager instance = null;
-	
+	private static ThemeManager instance = null;	
 	HashMap<String, Integer> themeMap;
 	public ThemeManager() {
 		themeMap = new HashMap<String, Integer>();
@@ -22,12 +21,17 @@ public class ThemeManager {
 		themeMap.put("small_transparent_dark", R.raw.small_transparent_dark);
 	}
 	
-	public static synchronized MonthViewRenderer.Config getConfig(Context context, String theme) {
+	public static synchronized ThemeManager getInstance() {
 		if (instance == null) {
 			instance = new ThemeManager();
 		}
-		theme = theme.toLowerCase();		
-		return MonthViewRenderer.Config.load(context.getResources().openRawResource(instance.themeMap.get(theme)),
+		return instance;
+	}
+	
+	public static MonthViewRenderer.Config getConfig(Context context, String theme) {		
+		theme = theme.toLowerCase();
+		return MonthViewRenderer.Config.load(
+				context.getResources().openRawResource(getInstance().themeMap.get(theme)),
 				context);
 	}
 }

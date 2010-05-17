@@ -42,7 +42,9 @@ public class MonthViewRenderer {
 		this.config = config;
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(this.config.date);
-		this.eventManager.setMonth(cal.get(Calendar.MONTH), cal.get(Calendar.YEAR));
+		if (eventManager != null) {
+			this.eventManager.setMonth(cal.get(Calendar.MONTH), cal.get(Calendar.YEAR));
+		}
 	}
 	
 	public void render(Canvas canvas) {
@@ -59,9 +61,7 @@ public class MonthViewRenderer {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(config.date);
 		int mm = calendar.get(Calendar.MONTH);
-		int yy = calendar.get(Calendar.YEAR);
-		this.eventManager.setMonth(mm, yy);
-		
+		int yy = calendar.get(Calendar.YEAR);		
 		GregorianCalendar cal = new GregorianCalendar(yy, mm, 1);
 		
 		// Compute how much to leave before before the first day of the month.
@@ -94,7 +94,7 @@ public class MonthViewRenderer {
     		   for (int j = 0; j < 7 && count <= daysInMonth; j++) {    			          		   
     			   if (j >= leadSpaces) {
     				   boolean highlight = isSameDate(todayYear, todayMonth, todayDay, yy, mm, count);
-    				   boolean hasEvent = this.eventManager.hasEvent(count, mm, yy);
+    				   boolean hasEvent = this.eventManager != null && this.eventManager.hasEvent(count, mm, yy);
     				   drawCellContent(canvas, config.cellOffsetX + j * config.cellWidth, config.cellOffsetY + (i - 2) * config.cellHeight, config.cellWidth, config.cellHeight, count, mm + 1, yy, j, highlight, hasEvent);
     				   count++;
     			   } else {        				               		   
@@ -105,7 +105,7 @@ public class MonthViewRenderer {
     		   for (int j = 0; j < 7; j++) {
     			   if (count <= daysInMonth) {
     				   boolean highlight = isSameDate(todayYear, todayMonth, todayDay, yy, mm, count);
-    				   boolean hasEvent = this.eventManager.hasEvent(count, mm, yy);
+    				   boolean hasEvent = this.eventManager != null && this.eventManager.hasEvent(count, mm, yy);
     				   drawCellContent(canvas, config.cellOffsetX + j * config.cellWidth, config.cellOffsetY + (i - 2) * config.cellHeight, config.cellWidth, config.cellHeight, count, mm + 1, yy, j, highlight, hasEvent);    				   
     				   count++;
     			   } else {
