@@ -42,9 +42,6 @@ public class MonthViewRenderer {
 		this.config = config;
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(this.config.date);
-		if (eventManager != null) {
-			this.eventManager.setMonth(cal.get(Calendar.MONTH), cal.get(Calendar.YEAR));
-		}
 	}
 	
 	public void render(Canvas canvas) {
@@ -61,7 +58,11 @@ public class MonthViewRenderer {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(config.date);
 		int mm = calendar.get(Calendar.MONTH);
-		int yy = calendar.get(Calendar.YEAR);		
+		int yy = calendar.get(Calendar.YEAR);
+		
+		if (eventManager != null) {
+			this.eventManager.setMonth(mm, yy);
+		}
 		GregorianCalendar cal = new GregorianCalendar(yy, mm, 1);
 		
 		// Compute how much to leave before before the first day of the month.
