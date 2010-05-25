@@ -9,7 +9,6 @@
 		a:layout_width="fill_parent"
 		a:layout_height="wrap_content"
 		a:layout_weight="1">
-		
 		<TextView a:id="@+id/monthText" 
 		      a:layout_width="fill_parent" 
 		      a:layout_height="wrap_content" 
@@ -19,8 +18,7 @@
 		      a:paddingTop="10sp"/>
 		<TextView a:id="@+id/dayOfMonthText"
 			a:layout_width="fill_parent" 
-			a:layout_height="wrap_content"
-			a:layout_marginTop="-16sp"
+			a:layout_height="wrap_content" 
 			a:text="29"
 			a:textColor="@color/dayColor"
 			a:gravity="center"
@@ -29,7 +27,6 @@
 		<TextView a:id="@+id/dayOfWeekText" 
 			a:layout_width="fill_parent" 
 			a:layout_height="wrap_content" 
-			a:layout_marginTop="-16sp"
 			a:text="Thứ ba"
 			a:textColor="@color/dayOfWeekColor"
 			a:gravity="center_horizontal"		
@@ -37,11 +34,10 @@
 		<TextView a:id="@+id/noteText" 
 		      a:layout_width="fill_parent" 
 		      a:layout_height="fill_parent"
-		      a:maxLines="4"		      
-		      a:text="Chúc bạn một ngày vui vẻ Chúc bạn một ngày vui vẻ Chúc bạn một ngày vui vẻ Chúc bạn một ngày vui vẻ Chúc bạn một ngày vui vẻ Chúc bạn một ngày vui vẻ" 
+		      a:text="Chúc bạn một ngày vui vẻ!" 
 		      a:gravity="center_horizontal" 
 		      a:textSize="16sp"
-		      a:padding="10sp"/>
+		      a:padding="10sp"/>        		      
 	</LinearLayout>
 	
 	<TableLayout 
