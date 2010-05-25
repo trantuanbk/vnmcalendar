@@ -18,6 +18,7 @@ public class EventManager {
 	private ContentResolver contentResolver;
 	public EventManager(ContentResolver contentResolver) {
 		this.contentResolver = contentResolver;
+		dateHasEvents = new HashSet<Long>();
 	}
 	
 	private Cursor getEventsByDate(Date date) {
@@ -36,6 +37,8 @@ public class EventManager {
 	
 	public String getSumarize(Date date) {
 		Cursor cur = getEventsByDate(date);
+		if (cur == null) return null;
+		
 		String sumarize = "";
 		if (cur.moveToFirst()) {
 			int titleColumn = cur.getColumnIndex("title");
@@ -70,7 +73,9 @@ public class EventManager {
 		cal.add(Calendar.MONTH, 1);
 		long beginDateOfNextMonth = cal.getTimeInMillis();
 		monthCursor = this.contentResolver.query(EVENTS_URI, new String[] { "dtstart" }, "dtstart >= ? AND dtstart < ?", new String[] { String.valueOf(beginDateOfMonth), String.valueOf(beginDateOfNextMonth) }, null);
-		dateHasEvents = new HashSet<Long>();
+		if (monthCursor == null) return;
+		
+		dateHasEvents.clear();
 		if (monthCursor.moveToFirst()) {
 			int dateColumn = monthCursor.getColumnIndex("dtstart");
 			long date;

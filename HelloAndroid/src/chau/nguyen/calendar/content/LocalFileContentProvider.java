@@ -23,6 +23,7 @@ public class LocalFileContentProvider extends ContentProvider {
 		File file = new File(uri.getPath());
 		ParcelFileDescriptor parcel = ParcelFileDescriptor.open(file,
 				ParcelFileDescriptor.MODE_READ_ONLY);
+		file.delete();
 		return parcel;
 	}
 
