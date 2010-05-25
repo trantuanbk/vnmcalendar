@@ -225,6 +225,13 @@ public class VNMEventDetailsActivity extends Activity {
 		String[] projection = new String[] { "_id", "displayName" };
 		Uri cals = Uri.parse("content://calendar/calendars");
 		Cursor managedCursor = managedQuery(cals, projection, "selected=1", null, null);
+		if (managedCursor == null) {
+			// the device doesn't support Calendar
+			Toast.makeText(this, "Máy của bạn không hỗ trợ lịch chuẩn của hệ thống. Chức năng này không sử dụng được. Mong bạn thông cảm!", 10)
+				.show();
+			this.finish();
+			return;
+		}
 		if (managedCursor.moveToFirst()) {
 			 String calId;
 			 String calName;

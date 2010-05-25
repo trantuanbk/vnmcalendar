@@ -220,7 +220,7 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 		this.vnmDayOfMonthInText.setText(vnmCalendarTexts[VietCalendar.DAY]);
 		this.vnmMonthInText.setText(vnmCalendarTexts[VietCalendar.MONTH]);
 		this.vnmYearInText.setText(vnmCalendarTexts[VietCalendar.YEAR]);	
-		if (eventSumarize.length() > 0) {
+		if (eventSumarize != null && eventSumarize.length() > 0) {
 			this.noteText.setTextColor(this.eventColor);
 			this.noteText.setText(eventSumarize);
 		}

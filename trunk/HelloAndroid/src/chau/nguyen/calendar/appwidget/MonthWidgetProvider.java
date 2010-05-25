@@ -52,7 +52,8 @@ public class MonthWidgetProvider extends AppWidgetProvider {
 		
 	protected static Uri renderWidget(Context context, MonthViewRenderer.Config config, int appWidgetId) {		
 		Bitmap bitmap = Bitmap.createBitmap(config.width, config.height, Bitmap.Config.ARGB_8888);		
-		config.date = new Date();
+		config.date = new Date();		
+		cleanUp(context);
 		EventManager eventManager = new EventManager(context.getContentResolver());
 		Calendar cal = Calendar.getInstance();
 		eventManager.setMonth(cal.get(Calendar.MONTH), cal.get(Calendar.YEAR));
@@ -71,5 +72,12 @@ public class MonthWidgetProvider extends AppWidgetProvider {
             e.printStackTrace();
         }                
 		return Uri.parse(LocalFileContentProvider.constructUri(file.getAbsolutePath()));
-	}		
+	}	
+	
+	protected static void cleanUp(Context context) {
+		File[] files = context.getCacheDir().listFiles();
+		for (File file : files) {
+			file.delete();
+		}
+	}
 }
