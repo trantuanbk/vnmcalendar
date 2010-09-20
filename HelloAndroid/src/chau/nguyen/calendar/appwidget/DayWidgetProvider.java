@@ -51,6 +51,8 @@ public class DayWidgetProvider extends AppWidgetProvider {
         for (int i = 0; i < N; i++) {
             int appWidgetId = appWidgetIds[i];            
             AppWidgetProviderInfo info = appWidgetManager.getAppWidgetInfo(appWidgetId);
+            if (info == null) continue;
+            
             Intent intent = new Intent(context, VNMDayActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 

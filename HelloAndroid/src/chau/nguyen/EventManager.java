@@ -8,12 +8,32 @@ import java.util.Set;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 
 public class EventManager {
-	public static Uri EVENTS_URI = Uri.parse("content://calendar/events");
-	public static Uri REMINDERS_URI = Uri.parse("content://calendar/reminders");
+	public static Uri CALENDARS_URI;
+	public static Uri EVENTS_URI;
+	public static Uri REMINDERS_URI;
 	private Cursor monthCursor;
 	private Set<Long> dateHasEvents;
+	
+	static {
+		int sdkVersion = 1;
+		try {
+			sdkVersion = Integer.parseInt(Build.VERSION.SDK);
+		} catch (Throwable ex) {			
+		}
+		
+		if (sdkVersion >= 8) { // from Froyo
+			CALENDARS_URI = Uri.parse("content://com.android.calendar/calendars");
+			EVENTS_URI = Uri.parse("content://com.android.calendar/events");
+			REMINDERS_URI = Uri.parse("content://com.android.calendar/reminders");
+		} else {
+			CALENDARS_URI = Uri.parse("content://calendar/calendars");
+			EVENTS_URI = Uri.parse("content://calendar/events");
+			REMINDERS_URI = Uri.parse("content://calendar/reminders");			
+		}
+	}
 	
 	private ContentResolver contentResolver;
 	public EventManager(ContentResolver contentResolver) {
