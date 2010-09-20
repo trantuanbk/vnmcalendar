@@ -34,7 +34,9 @@ public class MonthWidgetProvider extends AppWidgetProvider {
     }
 	
 	public static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId, String theme) {		
-        AppWidgetProviderInfo info = appWidgetManager.getAppWidgetInfo(appWidgetId);        
+        AppWidgetProviderInfo info = appWidgetManager.getAppWidgetInfo(appWidgetId);
+        if (info == null) return;
+        
         MonthViewRenderer.Config config = ThemeManager.getConfig(context, theme);
         
         Uri bitmapUri = null;
@@ -43,7 +45,7 @@ public class MonthWidgetProvider extends AppWidgetProvider {
         // Create an Intent to launch VNMDayActivity
         Intent intent = new Intent(context, VNMDayActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);        
-        RemoteViews views = new RemoteViews(context.getPackageName(), info.initialLayout);            
+        RemoteViews views = new RemoteViews(context.getPackageName(), info.initialLayout);
     	views.setImageViewUri(R.id.monthViewImage, bitmapUri);
     	views.setOnClickPendingIntent(R.id.monthViewImage, pendingIntent);
     	

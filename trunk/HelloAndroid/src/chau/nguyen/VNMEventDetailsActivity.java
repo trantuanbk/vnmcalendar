@@ -10,7 +10,6 @@ import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -222,9 +221,8 @@ public class VNMEventDetailsActivity extends Activity {
 			}
 			
 		});
-		String[] projection = new String[] { "_id", "displayName" };
-		Uri cals = Uri.parse("content://calendar/calendars");
-		Cursor managedCursor = managedQuery(cals, projection, "selected=1", null, null);
+		String[] projection = new String[] { "_id", "displayName" };		
+		Cursor managedCursor = managedQuery(EventManager.CALENDARS_URI, projection, "selected=1", null, null);
 		if (managedCursor == null) {
 			// the device doesn't support Calendar
 			Toast.makeText(this, "Máy của bạn không hỗ trợ lịch chuẩn của hệ thống. Chức năng này không sử dụng được. Mong bạn thông cảm!", 10)
