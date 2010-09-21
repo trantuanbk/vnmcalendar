@@ -212,8 +212,12 @@ public class MonthViewRenderer {
 				}
 			}			
 			canvas.drawText("" + day, x, y, paint);
-					    						
-			paint.setColor(config.dayColor);
+				
+			if (dayOfWeek == 6) {
+				paint.setColor(config.weekendColor);
+			} else {
+				paint.setColor(config.dayColor);
+			}
 			if (config.enableShadow) {
 				paint.setShadowLayer(1, 0, 0, config.dayShadowColor);
 			}
