@@ -15,7 +15,7 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
+        </activity>        
 		<activity android:name=".VNMMonthActivity" android:screenOrientation="portrait" />
 		<activity android:name=".VNMEventDetailsActivity" android:screenOrientation="portrait" />
 		<activity android:name=".DayInfoActivity" android:screenOrientation="portrait" />

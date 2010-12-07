@@ -56,8 +56,11 @@ public class VNMMonthViewer extends View {
 		config.todayColor = config.dayColor;
 		config.dayOfWeekColor = context.getResources().getColor(R.color.dayOfWeekColor);
 		config.weekendColor = context.getResources().getColor(R.color.weekendColor);
-		config.holidayColor = context.getResources().getColor(R.color.holidayColor);		
+		config.holidayColor = context.getResources().getColor(R.color.holidayColor);
+		config.otherDayColor = context.getResources().getColor(R.color.otherDayColor);		
 		renderer = new MonthViewRenderer(config, this.eventManager);
+		
+		this.setDrawingCacheEnabled(true);
 		
 		this.gestureDetector = new GestureDetector(getContext(), new GestureDetector.OnGestureListener() {			
 			public boolean onSingleTapUp(MotionEvent e) {

@@ -16,7 +16,7 @@
 		      a:text="Tháng 2 năm 2012" 
 		      a:gravity="center_horizontal" 
 		      a:textSize="18sp"
-		      a:paddingTop="10sp"/>
+		      a:paddingTop="10sp" />
 		<TextView a:id="@+id/dayOfMonthText"
 			a:layout_width="fill_parent" 
 			a:layout_height="wrap_content"
@@ -25,7 +25,11 @@
 			a:textColor="@color/dayColor"
 			a:gravity="center"
 			a:textSize="140sp"
-			a:textStyle="bold"/>
+			a:textStyle="bold"			
+			a:shadowColor="#FF0000"
+			a:shadowDx="1"
+			a:shadowDy="1"
+			a:shadowRadius="1.5" />
 		<TextView a:id="@+id/dayOfWeekText" 
 			a:layout_width="fill_parent" 
 			a:layout_height="wrap_content" 

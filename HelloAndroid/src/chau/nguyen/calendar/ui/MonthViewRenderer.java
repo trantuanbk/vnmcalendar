@@ -16,7 +16,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Paint.Align;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
+import android.hardware.Camera.PreviewCallback;
 import chau.nguyen.EventManager;
 import chau.nguyen.calendar.VietCalendar;
 import chau.nguyen.calendar.VietCalendar.Holiday;
@@ -44,8 +44,7 @@ public class MonthViewRenderer {
 		cal.setTime(this.config.date);
 	}
 	
-	public void render(Canvas canvas) {
-		Log.d("DEBUG", "Canvas size: " + canvas.getWidth() + " x " + canvas.getHeight());
+	public void render(Canvas canvas) {		
 		if (config.autoCalculateOffsets) {
 			config.calculate(canvas.getWidth(), canvas.getHeight());
 		}
@@ -57,22 +56,33 @@ public class MonthViewRenderer {
 		int leadSpaces = 0;
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(config.date);
-		int mm = calendar.get(Calendar.MONTH);
-		int yy = calendar.get(Calendar.YEAR);
+		int month = calendar.get(Calendar.MONTH);
+		int year = calendar.get(Calendar.YEAR);
+		
+		calendar.add(Calendar.MONTH, -1);
+		int prevMonth = calendar.get(Calendar.MONTH);
+		int prevYear = calendar.get(Calendar.YEAR);
+		int prevDaysInMonth = dom[prevMonth];
+		if (prevMonth == 1 && prevYear % 4 == 0) {
+			prevDaysInMonth++;
+		}
+		
+		calendar.add(Calendar.MONTH, 2);
+		int nextMonth = calendar.get(Calendar.MONTH);
+		int nextYear = calendar.get(Calendar.YEAR);				
 		
 		if (eventManager != null) {
-			this.eventManager.setMonth(mm, yy);
+			this.eventManager.setMonth(month, year);
 		}
-		GregorianCalendar cal = new GregorianCalendar(yy, mm, 1);
 		
+		GregorianCalendar cal = new GregorianCalendar(year, month, 1);
 		// Compute how much to leave before before the first day of the month.
 		// getDay() returns 0 for Sunday.
 		leadSpaces = getDayOfWeekVNLocale(cal.get(Calendar.DAY_OF_WEEK)) - 1;
-
 		// total days in month
-		int daysInMonth = dom[mm];
+		int daysInMonth = dom[month];
 
-		if (cal.isLeapYear(cal.get(Calendar.YEAR)) && mm == 1) {
+		if (cal.isLeapYear(cal.get(Calendar.YEAR)) && month == 1) {
 			++daysInMonth;
 		}				
 	       
@@ -84,7 +94,7 @@ public class MonthViewRenderer {
 		int count = 1;	       
 		for (int i = 0; i < 8; i++) {
 			if (i == 0) {
-    		   drawTitle(canvas, config.titleOffsetX, config.titleOffsetY, config.titleWidth, config.titleHeight, mm, yy);
+    		   drawTitle(canvas, config.titleOffsetX, config.titleOffsetY, config.titleWidth, config.titleHeight, month, year);
 			} else if (i == 1) {
 			   if (config.renderHeader) {
 	    		   for (int j = 0; j < 7; j++) {
@@ -94,24 +104,26 @@ public class MonthViewRenderer {
 			} else if (i == 2) {    		   
     		   for (int j = 0; j < 7 && count <= daysInMonth; j++) {    			          		   
     			   if (j >= leadSpaces) {
-    				   boolean highlight = isSameDate(todayYear, todayMonth, todayDay, yy, mm, count);
-    				   boolean hasEvent = this.eventManager != null && this.eventManager.hasEvent(count, mm, yy);
-    				   drawCellContent(canvas, config.cellOffsetX + j * config.cellWidth, config.cellOffsetY + (i - 2) * config.cellHeight, config.cellWidth, config.cellHeight, count, mm + 1, yy, j, highlight, hasEvent);
+    				   boolean highlight = isSameDate(todayYear, todayMonth, todayDay, year, month, count);
+    				   boolean hasEvent = this.eventManager != null && this.eventManager.hasEvent(count, month, year);
+    				   drawCellContent(canvas, config.cellOffsetX + j * config.cellWidth, config.cellOffsetY + (i - 2) * config.cellHeight, config.cellWidth, config.cellHeight, 
+    						   count, month + 1, year, j, highlight, hasEvent, false);
     				   count++;
-    			   } else {        				               		   
-    				   drawCellContent(canvas, config.cellOffsetX + j * config.cellWidth, config.cellOffsetY + (i - 2) * config.cellHeight, config.cellWidth, config.cellHeight, 0, 0, yy, j, false, false);   
+    			   } else {    				   
+    				   drawCellContent(canvas, config.cellOffsetX + j * config.cellWidth, config.cellOffsetY + (i - 2) * config.cellHeight, config.cellWidth, config.cellHeight, 
+    						   prevDaysInMonth - (leadSpaces - (j + 1)), prevMonth + 1, prevYear, j, false, false, true);   
     			   }
     		   }
 			} else {
     		   for (int j = 0; j < 7; j++) {
     			   if (count <= daysInMonth) {
-    				   boolean highlight = isSameDate(todayYear, todayMonth, todayDay, yy, mm, count);
-    				   boolean hasEvent = this.eventManager != null && this.eventManager.hasEvent(count, mm, yy);
-    				   drawCellContent(canvas, config.cellOffsetX + j * config.cellWidth, config.cellOffsetY + (i - 2) * config.cellHeight, config.cellWidth, config.cellHeight, count, mm + 1, yy, j, highlight, hasEvent);    				   
-    				   count++;
+    				   boolean highlight = isSameDate(todayYear, todayMonth, todayDay, year, month, count);
+    				   boolean hasEvent = this.eventManager != null && this.eventManager.hasEvent(count, month, year);
+    				   drawCellContent(canvas, config.cellOffsetX + j * config.cellWidth, config.cellOffsetY + (i - 2) * config.cellHeight, config.cellWidth, config.cellHeight, count, month + 1, year, j, highlight, hasEvent, false);
     			   } else {
-    				   drawCellContent(canvas, config.cellOffsetX + j * config.cellWidth, config.cellOffsetY + (i - 2) * config.cellHeight, config.cellWidth, config.cellHeight, 0, 0, yy, j, false, false);
+    				   drawCellContent(canvas, config.cellOffsetX + j * config.cellWidth, config.cellOffsetY + (i - 2) * config.cellHeight, config.cellWidth, config.cellHeight, count - daysInMonth, nextMonth + 1, nextYear, j, false, false, true);
     			   }
+    			   count++;
         	   }
 			}
 		}
@@ -165,9 +177,9 @@ public class MonthViewRenderer {
 		}	
 		canvas.drawText(dow[j], x, y, paint);
 	}
-	
+		
 	private void drawCellContent(Canvas canvas, int cellX, int cellY, int cellWidth, int cellHeight, 
-			int day, int month, int year, int dayOfWeek, boolean highlight, boolean hasEvent) {		
+			int day, int month, int year, int dayOfWeek, boolean highlight, boolean hasEvent, boolean otherMonth) {		
 		Paint paint = new Paint();					
 		paint.setAntiAlias(true);
 		paint.setTextAlign(Align.CENTER);		
@@ -211,18 +223,23 @@ public class MonthViewRenderer {
 					}
 				}
 			}			
+			if (otherMonth) {
+				paint.setColor(config.otherDayColor);
+			}
 			canvas.drawText("" + day, x, y, paint);
-				
+
 			if (dayOfWeek == 6) {
 				paint.setColor(config.weekendColor);
 			} else {
 				paint.setColor(config.dayColor);
 			}
+			paint.setColor(otherMonth ? config.otherDayColor : config.dayColor);
+
 			if (config.enableShadow) {
-				paint.setShadowLayer(1, 0, 0, config.dayShadowColor);
+				paint.setShadowLayer(1, 0, 0, otherMonth ? config.otherDayShadowColor : config.dayShadowColor);
 			}
 			paint.setTextSize(config.cellSubTextSize);
-			paint.setTextAlign(Align.RIGHT);
+			paint.setTextAlign(Align.RIGHT);			
 			if (lunars[0] == 1) {
 				canvas.drawText(lunars[VietCalendar.DAY] + "/" + lunars[VietCalendar.MONTH], cellX + cellWidth - 5, y + config.cellSubTextSize + 2, paint);
 			} else {
@@ -279,7 +296,7 @@ public class MonthViewRenderer {
 		public Bitmap cellEventBackground;
 		public Bitmap cellHighlightBackground;
 		public Drawable selectedCellDrawable;
-		
+				
 		public int dayColor = 0;
 		public int dayShadowColor = 0;
 		public int todayColor = 0;
@@ -290,6 +307,8 @@ public class MonthViewRenderer {
 		public int weekendShadowColor = 0;
 		public int holidayColor = 0;
 		public int holidayShadowColor = 0;
+		public int otherDayColor = 0;
+		public int otherDayShadowColor = 0;
 		
 		public void calculate(int width, int height) {
 			this.width = width;
@@ -327,8 +346,7 @@ public class MonthViewRenderer {
 				config.width = themeObject.getInt("width");
 				config.height = themeObject.getInt("height");				
 				String background = themeObject.optString("background", null);
-				if (background != null && background.length() > 0) {
-					Log.d("DEBUG", "Background: " + background + "(" + background.length() + ")");
+				if (background != null && background.length() > 0) {					
 					config.background = getDrawable(background, context);
 				}
 				config.enableShadow = themeObject.getBoolean("enableShadow");

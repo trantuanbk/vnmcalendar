@@ -161,18 +161,18 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 		});		
 	}
 	
-	private String getFamousSaying() {
-		String[] famousSayings = getResources().getStringArray(R.array.famousSaying);
-		int index = Calendar.getInstance().get(Calendar.MILLISECOND) % famousSayings.length;
-		return famousSayings[index];
+	private String getQuoteOfDay() {
+		String[] quotes = getResources().getStringArray(R.array.quotes);
+		int index = Calendar.getInstance().get(Calendar.MILLISECOND) % quotes.length;
+		return quotes[index];
 	}
 	
 	public void setDate(Date date) {
 		EventManager eventManager = new EventManager(this.dayViewActivity.getContentResolver());
 		String eventSumarize = eventManager.getSumarize(date);
 		this.displayDate = date;
-		String famousSaying = getFamousSaying();
-		this.noteText.setText(famousSaying);
+		String quote = getQuoteOfDay();
+		this.noteText.setText(quote);
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
 		int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
@@ -206,7 +206,7 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 		if (holiday != null) {
 			this.noteText.setText(holiday.getDescription());
 		} else {
-			this.noteText.setText(famousSaying);
+			this.noteText.setText(quote);
 		}
 		
 		this.vnmHourText.setText(hour + ":" + minute);
@@ -252,7 +252,7 @@ public class VNMDayViewer extends LinearLayout implements OnCreateContextMenuLis
 		item.setOnMenuItemClickListener(this.contextMenuClickHandler);
 		item = menu.add(0, CREATE_NEW_EVENT, 0, "Thêm sự kiện").setIcon(android.R.drawable.ic_menu_add);;
 		item.setOnMenuItemClickListener(this.contextMenuClickHandler);
-		item = menu.add(0, SWITCH_TO_MONTH, 0, "Hiện thị theo tháng").setIcon(android.R.drawable.ic_menu_month);;
+		item = menu.add(0, SWITCH_TO_MONTH, 0, "Hiển thị theo tháng").setIcon(android.R.drawable.ic_menu_month);;
 		item.setOnMenuItemClickListener(this.contextMenuClickHandler);
 	}
 	

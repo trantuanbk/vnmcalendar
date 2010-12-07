@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="famousSaying">
+    <string-array name="quotes">
     	<item>Hãy làm tròn mỗi công việc của đời mình như thể đó là công việc cuối cùng (Marc aurele)</item>
     	<item>Cách khéo nhất để làm vừa lòng ai đó là xin họ lời khuyên (Odove Primex)</item>
     	<item>Đừng mua thứ hữu ích mà hãy mua thứ cần thiết (Caton Censeur)</item>

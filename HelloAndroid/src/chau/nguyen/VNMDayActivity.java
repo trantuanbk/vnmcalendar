@@ -3,28 +3,28 @@ package chau.nguyen;
 import java.util.Calendar;
 import java.util.Date;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.widget.DatePicker;
 import android.widget.TextView;
-import android.widget.ViewSwitcher;
 import chau.nguyen.calendar.VietCalendar;
+import chau.nguyen.calendar.ui.DayView;
 import chau.nguyen.calendar.ui.VNMDatePickerDialog;
-import chau.nguyen.calendar.ui.VNMDayViewer;
+import chau.nguyen.calendar.widget.HorizontalScrollView;
+import chau.nguyen.calendar.widget.HorizontalScrollView.OnScreenSelectedListener;
 
-public class VNMDayActivity extends VNMCalendarViewActivity {
+public class VNMDayActivity extends Activity {
 	public static final int SELECT_DATE = 1;
 	
 	private static final int MENU_SELECT_DATE = 1;
@@ -37,24 +37,83 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
 	public static final int DATE_DIALOG_ID = 0;
 	public static final int ABOUT_DIALOG_ID = 1;
 	
+	private HorizontalScrollView scrollView;
 	private Date date;
 	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        this.switcher = new ViewSwitcher(this);
-        setContentView(this.switcher);
+    	super.onCreate(savedInstanceState);
         BackgroundManager.init(this);
-        this.date = new Date();
-        this.switcher.addView(new VNMDayViewer(this, this));
-        Drawable background = BackgroundManager.getRandomBackground();
-        this.switcher.getCurrentView().setBackgroundDrawable(background);
-        this.switcher.addView(new VNMDayViewer(this, this));
-        this.inAnimationLeft.initialize(this.switcher.getWidth(), this.switcher.getHeight(), this.switcher.getWidth(), this.switcher.getHeight());
-        this.inAnimationRight.initialize(this.switcher.getWidth(), this.switcher.getHeight(), this.switcher.getWidth(), this.switcher.getHeight());
-        this.outAnimationLeft.initialize(this.switcher.getWidth(), this.switcher.getHeight(), this.switcher.getWidth(), this.switcher.getHeight());
-        this.outAnimationRight.initialize(this.switcher.getWidth(), this.switcher.getHeight(), this.switcher.getWidth(), this.switcher.getHeight());                
+        
+        this.scrollView = new HorizontalScrollView(this);
+        this.setContentView(this.scrollView);
+        
+        this.scrollView.setOnScreenSelectedListener(new OnScreenSelectedListener() {
+			public void onSelected(int selectedIndex) {				
+				prepareOtherViews(selectedIndex);
+			}
+        });
+        
+        Date today = new Date();        
+        showDate(today);
+    }
+    
+    private void showDate(Date dateToShow) {
+    	if (this.scrollView.getChildCount() > 0) {
+    		this.scrollView.removeAllViews();
+    	}
+    	this.date = dateToShow;
+    	
+    	DayView previousView = new DayView(this);
+		previousView.setDate(addDays(dateToShow, 1));
+		previousView.setBackgroundDrawable(BackgroundManager.getRandomBackground());
+		this.scrollView.addView(previousView);
+		 
+		DayView currentView = new DayView(this);
+		currentView.setDate(dateToShow);
+		currentView.setBackgroundDrawable(BackgroundManager.getRandomBackground());
+		this.scrollView.addView(currentView);
+		 
+		DayView nextView = new DayView(this);
+		nextView.setDate(addDays(dateToShow, 1));
+		nextView.setBackgroundDrawable(BackgroundManager.getRandomBackground());
+		this.scrollView.addView(nextView);
+		         
+		this.scrollView.showScreen(1);     
+    }
+    
+    protected void prepareOtherViews(int selectedIndex) {
+    	DayView currentView = (DayView)this.scrollView.getChildAt(selectedIndex);
+    	Date currentDate = currentView.getDisplayDate();
+    	if (selectedIndex == 0) {
+    		// remove last view, add new view at the beginning
+    		DayView previousView = new DayView(this);
+    		previousView.setDate(addDays(currentDate, -1));
+    		previousView.setBackgroundDrawable(BackgroundManager.getRandomBackground());
+    		this.scrollView.prependView(previousView);    	
+
+    		if (this.scrollView.getChildCount() > 2) {
+    			this.scrollView.removeViewAt(2);
+    		}
+    	} else if (selectedIndex == 2) {    		
+    		// remove first view, append new view at the end
+    		DayView nextView = new DayView(this);
+    		nextView.setDate(addDays(currentDate, +1));
+    		nextView.setBackgroundDrawable(BackgroundManager.getRandomBackground());    		
+    		this.scrollView.addView(nextView);
+    		
+    		if (this.scrollView.getChildCount() > 3) {
+    			this.scrollView.removeFirstView();
+    		}
+    	}
+	}
+    
+    private Date addDays(Date date, int days) {
+    	Calendar cal = Calendar.getInstance();
+    	cal.setTime(date);
+    	cal.add(Calendar.DATE, days);
+    	return cal.getTime();
     }
     
     @Override
@@ -76,7 +135,7 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
     	} else if (item.getItemId() == MENU_SELECT_DATE) {
     		selectDate();
     	} else if (item.getItemId() == MENU_SELECT_TODAY) {
-    		gotoDate(new Date());
+    		showDate(new Date());
     	} else if (item.getItemId() == MENU_DAY_INFO) {
     		showDayInfo();
     	} else if (item.getItemId() == MENU_ADD_EVENT) {
@@ -86,45 +145,6 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
     	}
     	return true;
     }    	
-
-	public void gotoDate(Date date) {		
-		VNMDayViewer currentView = (VNMDayViewer)this.switcher.getCurrentView();		
-		Date currentDate = currentView.getDisplayDate();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(currentDate);
-		int currentDayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
-		cal.setTime(date);
-		int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
-		if (date.after(currentDate)) {
-			if (dayOfMonth == currentDayOfMonth) {
-				this.switcher.setInAnimation(this.inAnimationUp);
-				this.switcher.setOutAnimation(this.outAnimationUp);
-			} else {
-				this.switcher.setInAnimation(this.inAnimationLeft);
-				this.switcher.setOutAnimation(this.outAnimationLeft);
-			}
-		} else if (date.before(currentDate)) {
-			if (dayOfMonth == currentDayOfMonth) {
-				this.switcher.setInAnimation(this.inAnimationDown);
-				this.switcher.setOutAnimation(this.outAnimationDown);
-			} else {
-				this.switcher.setInAnimation(this.inAnimationRight);
-				this.switcher.setOutAnimation(this.outAnimationRight);
-			}
-		}
-		
-		VNMDayViewer next = (VNMDayViewer)this.switcher.getNextView();
-		next.setBackgroundDrawable(BackgroundManager.getRandomBackground());
-		next.setDate(date);
-		this.date = date;
-		this.switcher.showNext();
-	}
-	
-	private void setDate(Date date) {
-		this.date = date;
-		VNMDayViewer currentView = (VNMDayViewer)switcher.getCurrentView();		
-		currentView.setDate(date);
-	}
 	
 	public void selectDate() {
 		showDialog(DATE_DIALOG_ID);
@@ -142,21 +162,7 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
 		startActivity(dayInfoIntent);
 	}
 	
-	public void addEvent() {
-		/*
-		Intent intent = new Intent(Intent.ACTION_EDIT);
-		intent.setClassName("com.android.calendar", "com.android.calendar.EditEvent");
-		Calendar eventCal = Calendar.getInstance();
-		eventCal.setTime(this.date);
-		eventCal.set(Calendar.HOUR_OF_DAY, 8);
-		eventCal.set(Calendar.MINUTE, 0);
-		intent.putExtra("beginTime", eventCal.getTimeInMillis());
-		eventCal.set(Calendar.HOUR_OF_DAY, 9);
-        intent.putExtra("endTime", eventCal.getTimeInMillis()); 
-		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		startActivity(intent);
-		*/
-		
+	public void addEvent() {		
 		Intent intent = new Intent(this, VNMEventDetailsActivity.class);
 		startActivity(intent);
 		
@@ -171,25 +177,13 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
 			long result = data.getLongExtra(VNMMonthActivity.SELECTED_DATE_RETURN, 0);
 			Calendar cal = Calendar.getInstance();
 			cal.setTimeInMillis(result);
-			setDate(cal.getTime());
+			showDate(cal.getTime());
 			break;
 		default:			
 			break;
 		}
 	}
 
-	@Override
-	public void onAnimationEnd(Animation animation) {
-	}
-
-	@Override
-	public void onAnimationRepeat(Animation animation) {
-	}
-
-	@Override
-	public void onAnimationStart(Animation animation) {
-	}
-	
 	@Override
 	protected Dialog onCreateDialog(int id) {
 	    switch (id) {
@@ -236,13 +230,13 @@ public class VNMDayActivity extends VNMCalendarViewActivity {
 				cal.set(Calendar.YEAR, year);
 				cal.set(Calendar.MONTH, monthOfYear);
 				cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-				setDate(cal.getTime());								
+				showDate(cal.getTime());								
 			} else {
 				int[] solar = VietCalendar.convertLunar2Solar(dayOfMonth, monthOfYear + 1, year);				
 				cal.set(Calendar.DAY_OF_MONTH, solar[VietCalendar.DAY]);
 				cal.set(Calendar.MONTH, solar[VietCalendar.MONTH] - 1);
 				cal.set(Calendar.YEAR, solar[VietCalendar.YEAR]);
-				setDate(cal.getTime());				
+				showDate(cal.getTime());				
 			}
 		}
 	};
