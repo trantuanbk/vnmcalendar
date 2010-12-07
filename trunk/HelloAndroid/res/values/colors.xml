@@ -8,4 +8,6 @@
     <color name="weekendColor">#F00</color>
     <color name="holidayColor">#F00</color> 
     <color name="eventColor">#FF6A00</color>
+    <color name="shadowColor">#000</color>
+    <color name="otherDayColor">#5444</color>
 </resources>
