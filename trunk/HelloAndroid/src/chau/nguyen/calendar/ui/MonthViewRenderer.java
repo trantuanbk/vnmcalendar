@@ -16,7 +16,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Paint.Align;
 import android.graphics.drawable.Drawable;
-import android.hardware.Camera.PreviewCallback;
 import chau.nguyen.EventManager;
 import chau.nguyen.calendar.VietCalendar;
 import chau.nguyen.calendar.VietCalendar.Holiday;
@@ -184,7 +183,14 @@ public class MonthViewRenderer {
 		paint.setAntiAlias(true);
 		paint.setTextAlign(Align.CENTER);		
 		paint.setTextSize(config.cellMainTextSize);
-		paint.setDither(true);		
+		paint.setDither(true);
+		
+		if (config.selectedDate != null && isSameDate(config.selectedDate.getYear() + 1900, 
+				config.selectedDate.getMonth(), 
+				config.selectedDate.getDate(), 
+				year, month - 1, day)) {
+			highlight = true;
+		}
 		
 		Bitmap bitmap = highlight ? config.cellHighlightBackground : config.cellBackground;
 		if (bitmap != null) {
@@ -240,7 +246,7 @@ public class MonthViewRenderer {
 			}
 			paint.setTextSize(config.cellSubTextSize);
 			paint.setTextAlign(Align.RIGHT);			
-			if (lunars[0] == 1) {
+			if (lunars[VietCalendar.DAY] == 1) {
 				canvas.drawText(lunars[VietCalendar.DAY] + "/" + lunars[VietCalendar.MONTH], cellX + cellWidth - 5, y + config.cellSubTextSize + 2, paint);
 			} else {
 				canvas.drawText(lunars[VietCalendar.DAY] + "", cellX + cellWidth - 5, y + config.cellSubTextSize + 2, paint);

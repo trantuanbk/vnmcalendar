@@ -19,8 +19,9 @@ import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import chau.nguyen.calendar.VietCalendar;
-import chau.nguyen.calendar.ui.DayView;
+import chau.nguyen.calendar.ui.ScrollableDayView;
 import chau.nguyen.calendar.ui.VNMDatePickerDialog;
+import chau.nguyen.calendar.ui.ScrollableDayView.OnDateChangedListener;
 import chau.nguyen.calendar.widget.HorizontalScrollView;
 import chau.nguyen.calendar.widget.HorizontalScrollView.OnScreenSelectedListener;
 
@@ -54,55 +55,67 @@ public class VNMDayActivity extends Activity {
 				prepareOtherViews(selectedIndex);
 			}
         });
-        
-        Date today = new Date();        
-        showDate(today);
+                      
+        showDate(new Date());
     }
     
-    private void showDate(Date dateToShow) {
-    	if (this.scrollView.getChildCount() > 0) {
+    private void showDate(Date date) {
+    	if (this.scrollView.getChildCount() == 3) {
+    		ScrollableDayView previousView = (ScrollableDayView)this.scrollView.getChildAt(0);	    	
+			previousView.setDate(addDays(date, -1));
+			 
+			ScrollableDayView currentView = (ScrollableDayView)this.scrollView.getChildAt(1);			
+			currentView.setDate(date);
+			 
+			ScrollableDayView nextView = (ScrollableDayView)this.scrollView.getChildAt(2);
+			nextView.setDate(addDays(date, 1));    		
+    	} else {    	
     		this.scrollView.removeAllViews();
+    		
+	    	ScrollableDayView previousView = new ScrollableDayView(this);
+	    	previousView.setOnDateChangedListener(onDateChangedListener);
+			previousView.setDate(addDays(date, 1));
+			previousView.setBackgroundDrawable(BackgroundManager.getRandomBackground());
+			this.scrollView.addView(previousView);
+			 
+			ScrollableDayView currentView = new ScrollableDayView(this);
+			currentView.setOnDateChangedListener(onDateChangedListener);
+			currentView.setDate(date);
+			currentView.setBackgroundDrawable(BackgroundManager.getRandomBackground());
+			this.scrollView.addView(currentView);
+			 
+			ScrollableDayView nextView = new ScrollableDayView(this);
+			nextView.setOnDateChangedListener(onDateChangedListener);
+			nextView.setDate(addDays(date, 1));
+			nextView.setBackgroundDrawable(BackgroundManager.getRandomBackground());
+			this.scrollView.addView(nextView);
     	}
-    	this.date = dateToShow;
     	
-    	DayView previousView = new DayView(this);
-		previousView.setDate(addDays(dateToShow, 1));
-		previousView.setBackgroundDrawable(BackgroundManager.getRandomBackground());
-		this.scrollView.addView(previousView);
-		 
-		DayView currentView = new DayView(this);
-		currentView.setDate(dateToShow);
-		currentView.setBackgroundDrawable(BackgroundManager.getRandomBackground());
-		this.scrollView.addView(currentView);
-		 
-		DayView nextView = new DayView(this);
-		nextView.setDate(addDays(dateToShow, 1));
-		nextView.setBackgroundDrawable(BackgroundManager.getRandomBackground());
-		this.scrollView.addView(nextView);
-		         
-		this.scrollView.showScreen(1);     
+		this.scrollView.showScreen(1);
     }
     
     protected void prepareOtherViews(int selectedIndex) {
-    	DayView currentView = (DayView)this.scrollView.getChildAt(selectedIndex);
-    	Date currentDate = currentView.getDisplayDate();
+    	ScrollableDayView currentView = (ScrollableDayView)this.scrollView.getChildAt(selectedIndex);
+    	Date currentDate = currentView.getDate();
     	if (selectedIndex == 0) {
     		// remove last view, add new view at the beginning
-    		DayView previousView = new DayView(this);
+    		ScrollableDayView previousView = new ScrollableDayView(this);
+    		previousView.setOnDateChangedListener(onDateChangedListener);
     		previousView.setDate(addDays(currentDate, -1));
     		previousView.setBackgroundDrawable(BackgroundManager.getRandomBackground());
-    		this.scrollView.prependView(previousView);    	
-
+    		this.scrollView.prependView(previousView);
+    		
     		if (this.scrollView.getChildCount() > 2) {
     			this.scrollView.removeViewAt(2);
     		}
-    	} else if (selectedIndex == 2) {    		
+    	} else if (selectedIndex == 2) {
     		// remove first view, append new view at the end
-    		DayView nextView = new DayView(this);
+    		ScrollableDayView nextView = new ScrollableDayView(this);
+    		nextView.setOnDateChangedListener(onDateChangedListener);
     		nextView.setDate(addDays(currentDate, +1));
     		nextView.setBackgroundDrawable(BackgroundManager.getRandomBackground());    		
     		this.scrollView.addView(nextView);
-    		
+    					
     		if (this.scrollView.getChildCount() > 3) {
     			this.scrollView.removeFirstView();
     		}
@@ -152,7 +165,6 @@ public class VNMDayActivity extends Activity {
 	
 	public void showMonthView() {
 		Intent monthIntent = new Intent(this, VNMMonthActivity.class);
-		//startActivity(monthIntent);
 		startActivityForResult(monthIntent, SELECT_DATE);
 	}	
 	
@@ -170,17 +182,11 @@ public class VNMDayActivity extends Activity {
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		switch (requestCode) {
-			case SELECT_DATE:
-			if (resultCode == RESULT_CANCELED)
-				return;
+		if (requestCode == SELECT_DATE && resultCode == RESULT_OK) {			
 			long result = data.getLongExtra(VNMMonthActivity.SELECTED_DATE_RETURN, 0);
 			Calendar cal = Calendar.getInstance();
 			cal.setTimeInMillis(result);
-			showDate(cal.getTime());
-			break;
-		default:			
-			break;
+			showDate(cal.getTime());			
 		}
 	}
 
@@ -221,6 +227,17 @@ public class VNMDayActivity extends Activity {
 	    }
 	    return null;
 	}
+	
+	private OnDateChangedListener onDateChangedListener = new OnDateChangedListener() {
+		public void onDateChanged(Date date) {
+			ScrollableDayView previousView = (ScrollableDayView)scrollView.getChildAt(0);
+			previousView.setDate(addDays(date, -1));
+
+    		ScrollableDayView nextView = (ScrollableDayView)scrollView.getChildAt(2);
+    		nextView.setDate(addDays(date, +1));
+			
+		}		
+	};
 	
 	private VNMDatePickerDialog.OnDateSetListener mDateSetListener = new VNMDatePickerDialog.OnDateSetListener() {
 		public void onDateSet(DatePicker view, boolean isSolarSelected, int year, int monthOfYear,
