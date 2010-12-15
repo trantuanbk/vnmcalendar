@@ -1,36 +1,107 @@
 package chau.nguyen;
 
+import java.util.Calendar;
 import java.util.Date;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.animation.Animation;
-import android.widget.ViewSwitcher;
-import chau.nguyen.calendar.ui.VNMMonthViewer;
+import chau.nguyen.calendar.ui.ScrollableMonthView;
+import chau.nguyen.calendar.ui.MonthView.OnDateSelectedListener;
+import chau.nguyen.calendar.ui.ScrollableMonthView.OnDateChangedListener;
+import chau.nguyen.calendar.widget.HorizontalScrollView;
+import chau.nguyen.calendar.widget.HorizontalScrollView.OnScreenSelectedListener;
 
-public class VNMMonthActivity extends VNMCalendarViewActivity {
+public class VNMMonthActivity extends Activity {
 	public static final String SELECTED_DATE_RETURN = "selectedDateReturn";
 	private static int MENU_DAY_VIEW = 1;
 	//private static int MENU_SETTINGS = 2;		
 	
-	/** Called when the activity is first created. */
+	private HorizontalScrollView scrollView;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);        
         BackgroundManager.init(this);
         
-        this.switcher = new ViewSwitcher(this);
-        setContentView(this.switcher);
+        this.scrollView = new HorizontalScrollView(this);
+        this.setContentView(this.scrollView);
         
-        this.switcher.addView(new VNMMonthViewer(this, this));
-        this.switcher.getCurrentView().setBackgroundDrawable(BackgroundManager.getRandomBackground());
-        this.switcher.addView(new VNMMonthViewer(this, this));
-        this.inAnimationLeft.initialize(this.switcher.getWidth(), this.switcher.getHeight(), this.switcher.getWidth(), this.switcher.getHeight());
-        this.inAnimationRight.initialize(this.switcher.getWidth(), this.switcher.getHeight(), this.switcher.getWidth(), this.switcher.getHeight());
-        this.outAnimationLeft.initialize(this.switcher.getWidth(), this.switcher.getHeight(), this.switcher.getWidth(), this.switcher.getHeight());
-        this.outAnimationRight.initialize(this.switcher.getWidth(), this.switcher.getHeight(), this.switcher.getWidth(), this.switcher.getHeight());                       
+        this.scrollView.setOnScreenSelectedListener(new OnScreenSelectedListener() {
+			public void onSelected(int selectedIndex) {				
+				prepareOtherViews(selectedIndex);
+			}
+        });
+                      
+        showDate(new Date());                       
+    }
+    
+    private void showDate(Date date) {
+    	if (this.scrollView.getChildCount() > 0) {
+    		this.scrollView.removeAllViews();
+    	}
+    	
+    	ScrollableMonthView previousView = new ScrollableMonthView(this);
+    	previousView.setOnDateChangedListener(onDateChangedListener);
+    	previousView.setOnDateSelectedListener(onDateSelectedListener);
+		previousView.setDate(addMonths(date, 1));
+		previousView.setBackgroundDrawable(BackgroundManager.getRandomBackground());
+		this.scrollView.addView(previousView);
+		 
+		ScrollableMonthView currentView = new ScrollableMonthView(this);
+		currentView.setOnDateChangedListener(onDateChangedListener);
+		currentView.setOnDateSelectedListener(onDateSelectedListener);
+		currentView.setDate(date);
+		currentView.setBackgroundDrawable(BackgroundManager.getRandomBackground());
+		this.scrollView.addView(currentView);
+		 
+		ScrollableMonthView nextView = new ScrollableMonthView(this);
+		nextView.setOnDateChangedListener(onDateChangedListener);
+		nextView.setOnDateSelectedListener(onDateSelectedListener);
+		nextView.setDate(addMonths(date, 1));
+		nextView.setBackgroundDrawable(BackgroundManager.getRandomBackground());
+		this.scrollView.addView(nextView);
+		         
+		this.scrollView.showScreen(1);
+    }
+    
+    protected void prepareOtherViews(int selectedIndex) {
+    	ScrollableMonthView currentView = (ScrollableMonthView)this.scrollView.getChildAt(selectedIndex);
+    	Date currentDate = currentView.getDate();
+    	if (selectedIndex == 0) {
+    		// remove last view, add new view at the beginning
+    		ScrollableMonthView previousView = new ScrollableMonthView(this);
+    		previousView.setOnDateChangedListener(onDateChangedListener);
+    		previousView.setOnDateSelectedListener(onDateSelectedListener);
+    		previousView.setDate(addMonths(currentDate, -1));
+    		previousView.setBackgroundDrawable(BackgroundManager.getRandomBackground());
+    		this.scrollView.prependView(previousView);
+    		
+    		if (this.scrollView.getChildCount() > 2) {
+    			this.scrollView.removeViewAt(2);
+    		}
+    	} else if (selectedIndex == 2) {
+    		// remove first view, append new view at the end
+    		ScrollableMonthView nextView = new ScrollableMonthView(this);
+    		nextView.setOnDateChangedListener(onDateChangedListener);
+    		nextView.setOnDateSelectedListener(onDateSelectedListener);
+    		nextView.setDate(addMonths(currentDate, +1));
+    		nextView.setBackgroundDrawable(BackgroundManager.getRandomBackground());    		
+    		this.scrollView.addView(nextView);
+    					
+    		if (this.scrollView.getChildCount() > 3) {
+    			this.scrollView.removeFirstView();
+    		}
+    	}
+	}
+    
+    private Date addMonths(Date date, int months) {
+    	Calendar cal = Calendar.getInstance();
+    	cal.setTime(date);
+    	cal.add(Calendar.MONTH, months);
+    	return cal.getTime();
     }
     
     @Override
@@ -48,52 +119,22 @@ public class VNMMonthActivity extends VNMCalendarViewActivity {
     	return true;
     }
     
-    public void showDateInDayView(Date date) {
-    	Intent data = new Intent();
-    	data.putExtra(SELECTED_DATE_RETURN, date.getTime());
-    	setResult(RESULT_OK, data);
-    	this.finish();
-    	//this.finishActivity(VNMDayActivity.SELECT_DATE);
-    }    
+	private OnDateChangedListener onDateChangedListener = new OnDateChangedListener() {
+		public void onDateChanged(Date date) {
+			ScrollableMonthView previousView = (ScrollableMonthView)scrollView.getChildAt(0);
+			previousView.setDate(addMonths(date, -1));
 
-	public void gotoDate(Date date) {		
-		VNMMonthViewer currentView = (VNMMonthViewer)this.switcher.getCurrentView();
-		Date currentDate = currentView.getDisplayDate(); 
-		if (date.after(currentDate)) {
-			if (date.getMonth() == currentDate.getMonth()) {
-				this.switcher.setInAnimation(this.inAnimationUp);
-				this.switcher.setOutAnimation(this.outAnimationUp);
-			} else {
-				this.switcher.setInAnimation(this.inAnimationLeft);
-				this.switcher.setOutAnimation(this.outAnimationLeft);
-			}
-		} else {
-			if (date.getMonth() == currentDate.getMonth()) {
-				this.switcher.setInAnimation(this.inAnimationDown);
-				this.switcher.setOutAnimation(this.outAnimationDown);
-			} else {
-				this.switcher.setInAnimation(this.inAnimationRight);
-				this.switcher.setOutAnimation(this.outAnimationRight);
-			}
-		}
-		
-		VNMMonthViewer next = (VNMMonthViewer)this.switcher.getNextView();
-		next.setBackgroundDrawable(BackgroundManager.getRandomBackground());
-		next.setDisplayDate(date);
-		this.switcher.showNext();
-	}
-
-	@Override
-	public void onAnimationEnd(Animation animation) {		
-	}
-
-	@Override
-	public void onAnimationRepeat(Animation animation) {
-	}
-
-	@Override
-	public void onAnimationStart(Animation animation) {
-		VNMMonthViewer currentView = (VNMMonthViewer)this.switcher.getCurrentView();
-		currentView.animationStart();		
-	}
+    		ScrollableMonthView nextView = (ScrollableMonthView)scrollView.getChildAt(2);
+    		nextView.setDate(addMonths(date, +1));			
+		}		
+	};
+	
+	private OnDateSelectedListener onDateSelectedListener = new OnDateSelectedListener() {
+		public void onDateSelected(Date date) {
+			Intent data = new Intent();			
+	    	data.putExtra(SELECTED_DATE_RETURN, date.getTime());
+	    	setResult(RESULT_OK, data);
+	    	finish();
+		}		
+	};
 }
