@@ -24,7 +24,7 @@
 			a:text="29"
 			a:textColor="@color/dayColor"
 			a:gravity="center"
-			a:textSize="160sp"
+			a:textSize="120sp"
 			a:textStyle="bold"			
 			a:shadowColor="#FF0000"
 			a:shadowDx="1"
@@ -37,7 +37,7 @@
 			a:text="Thứ ba"
 			a:textColor="@color/dayOfWeekColor"
 			a:gravity="center_horizontal"		
-			a:textSize="30sp"/>
+			a:textSize="20sp"/>
 		<TextView a:id="@+id/noteText" 
 		      a:layout_width="fill_parent" 
 		      a:layout_height="fill_parent"
