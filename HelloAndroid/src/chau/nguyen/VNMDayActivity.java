@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import chau.nguyen.calendar.VietCalendar;
@@ -38,8 +39,7 @@ public class VNMDayActivity extends Activity {
 	public static final int DATE_DIALOG_ID = 0;
 	public static final int ABOUT_DIALOG_ID = 1;
 	
-	private HorizontalScrollView scrollView;
-	private Date date;
+	private HorizontalScrollView scrollView;	
 	
     /** Called when the activity is first created. */
     @Override
@@ -60,36 +60,23 @@ public class VNMDayActivity extends Activity {
     }
     
     private void showDate(Date date) {
-    	if (this.scrollView.getChildCount() == 3) {
-    		ScrollableDayView previousView = (ScrollableDayView)this.scrollView.getChildAt(0);	    	
-			previousView.setDate(addDays(date, -1));
-			 
-			ScrollableDayView currentView = (ScrollableDayView)this.scrollView.getChildAt(1);			
-			currentView.setDate(date);
-			 
-			ScrollableDayView nextView = (ScrollableDayView)this.scrollView.getChildAt(2);
-			nextView.setDate(addDays(date, 1));    		
-    	} else {    	
-    		this.scrollView.removeAllViews();
-    		
-	    	ScrollableDayView previousView = new ScrollableDayView(this);
-	    	previousView.setOnDateChangedListener(onDateChangedListener);
-			previousView.setDate(addDays(date, 1));
-			previousView.setBackgroundDrawable(BackgroundManager.getRandomBackground());
-			this.scrollView.addView(previousView);
-			 
-			ScrollableDayView currentView = new ScrollableDayView(this);
-			currentView.setOnDateChangedListener(onDateChangedListener);
-			currentView.setDate(date);
-			currentView.setBackgroundDrawable(BackgroundManager.getRandomBackground());
-			this.scrollView.addView(currentView);
-			 
-			ScrollableDayView nextView = new ScrollableDayView(this);
-			nextView.setOnDateChangedListener(onDateChangedListener);
-			nextView.setDate(addDays(date, 1));
-			nextView.setBackgroundDrawable(BackgroundManager.getRandomBackground());
-			this.scrollView.addView(nextView);
-    	}
+    	int childCount = this.scrollView.getChildCount(); 
+		for (int i = 0; i < 3 - childCount; i++) {
+			ScrollableDayView view = new ScrollableDayView(this);
+	    	view.setOnDateChangedListener(onDateChangedListener);
+	    	view.setOnClickListener(onClickListener);
+			view.setBackgroundDrawable(BackgroundManager.getRandomBackground());
+			this.scrollView.addView(view);		
+		}
+    	    	
+		ScrollableDayView previousView = (ScrollableDayView)this.scrollView.getChildAt(0);	    	
+		previousView.setDate(addDays(date, -1));
+		 
+		ScrollableDayView currentView = (ScrollableDayView)this.scrollView.getChildAt(1);			
+		currentView.setDate(date);
+		 
+		ScrollableDayView nextView = (ScrollableDayView)this.scrollView.getChildAt(2);
+		nextView.setDate(addDays(date, 1));
     	
 		this.scrollView.showScreen(1);
     }
@@ -101,6 +88,7 @@ public class VNMDayActivity extends Activity {
     		// remove last view, add new view at the beginning
     		ScrollableDayView previousView = new ScrollableDayView(this);
     		previousView.setOnDateChangedListener(onDateChangedListener);
+    		previousView.setOnClickListener(onClickListener);
     		previousView.setDate(addDays(currentDate, -1));
     		previousView.setBackgroundDrawable(BackgroundManager.getRandomBackground());
     		this.scrollView.prependView(previousView);
@@ -112,6 +100,7 @@ public class VNMDayActivity extends Activity {
     		// remove first view, append new view at the end
     		ScrollableDayView nextView = new ScrollableDayView(this);
     		nextView.setOnDateChangedListener(onDateChangedListener);
+    		nextView.setOnClickListener(onClickListener);
     		nextView.setDate(addDays(currentDate, +1));
     		nextView.setBackgroundDrawable(BackgroundManager.getRandomBackground());    		
     		this.scrollView.addView(nextView);
@@ -170,7 +159,7 @@ public class VNMDayActivity extends Activity {
 	
 	public void showDayInfo() {
 		Intent dayInfoIntent = new Intent(this, DayInfoActivity.class);
-		dayInfoIntent.putExtra("Date", this.date.getTime());
+		dayInfoIntent.putExtra("Date", getCurrentDate().getTime());
 		startActivity(dayInfoIntent);
 	}
 	
@@ -178,6 +167,12 @@ public class VNMDayActivity extends Activity {
 		Intent intent = new Intent(this, VNMEventDetailsActivity.class);
 		startActivity(intent);
 		
+	}
+	
+	private Date getCurrentDate() {
+		int selectedIndex = this.scrollView.getDisplayedChild();
+		ScrollableDayView currentView = (ScrollableDayView)this.scrollView.getChildAt(selectedIndex);
+    	return currentView.getDate();
 	}
 	
 	@Override
@@ -195,7 +190,7 @@ public class VNMDayActivity extends Activity {
 	    switch (id) {
 	    	case DATE_DIALOG_ID:
 	    		Calendar cal = Calendar.getInstance();
-	    		cal.setTime(this.date);
+	    		cal.setTime(getCurrentDate());
 	    		//return new DatePickerDialog(this, null, 
 	    		//		cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
 	    		return new VNMDatePickerDialog(this, mDateSetListener, 
@@ -227,6 +222,12 @@ public class VNMDayActivity extends Activity {
 	    }
 	    return null;
 	}
+	
+	private OnClickListener onClickListener = new OnClickListener() {
+		public void onClick(View v) {
+			showDayInfo();
+		}		
+	};
 	
 	private OnDateChangedListener onDateChangedListener = new OnDateChangedListener() {
 		public void onDateChanged(Date date) {

@@ -383,6 +383,8 @@ public class MonthViewRenderer {
 				config.todayShadowColor = Color.parseColor(themeObject.getString("todayShadowColor"));
 				config.holidayColor = Color.parseColor(themeObject.getString("holidayColor"));
 				config.holidayShadowColor = Color.parseColor(themeObject.getString("holidayShadowColor"));
+				config.otherDayColor = Color.parseColor(themeObject.getString("otherDayColor"));
+				config.otherDayShadowColor = Color.parseColor(themeObject.getString("otherDayShadowColor"));
 				config.dayOfWeekColor = Color.parseColor(themeObject.getString("dayOfWeekColor"));
 				config.dayOfWeekShadowColor = Color.parseColor(themeObject.getString("dayOfWeekShadowColor"));
 				config.weekendColor = Color.parseColor(themeObject.getString("weekendColor"));
