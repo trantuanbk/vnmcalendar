@@ -317,7 +317,9 @@ public class HorizontalScrollView extends ViewGroup {
                         scrollBy(Math.min(availableToScroll, deltaX), 0);
                         mScrollX = getScrollX();
                     }
-                }
+                } else {
+                    snapToDestination();
+                }  
             }
             break;
         case MotionEvent.ACTION_UP:

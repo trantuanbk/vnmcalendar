@@ -9,6 +9,7 @@ import chau.nguyen.calendar.widget.VerticalScrollView;
 
 public class ScrollableDayView extends VerticalScrollView {
 	private OnDateChangedListener onDateChangedListener;
+	private OnClickListener onClickListener;
 	
 	public ScrollableDayView(Context context) {
 		super(context);		
@@ -18,8 +19,21 @@ public class ScrollableDayView extends VerticalScrollView {
 	public void setOnDateChangedListener(OnDateChangedListener onDateChangedListener) {
 		this.onDateChangedListener = onDateChangedListener;
 	}
+	
+	@Override
+	public void setOnClickListener(OnClickListener l) {
+		this.onClickListener = l;
+	}
 
 	public void setDate(Date date) {
+		int childCount = this.getChildCount(); 
+		for (int i = 0; i < 3 - childCount; i++) {
+			DayView dayView = new DayView(getContext());
+			dayView.setOnClickListener(onClickListener);
+			dayView.setBackgroundDrawable(BackgroundManager.getRandomBackground());
+			this.addView(dayView);			
+		}
+		
 		if (this.getChildCount() == 3) {											
 			DayView previousView = (DayView)getChildAt(0);
 			previousView.setDate(addMonths(date, -1));
@@ -29,23 +43,6 @@ public class ScrollableDayView extends VerticalScrollView {
 			
 			DayView nextView = (DayView)getChildAt(2);
 			nextView.setDate(addMonths(date, 1));
-    	} else {
-    		this.removeAllViews();
-    		
-	    	DayView previousView = new DayView(getContext());
-			previousView.setDate(addMonths(date, 1));
-			previousView.setBackgroundDrawable(BackgroundManager.getRandomBackground());
-			this.addView(previousView);
-			 
-			DayView currentView = new DayView(getContext());
-			currentView.setDate(date);
-			currentView.setBackgroundDrawable(BackgroundManager.getRandomBackground());
-			this.addView(currentView);
-			 
-			DayView nextView = new DayView(getContext());
-			nextView.setDate(addMonths(date, 1));
-			nextView.setBackgroundDrawable(BackgroundManager.getRandomBackground());
-			this.addView(nextView);
     	}
 				
 		this.setOnScreenSelectedListener(null);
@@ -64,6 +61,7 @@ public class ScrollableDayView extends VerticalScrollView {
     	if (selectedIndex == 0) {
     		// remove last view, add new view at the beginning
     		DayView previousView = new DayView(getContext());
+    		previousView.setOnClickListener(onClickListener);
     		previousView.setDate(addMonths(currentDate, -1));
     		previousView.setBackgroundDrawable(BackgroundManager.getRandomBackground());
     		this.prependView(previousView);    	
@@ -74,6 +72,7 @@ public class ScrollableDayView extends VerticalScrollView {
     	} else if (selectedIndex == 2) {    		
     		// remove first view, append new view at the end
     		DayView nextView = new DayView(getContext());
+    		nextView.setOnClickListener(onClickListener);
     		nextView.setDate(addMonths(currentDate, +1));
     		nextView.setBackgroundDrawable(BackgroundManager.getRandomBackground());    		
     		this.addView(nextView);

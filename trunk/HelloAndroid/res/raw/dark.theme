@@ -39,5 +39,7 @@
     weekendColor: "#FF0000",
     weekendShadowColor: "#FFFFFF",
     holidayColor: "#FF0000",
-    holidayShadowColor: "#FFFFFF"
+    holidayShadowColor: "#FFFFFF",
+    otherDayColor: "#AAAAAA",
+    otherDayShadowColor: "#333333"    
 }

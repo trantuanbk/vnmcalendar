@@ -6,7 +6,6 @@ import java.util.Date;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -158,8 +157,8 @@ public class DayView extends LinearLayout {
 		return simpleDateFormat.format(this.displayDate);
 	}	
 	
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		return true;
-	}
+//	@Override
+//	public boolean onTouchEvent(MotionEvent event) {
+//		return true;
+//	}
 }

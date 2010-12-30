@@ -317,6 +317,8 @@ public class VerticalScrollView extends ViewGroup {
                         scrollBy(0, Math.min(availableToScroll, deltaY));
                         mScrollY = getScrollY();
                     }
+                } else {
+                	snapToDestination();
                 }
             }
             break;

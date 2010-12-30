@@ -1,4 +1,7 @@
-﻿16/04/2010:
+﻿30/12/2010:
+* 
+
+16/04/2010:
 * Có thêm widget cho Home screen
 * Chọn được ngày khi xem trên tháng
 * Thay đổi hình nền ngẫu nhiên
