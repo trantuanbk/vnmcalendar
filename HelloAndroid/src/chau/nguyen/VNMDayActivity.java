@@ -45,14 +45,14 @@ public class VNMDayActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
-        BackgroundManager.init(this);
+        BackgroundManager.init(this);                
         
         this.scrollView = new HorizontalScrollView(this);
         this.setContentView(this.scrollView);
         
         this.scrollView.setOnScreenSelectedListener(new OnScreenSelectedListener() {
-			public void onSelected(int selectedIndex) {				
-				prepareOtherViews(selectedIndex);
+			public void onSelected(int selectedIndex) {
+				prepareOtherViews(selectedIndex);				
 			}
         });
                       
@@ -84,30 +84,16 @@ public class VNMDayActivity extends Activity {
     protected void prepareOtherViews(int selectedIndex) {
     	ScrollableDayView currentView = (ScrollableDayView)this.scrollView.getChildAt(selectedIndex);
     	Date currentDate = currentView.getDate();
-    	if (selectedIndex == 0) {
+    	if (selectedIndex == 0) {    		
     		// remove last view, add new view at the beginning
-    		ScrollableDayView previousView = new ScrollableDayView(this);
-    		previousView.setOnDateChangedListener(onDateChangedListener);
-    		previousView.setOnClickListener(onClickListener);
-    		previousView.setDate(addDays(currentDate, -1));
-    		previousView.setBackgroundDrawable(BackgroundManager.getRandomBackground());
-    		this.scrollView.prependView(previousView);
-    		
-    		if (this.scrollView.getChildCount() > 2) {
-    			this.scrollView.removeViewAt(2);
-    		}
+    		ScrollableDayView previousView = (ScrollableDayView)this.scrollView.getChildAt(2);
+    		previousView.setDate(addDays(currentDate, -1));    		    	
+    		this.scrollView.rotateLastView();
     	} else if (selectedIndex == 2) {
     		// remove first view, append new view at the end
-    		ScrollableDayView nextView = new ScrollableDayView(this);
-    		nextView.setOnDateChangedListener(onDateChangedListener);
-    		nextView.setOnClickListener(onClickListener);
-    		nextView.setDate(addDays(currentDate, +1));
-    		nextView.setBackgroundDrawable(BackgroundManager.getRandomBackground());    		
-    		this.scrollView.addView(nextView);
-    					
-    		if (this.scrollView.getChildCount() > 3) {
-    			this.scrollView.removeFirstView();
-    		}
+    		ScrollableDayView nextView = (ScrollableDayView)this.scrollView.getChildAt(0);
+    		nextView.setDate(addDays(currentDate, +1));    					    		
+    		this.scrollView.rotateFirstView();
     	}
 	}
     
@@ -235,8 +221,7 @@ public class VNMDayActivity extends Activity {
 			previousView.setDate(addDays(date, -1));
 
     		ScrollableDayView nextView = (ScrollableDayView)scrollView.getChildAt(2);
-    		nextView.setDate(addDays(date, +1));
-			
+    		nextView.setDate(addDays(date, +1));			
 		}		
 	};
 	

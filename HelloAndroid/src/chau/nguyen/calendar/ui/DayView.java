@@ -5,6 +5,10 @@ import java.util.Calendar;
 import java.util.Date;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.PorterDuff.Mode;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -36,7 +40,7 @@ public class DayView extends LinearLayout {
 	private int weekendColor;
 	private int holidayColor;
 	private int eventColor;
-
+	
 	public DayView(Context context) {
 		super(context);
 		init(context);
@@ -47,7 +51,7 @@ public class DayView extends LinearLayout {
 		init(context);
 	}
 	
-	private void init(Context context) {
+	private void init(Context context) {		
 		// Inflate the view from the layout resource.
 		View.inflate(getContext(), R.layout.vnm_day_viewer, this);
 		this.setFocusable(false);
@@ -140,7 +144,7 @@ public class DayView extends LinearLayout {
 			this.noteText.setText(eventSumarize);
 		}
 		
-		this.dayOfMonthText.setShadowLayer(1.2f, 1.0f, 1.0f, getResources().getColor(R.color.shadowColor));
+		this.dayOfMonthText.setShadowLayer(1.2f, 1.0f, 1.0f, getResources().getColor(R.color.shadowColor));		
 		this.invalidate();
 	}		
 	
@@ -156,6 +160,24 @@ public class DayView extends LinearLayout {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		return simpleDateFormat.format(this.displayDate);
 	}	
+	
+	@Override
+	public void setBackgroundDrawable(Drawable d) {
+		getChildAt(0).setBackgroundDrawable(d);
+		//super.setBackgroundDrawable(d);
+	}
+	
+	@Override
+	protected void onDraw(Canvas canvas) {
+		Bitmap cacheBitmap = getDrawingCache();
+		if (cacheBitmap != null) {			
+			//canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), clearPaint);
+			canvas.drawColor(0, Mode.CLEAR);			
+			canvas.drawBitmap(cacheBitmap, 0, 0, null); 
+		} else {
+			super.onDraw(canvas);
+		}
+	}
 	
 //	@Override
 //	public boolean onTouchEvent(MotionEvent event) {

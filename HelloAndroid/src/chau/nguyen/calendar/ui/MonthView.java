@@ -93,10 +93,16 @@ public class MonthView extends View {
 	public Date getDate() {
 		return date;
 	}
-
+	
 	@Override
 	protected void onDraw(Canvas canvas) {
-		renderer.render(canvas);
+//		Bitmap cacheBitmap = getDrawingCache();
+//		if (cacheBitmap != null) {			
+//			canvas.drawColor(0, Mode.CLEAR);			
+//			canvas.drawBitmap(cacheBitmap, 0, 0, null); 
+//		} else {
+			renderer.render(canvas);
+//		}
 	}
 	
 	@Override

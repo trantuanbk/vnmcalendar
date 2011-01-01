@@ -3,6 +3,7 @@ package chau.nguyen.calendar.widget;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -71,36 +72,41 @@ public class VerticalScrollView extends ViewGroup {
 	public void setOnScreenSelectedListener(OnScreenSelectedListener listener) {
 		this.listener = listener;
 	}
-				
-	View prependView = null;
-	public void prependView(View child) {
-		// we will actually add this view on measuring phase
-		this.prependView = child;
+					
+	private boolean rotateLastView = false;
+	public void rotateLastView() {
+		this.rotateLastView = true;		
 		this.requestLayout();
-	}	
-	private void prependViewInLayout() {
-		super.addViewInLayout(prependView, 0, 
-				new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+	}
+	
+	private void rotateLastViewInLayout() {
+		View lastView = getChildAt(getChildCount() - 1);
+		this.removeViewAt(getChildCount() - 1);		
 		mCurrentScreen++;
-    	mNextScreen = INVALID_SCREEN;		
+    	mNextScreen = INVALID_SCREEN;
     	mScrollY = mCurrentScreen * getHeight();
     	scrollTo(0, mScrollY);
-    	prependView = null;
+    	this.rotateLastView = false;    	
+    	super.addViewInLayout(lastView, 0, 
+				new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
 	}
 	
-	private boolean removeFirstView = false;	
-	public void removeFirstView() {
-		this.removeFirstView = true;
+	private boolean rotateFirstView = false;
+	public void rotateFirstView() {
+		this.rotateFirstView = true;
+		this.requestLayout();
 	}
 	
-	private void removeFirstViewInLayout() {
+	private void rotateFirstViewInLayout() {
 		View firstView = getChildAt(0);
-		super.removeViewInLayout(firstView);
+		this.removeViewInLayout(firstView);
 		mCurrentScreen--;
 		mNextScreen = INVALID_SCREEN;
 		mScrollY = mCurrentScreen * getHeight();
     	scrollTo(0, mScrollY);
-		removeFirstView = false;
+		rotateFirstView = false;
+		super.addViewInLayout(firstView, getChildCount(), 
+				new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
 	}
 		
 	/**
@@ -108,11 +114,11 @@ public class VerticalScrollView extends ViewGroup {
      */
     private void init() {
         Context context = getContext();
-        mScroller = new Scroller(context);//, new BackInterpolator(Type.OUT, 3f));//new ElasticInterpolator(Type.OUT, 1, 0.3f));        
+        mScroller = new Scroller(context);//, new ElasticInterpolator(5f));// new BackInterpolator(Type.OUT, 3f));//new ElasticInterpolator(Type.OUT, 1, 0.3f));        
         mCurrentScreen = 0;
 
         final ViewConfiguration configuration = ViewConfiguration.get(getContext());
-        mTouchSlop = configuration.getScaledTouchSlop() * 5;        
+        mTouchSlop = configuration.getScaledTouchSlop();        
         mMaximumVelocity = configuration.getScaledMaximumFlingVelocity();
     }   
     
@@ -160,11 +166,11 @@ public class VerticalScrollView extends ViewGroup {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-    	if (prependView != null) {
-    		prependViewInLayout();
+    	if (rotateLastView) {
+    		this.rotateLastViewInLayout();
     	}
-    	if (removeFirstView) {
-    		this.removeFirstViewInLayout();
+    	if (rotateFirstView) {
+    		this.rotateFirstViewInLayout();
     	}
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
@@ -211,6 +217,8 @@ public class VerticalScrollView extends ViewGroup {
     
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
+    	Log.d("DEBUG", "VerticalScrollView.onInterceptTouchEvent() -> " + ev.getAction());
+    	
         /*
          * This method JUST determines whether we want to intercept the motion.
          * If we return true, onTouchEvent will be called and we do the actual
@@ -226,8 +234,8 @@ public class VerticalScrollView extends ViewGroup {
         if ((action == MotionEvent.ACTION_MOVE) && (mTouchState != TOUCH_STATE_REST)) {
             return true;
         }
-
-        final float y = ev.getY();
+        
+        final float y = ev.getY();        
         
         switch (action) {
             case MotionEvent.ACTION_MOVE:
@@ -241,17 +249,18 @@ public class VerticalScrollView extends ViewGroup {
                  * of the down event.
                  */
                 final int yDiff = (int) Math.abs(y - mLastMotionY);
-
+                
                 final int touchSlop = mTouchSlop;
                 boolean yMoved = yDiff > touchSlop;
                 if (yMoved) {
                     // Scroll if the user moved far enough along the X axis
                     mTouchState = TOUCH_STATE_SCROLLING;
+                    getParent().requestDisallowInterceptTouchEvent(true);
                 }
                 break;
 
             case MotionEvent.ACTION_DOWN:
-                // Remember location of down touch
+                // Remember location of down touch            	
                 mLastMotionY = y;
                 /*
                  * If being flinged and user touches the screen, initiate drag;
@@ -266,6 +275,7 @@ public class VerticalScrollView extends ViewGroup {
                 
                 // Release the drag
                 mTouchState = TOUCH_STATE_REST;
+                getParent().requestDisallowInterceptTouchEvent(false);
                 break;
         }
 
@@ -278,12 +288,14 @@ public class VerticalScrollView extends ViewGroup {
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
+    	Log.d("DEBUG", "VerticalScrollView.onTouchEvent() -> " + ev.getAction());
+    	
         if (mVelocityTracker == null) {
             mVelocityTracker = VelocityTracker.obtain();
         }
         mVelocityTracker.addMovement(ev);
 
-        final int action = ev.getAction();
+        final int action = ev.getAction();        
         final float y = ev.getY();
 
         switch (action) {
@@ -296,14 +308,14 @@ public class VerticalScrollView extends ViewGroup {
                 mScroller.abortAnimation();
             }
 
-            // Remember where the motion event started
-            mLastMotionY = y;
+            // Remember where the motion event started            
+            mLastMotionY = y;            
             break;
         case MotionEvent.ACTION_MOVE:
             if (mTouchState == TOUCH_STATE_SCROLLING) {
-                // Scroll to follow the motion event
-                final int deltaY = (int) (mLastMotionY - y);
-                mLastMotionY = y;
+                // Scroll to follow the motion event            	
+                final int deltaY = (int) (mLastMotionY - y);                
+                mLastMotionY = y;                
 
                 if (deltaY < 0) {
                     if (mScrollY > 0) {
@@ -317,8 +329,6 @@ public class VerticalScrollView extends ViewGroup {
                         scrollBy(0, Math.min(availableToScroll, deltaY));
                         mScrollY = getScrollY();
                     }
-                } else {
-                	snapToDestination();
                 }
             }
             break;
@@ -347,6 +357,7 @@ public class VerticalScrollView extends ViewGroup {
             break;
         case MotionEvent.ACTION_CANCEL:
             mTouchState = TOUCH_STATE_REST;
+            snapToDestination();
         }
         
         return true;
@@ -371,10 +382,10 @@ public class VerticalScrollView extends ViewGroup {
         
         final int newY = whichScreen * getHeight();
         final int delta = newY - mScrollY;
-        final int duration = screenDelta * 300;
+        final int duration = screenDelta * 400;
 
         if (!mScroller.isFinished()) mScroller.abortAnimation();
-        mScroller.startScroll(0, mScrollY, 0, delta, duration);
+        mScroller.startScroll(0, mScrollY, 0, delta, duration > 0 ? duration : 400);
         invalidate();
     }
 

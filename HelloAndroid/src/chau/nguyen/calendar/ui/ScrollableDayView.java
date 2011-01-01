@@ -34,16 +34,15 @@ public class ScrollableDayView extends VerticalScrollView {
 			this.addView(dayView);			
 		}
 		
-		if (this.getChildCount() == 3) {											
-			DayView previousView = (DayView)getChildAt(0);
-			previousView.setDate(addMonths(date, -1));
-			
-			DayView currentView = (DayView)getChildAt(1);
-			currentView.setDate(date);
-			
-			DayView nextView = (DayView)getChildAt(2);
-			nextView.setDate(addMonths(date, 1));
-    	}
+												
+		DayView previousView = (DayView)getChildAt(0);
+		previousView.setDate(addMonths(date, -1));
+		
+		DayView currentView = (DayView)getChildAt(1);
+		currentView.setDate(date);
+		
+		DayView nextView = (DayView)getChildAt(2);
+		nextView.setDate(addMonths(date, 1));
 				
 		this.setOnScreenSelectedListener(null);
 		this.showScreen(1);
@@ -60,26 +59,17 @@ public class ScrollableDayView extends VerticalScrollView {
     	Date currentDate = currentView.getDisplayDate();    	
     	if (selectedIndex == 0) {
     		// remove last view, add new view at the beginning
-    		DayView previousView = new DayView(getContext());
-    		previousView.setOnClickListener(onClickListener);
+    		DayView previousView = (DayView)this.getChildAt(2);    		
     		previousView.setDate(addMonths(currentDate, -1));
     		previousView.setBackgroundDrawable(BackgroundManager.getRandomBackground());
-    		this.prependView(previousView);    	
-
-    		if (this.getChildCount() > 2) {
-    			this.removeViewAt(2);
-    		}
+    		this.rotateLastView();
+    		
     	} else if (selectedIndex == 2) {    		
     		// remove first view, append new view at the end
-    		DayView nextView = new DayView(getContext());
-    		nextView.setOnClickListener(onClickListener);
+    		DayView nextView = (DayView)getChildAt(0);    		
     		nextView.setDate(addMonths(currentDate, +1));
     		nextView.setBackgroundDrawable(BackgroundManager.getRandomBackground());    		
-    		this.addView(nextView);
-    		
-    		if (this.getChildCount() > 3) {
-    			this.removeFirstView();
-    		}
+    		this.rotateFirstView();
     	}
     	
     	if (this.onDateChangedListener != null) {
