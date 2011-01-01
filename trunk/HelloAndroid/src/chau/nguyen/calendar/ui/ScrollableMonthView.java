@@ -25,36 +25,22 @@ public class ScrollableMonthView extends VerticalScrollView {
 	}
 
 	public void setDate(Date date) {
-		if (this.getChildCount() == 3) {
-			MonthView previousView = (MonthView)getChildAt(0);
-			previousView.setDate(addYears(date, -1));
-			
-			MonthView currentView = (MonthView)getChildAt(1);
-			currentView.setDate(date);
-			
-			MonthView nextView = (MonthView)getChildAt(2);
-			nextView.setDate(addYears(date, 1));
-    	} else {
-    		this.removeAllViews();
-    		
-	    	MonthView previousView = new MonthView(getContext());
-	    	previousView.setOnDateSelectedListener(onDateSelectedListener);
-			previousView.setDate(addYears(date, 1));
-			previousView.setBackgroundDrawable(BackgroundManager.getRandomBackground());
-			this.addView(previousView);
-			 
-			MonthView currentView = new MonthView(getContext());
-			currentView.setOnDateSelectedListener(onDateSelectedListener);
-			currentView.setDate(date);
-			currentView.setBackgroundDrawable(BackgroundManager.getRandomBackground());
-			this.addView(currentView);
-			 
-			MonthView nextView = new MonthView(getContext());
-			nextView.setOnDateSelectedListener(onDateSelectedListener);
-			nextView.setDate(addYears(date, 1));
-			nextView.setBackgroundDrawable(BackgroundManager.getRandomBackground());
-			this.addView(nextView);
-    	}
+		int childCount = this.getChildCount(); 
+		for (int i = 0; i < 3 - childCount; i++) {
+			MonthView monthView = new MonthView(getContext());			
+			monthView.setOnDateSelectedListener(onDateSelectedListener);
+			monthView.setBackgroundDrawable(BackgroundManager.getRandomBackground());
+			this.addView(monthView);			
+		}
+				
+		MonthView previousView = (MonthView)getChildAt(0);
+		previousView.setDate(addYears(date, -1));
+		
+		MonthView currentView = (MonthView)getChildAt(1);
+		currentView.setDate(date);
+		
+		MonthView nextView = (MonthView)getChildAt(2);
+		nextView.setDate(addYears(date, 1));    	
 				
 		this.setOnScreenSelectedListener(null);
 		this.showScreen(1);
@@ -71,26 +57,17 @@ public class ScrollableMonthView extends VerticalScrollView {
     	Date currentDate = currentView.getDate();    	
     	if (selectedIndex == 0) {
     		// remove last view, add new view at the beginning
-    		MonthView previousView = new MonthView(getContext());
-    		previousView.setOnDateSelectedListener(onDateSelectedListener);
+    		MonthView previousView = (MonthView)getChildAt(2);
     		previousView.setDate(addYears(currentDate, -1));
     		previousView.setBackgroundDrawable(BackgroundManager.getRandomBackground());
-    		this.prependView(previousView);    	
-
-    		if (this.getChildCount() > 2) {
-    			this.removeViewAt(2);
-    		}
+    		this.rotateLastView();
+    		
     	} else if (selectedIndex == 2) {    		
     		// remove first view, append new view at the end
-    		MonthView nextView = new MonthView(getContext());
-    		nextView.setOnDateSelectedListener(onDateSelectedListener);
+    		MonthView nextView = (MonthView)getChildAt(0);    		
     		nextView.setDate(addYears(currentDate, +1));
-    		nextView.setBackgroundDrawable(BackgroundManager.getRandomBackground());    		
-    		this.addView(nextView);
-    		
-    		if (this.getChildCount() > 3) {
-    			this.removeFirstView();
-    		}
+    		nextView.setBackgroundDrawable(BackgroundManager.getRandomBackground());
+    		this.rotateFirstView();
     	}
     	
     	if (this.onDateChangedListener != null) {
@@ -101,6 +78,7 @@ public class ScrollableMonthView extends VerticalScrollView {
 	private Date addYears(Date date, int years) {
     	Calendar cal = Calendar.getInstance();
     	cal.setTime(date);
+    	cal.set(Calendar.DAY_OF_MONTH, 1);
     	cal.add(Calendar.YEAR, years);
     	return cal.getTime();
     }

@@ -3,12 +3,12 @@ package chau.nguyen.calendar.widget;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
-import android.widget.Scroller;
 
 public class HorizontalScrollView extends ViewGroup {
     private static final int INVALID_SCREEN = -1;
@@ -22,10 +22,10 @@ public class HorizontalScrollView extends ViewGroup {
 
     private int mCurrentScreen;
     private int mNextScreen = INVALID_SCREEN;
-    private Scroller mScroller;
+    private CustomScroller mScroller;
     private VelocityTracker mVelocityTracker;
         
-    private float mLastMotionX;
+    private float mLastMotionX;    
     private int mScrollX;
     
     private final static int TOUCH_STATE_REST = 0;
@@ -72,35 +72,40 @@ public class HorizontalScrollView extends ViewGroup {
 		this.listener = listener;
 	}
 				
-	View prependView = null;
-	public void prependView(View child) {
-		// we will actually add this view on measuring phase
-		this.prependView = child;
+	private boolean rotateLastView = false;
+	public void rotateLastView() {
+		this.rotateLastView = true;		
 		this.requestLayout();
-	}	
-	private void prependViewInLayout() {
-		super.addViewInLayout(prependView, 0, 
-				new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+	}
+	
+	private void rotateLastViewInLayout() {		
+		View lastView = getChildAt(getChildCount() - 1);
+		this.removeViewAt(getChildCount() - 1);		
 		mCurrentScreen++;
-    	mNextScreen = INVALID_SCREEN;		
+    	mNextScreen = INVALID_SCREEN;
     	mScrollX = mCurrentScreen * getWidth();
     	scrollTo(mScrollX, 0);
-    	prependView = null;
+    	this.rotateLastView = false;    	
+    	super.addViewInLayout(lastView, 0, 
+				new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));    	
 	}
 	
-	private boolean removeFirstView = false;	
-	public void removeFirstView() {
-		this.removeFirstView = true;
+	private boolean rotateFirstView = false;
+	public void rotateFirstView() {
+		this.rotateFirstView = true;
+		this.requestLayout();
 	}
 	
-	private void removeFirstViewInLayout() {
+	private void rotateFirstViewInLayout() {
 		View firstView = getChildAt(0);
 		super.removeViewInLayout(firstView);
 		mCurrentScreen--;
 		mNextScreen = INVALID_SCREEN;
 		mScrollX = mCurrentScreen * getWidth();
     	scrollTo(mScrollX, 0);
-		removeFirstView = false;
+		rotateFirstView = false;
+		super.addViewInLayout(firstView, getChildCount(), 
+				new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
 	}
 		
 	/**
@@ -108,11 +113,11 @@ public class HorizontalScrollView extends ViewGroup {
      */
     private void init() {
         Context context = getContext();
-        mScroller = new Scroller(context);//, new BackInterpolator(Type.OUT, 3f));//new ElasticInterpolator(Type.OUT, 1, 0.3f));        
+        mScroller = new CustomScroller(context);//, new ElasticInterpolator(5f));// new BackInterpolator(Type.OUT, 3f));//new ElasticInterpolator(Type.OUT, 1, 0.3f));        
         mCurrentScreen = 0;
 
         final ViewConfiguration configuration = ViewConfiguration.get(getContext());
-        mTouchSlop = configuration.getScaledTouchSlop() * 5;        
+        mTouchSlop = configuration.getScaledTouchSlop();        
         mMaximumVelocity = configuration.getScaledMaximumFlingVelocity();
     }   
     
@@ -160,11 +165,11 @@ public class HorizontalScrollView extends ViewGroup {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-    	if (prependView != null) {
-    		prependViewInLayout();
+    	if (rotateLastView) {
+    		this.rotateLastViewInLayout();
     	}
-    	if (removeFirstView) {
-    		this.removeFirstViewInLayout();
+    	if (rotateFirstView) {
+    		this.rotateFirstViewInLayout();
     	}
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
@@ -211,6 +216,7 @@ public class HorizontalScrollView extends ViewGroup {
     
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
+    	Log.d("DEBUG", "HorizontalScrollView.onInterceptTouchEvent() -> " + ev.getAction());
         /*
          * This method JUST determines whether we want to intercept the motion.
          * If we return true, onTouchEvent will be called and we do the actual
@@ -226,7 +232,7 @@ public class HorizontalScrollView extends ViewGroup {
         if ((action == MotionEvent.ACTION_MOVE) && (mTouchState != TOUCH_STATE_REST)) {
             return true;
         }
-
+        
         final float x = ev.getX();
         
         switch (action) {
@@ -240,7 +246,7 @@ public class HorizontalScrollView extends ViewGroup {
                  * Locally do absolute value. mLastMotionX is set to the y value
                  * of the down event.
                  */
-                final int xDiff = (int) Math.abs(x - mLastMotionX);
+                final int xDiff = (int) Math.abs(x - mLastMotionX);                
 
                 final int touchSlop = mTouchSlop;
                 boolean xMoved = xDiff > touchSlop;
@@ -278,6 +284,8 @@ public class HorizontalScrollView extends ViewGroup {
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
+    	Log.d("DEBUG", "HorizontalScrollView.onTouchEvent() -> " + ev.getAction());
+    	
         if (mVelocityTracker == null) {
             mVelocityTracker = VelocityTracker.obtain();
         }
@@ -317,9 +325,7 @@ public class HorizontalScrollView extends ViewGroup {
                         scrollBy(Math.min(availableToScroll, deltaX), 0);
                         mScrollX = getScrollX();
                     }
-                } else {
-                    snapToDestination();
-                }  
+                } 
             }
             break;
         case MotionEvent.ACTION_UP:
@@ -371,10 +377,10 @@ public class HorizontalScrollView extends ViewGroup {
         
         final int newX = whichScreen * getWidth();
         final int delta = newX - mScrollX;
-        final int duration = screenDelta * 300;
+        final int duration = screenDelta * 400;        
 
         if (!mScroller.isFinished()) mScroller.abortAnimation();
-        mScroller.startScroll(mScrollX, 0, delta, 0, duration);
+        mScroller.startScroll(mScrollX, 0, delta, 0, duration > 0 ? duration : 400);
         invalidate();
     }
 
