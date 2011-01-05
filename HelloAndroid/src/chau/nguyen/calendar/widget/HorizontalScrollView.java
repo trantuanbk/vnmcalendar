@@ -3,7 +3,6 @@ package chau.nguyen.calendar.widget;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -75,12 +74,12 @@ public class HorizontalScrollView extends ViewGroup {
 	private boolean rotateLastView = false;
 	public void rotateLastView() {
 		this.rotateLastView = true;		
-		this.requestLayout();
+		this.requestLayout();		
 	}
 	
 	private void rotateLastViewInLayout() {		
 		View lastView = getChildAt(getChildCount() - 1);
-		this.removeViewAt(getChildCount() - 1);		
+		this.removeViewAt(getChildCount() - 1);
 		mCurrentScreen++;
     	mNextScreen = INVALID_SCREEN;
     	mScrollX = mCurrentScreen * getWidth();
@@ -93,10 +92,10 @@ public class HorizontalScrollView extends ViewGroup {
 	private boolean rotateFirstView = false;
 	public void rotateFirstView() {
 		this.rotateFirstView = true;
-		this.requestLayout();
+		this.requestLayout();		
 	}
 	
-	private void rotateFirstViewInLayout() {
+	private void rotateFirstViewInLayout() {		
 		View firstView = getChildAt(0);
 		super.removeViewInLayout(firstView);
 		mCurrentScreen--;
@@ -105,7 +104,7 @@ public class HorizontalScrollView extends ViewGroup {
     	scrollTo(mScrollX, 0);
 		rotateFirstView = false;
 		super.addViewInLayout(firstView, getChildCount(), 
-				new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+				new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));	
 	}
 		
 	/**
@@ -113,7 +112,11 @@ public class HorizontalScrollView extends ViewGroup {
      */
     private void init() {
         Context context = getContext();
-        mScroller = new CustomScroller(context);//, new ElasticInterpolator(5f));// new BackInterpolator(Type.OUT, 3f));//new ElasticInterpolator(Type.OUT, 1, 0.3f));        
+        mScroller = new CustomScroller(context);
+        	//, new DecelerateInterpolator(3.0f));
+        	//, new ElasticInterpolator(5f));
+        	//, new BackInterpolator(Type.OUT, 3f));
+        	//new ElasticInterpolator(Type.OUT, 1, 0.3f));        
         mCurrentScreen = 0;
 
         final ViewConfiguration configuration = ViewConfiguration.get(getContext());
@@ -171,6 +174,7 @@ public class HorizontalScrollView extends ViewGroup {
     	if (rotateFirstView) {
     		this.rotateFirstViewInLayout();
     	}
+    	
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
         final int width = MeasureSpec.getSize(widthMeasureSpec);
@@ -216,7 +220,6 @@ public class HorizontalScrollView extends ViewGroup {
     
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-    	Log.d("DEBUG", "HorizontalScrollView.onInterceptTouchEvent() -> " + ev.getAction());
         /*
          * This method JUST determines whether we want to intercept the motion.
          * If we return true, onTouchEvent will be called and we do the actual
@@ -283,8 +286,7 @@ public class HorizontalScrollView extends ViewGroup {
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent ev) {
-    	Log.d("DEBUG", "HorizontalScrollView.onTouchEvent() -> " + ev.getAction());
+    public boolean onTouchEvent(MotionEvent ev) {    	
     	
         if (mVelocityTracker == null) {
             mVelocityTracker = VelocityTracker.obtain();
@@ -369,7 +371,8 @@ public class HorizontalScrollView extends ViewGroup {
     }
 
     public void snapToScreen(int whichScreen) {
-        //if (!mScroller.isFinished()) return;
+        if (!mScroller.isFinished()) return;
+        
         whichScreen = Math.max(0, Math.min(whichScreen, getChildCount() - 1));
         
         final int screenDelta = Math.abs(whichScreen - mCurrentScreen);

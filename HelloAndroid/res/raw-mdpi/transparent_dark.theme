@@ -1,30 +1,30 @@
 {
     name: "Chữ đen - Nền trắng",
-    width: 231,
-    height: 264,    
+    width: 301,
+    height: 344,    
     enableShadow: true,
-    autoCalculateOffsets: true,
+    autoCalculateOffsets: false,
     
     titleOffsetX: 0,
     titleOffsetY: 0,
-    titleWidth: 231,
-    titleHeight: 33,
+    titleWidth: 301,
+    titleHeight: 43,
     titleTextSize: 25,
     titleTextColor: "#000000",
     titleTextShadowColor: "#FFFFFF",
     
     headerOffsetX: 0,
-    headerOffsetY: 33,
-    headerWidth: 33,
-    headerHeight: 33,
+    headerOffsetY: 43,
+    headerWidth: 43,
+    headerHeight: 43,
     headerTextSize: 18,
     headerTextColor: "#000000",
     headerTextShadowColor: "#FFFFFF",
     
     cellOffsetX: 0,
-    cellOffsetY: 66,
-    cellWidth: 33,
-    cellHeight: 33,
+    cellOffsetY: 86,
+    cellWidth: 43,
+    cellHeight: 43,
     cellMainTextSize: 22,
     cellSubTextSize: 13,    
     cellEventBackground: "event_cell_bg",
@@ -40,5 +40,5 @@
     holidayColor: "#FF0000",
     holidayShadowColor: "#FFFFFF",
     otherDayColor: "#AAAAAA",
-    otherDayShadowColor: "#333333"
+    otherDayShadowColor: "#333333"    
 }

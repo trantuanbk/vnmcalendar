@@ -54,8 +54,9 @@ public class VNMDayActivity extends Activity {
 			public void onSelected(int selectedIndex) {
 				prepareOtherViews(selectedIndex);				
 			}
-        });
-                      
+        });        
+        //Log.d("DEBUG", StreamUtils.readAllText(getResources().openRawResource(R.raw.test)));
+                
         showDate(new Date());
     }
     
