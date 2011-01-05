@@ -17,6 +17,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Bitmap.CompressFormat;
 import android.net.Uri;
+import android.util.Log;
 import android.widget.RemoteViews;
 import chau.nguyen.EventManager;
 import chau.nguyen.R;
@@ -38,6 +39,9 @@ public class MonthWidgetProvider extends AppWidgetProvider {
         if (info == null) return;
         
         MonthViewRenderer.Config config = ThemeManager.getConfig(context, theme);
+        
+        Log.d("DEBUG", info.minWidth + "x" + info.minHeight);
+        Log.d("DEBUG", ">> " + config.width + "x" + config.height);
         
         Uri bitmapUri = null;
         bitmapUri = renderWidget(context, config, appWidgetId);  

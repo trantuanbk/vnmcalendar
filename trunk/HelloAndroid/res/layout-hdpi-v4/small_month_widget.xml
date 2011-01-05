@@ -2,10 +2,10 @@
 <FrameLayout xmlns:a="http://schemas.android.com/apk/res/android"
     a:layout_width="fill_parent"
     a:layout_height="fill_parent">
-	<ImageView
-	   a:layout_width="210px"    
-	   a:layout_height="240px"
+	<ImageView 
+	   a:layout_width="280px"
+	   a:layout_height="320px"
 	   a:layout_gravity="center"
-	   a:id="@+id/monthViewImage"
+	   a:id="@+id/monthViewImage"	   
 	/>
 </FrameLayout>

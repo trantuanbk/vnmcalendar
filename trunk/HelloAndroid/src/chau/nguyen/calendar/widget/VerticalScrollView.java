@@ -3,7 +3,6 @@ package chau.nguyen.calendar.widget;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -216,9 +215,7 @@ public class VerticalScrollView extends ViewGroup {
     }
     
     @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-    	Log.d("DEBUG", "VerticalScrollView.onInterceptTouchEvent() -> " + ev.getAction());
-    	
+    public boolean onInterceptTouchEvent(MotionEvent ev) {    	
         /*
          * This method JUST determines whether we want to intercept the motion.
          * If we return true, onTouchEvent will be called and we do the actual
@@ -288,8 +285,6 @@ public class VerticalScrollView extends ViewGroup {
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-    	Log.d("DEBUG", "VerticalScrollView.onTouchEvent() -> " + ev.getAction());
-    	
         if (mVelocityTracker == null) {
             mVelocityTracker = VelocityTracker.obtain();
         }
@@ -374,7 +369,8 @@ public class VerticalScrollView extends ViewGroup {
     }
 
     public void snapToScreen(int whichScreen) {
-        //if (!mScroller.isFinished()) return;
+        if (!mScroller.isFinished()) return;
+        
         whichScreen = Math.max(0, Math.min(whichScreen, getChildCount() - 1));
         
         final int screenDelta = Math.abs(whichScreen - mCurrentScreen);
