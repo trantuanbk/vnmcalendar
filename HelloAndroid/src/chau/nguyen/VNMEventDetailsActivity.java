@@ -19,6 +19,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -64,6 +66,9 @@ public class VNMEventDetailsActivity extends Activity {
 	protected Spinner remindersDropDown;
 	protected Spinner calendarsDropDown;
 	protected Spinner numberYearsDropDown;
+	protected RadioButton lunarCalendarRadio;
+	protected RadioButton solarCalendarRadio;
+	protected LinearLayout numberYearsContainer;
 	
 	private ProgressDialog progressDialog;
 	
@@ -138,6 +143,9 @@ public class VNMEventDetailsActivity extends Activity {
 		this.repeatsDropDown = (Spinner)findViewById(R.id.repeatsDropDown);
 		this.calendarsDropDown = (Spinner)findViewById(R.id.calendarsDropDown);
 		this.numberYearsDropDown = (Spinner)findViewById(R.id.numberYearsDropDown);
+		this.lunarCalendarRadio = (RadioButton)findViewById(R.id.lunarCalendarRadio);
+		this.solarCalendarRadio = (RadioButton)findViewById(R.id.solarCalendarRadio);
+		this.numberYearsContainer = (LinearLayout)findViewById(R.id.numberYearsContainer);
 		Calendar cal = Calendar.getInstance();
 		
 		this.startDate =  VietCalendar.convertSolar2LunarInVietnamese(cal.getTime());
@@ -286,6 +294,7 @@ public class VNMEventDetailsActivity extends Activity {
 			    long reminderMinutes = getRemindTime(remindersDropDown.getSelectedItemPosition());
 			    int repeat = repeatsDropDown.getSelectedItemPosition();
 				CreatingEvent creatingEvent = new CreatingEvent();
+				creatingEvent.setLunarEvent(lunarCalendarRadio.isChecked());
 				creatingEvent.setTitle(titleEditText.getText().toString());
 				creatingEvent.setDescription(descriptionEditText.getText().toString());
 				creatingEvent.setEventLocation(locationEditText.getText().toString());
@@ -324,6 +333,26 @@ public class VNMEventDetailsActivity extends Activity {
 				finish();
 			}			
 		});
+		
+		this.lunarCalendarRadio.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				numberYearsContainer.setVisibility(View.VISIBLE);
+				setDate(startDateButton, startDate);
+				setDate(endDateButton, endDate);
+			}
+		});
+		
+		this.solarCalendarRadio.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				numberYearsContainer.setVisibility(View.GONE);
+				setDate(startDateButton, startDate);
+				setDate(endDateButton, endDate);
+			}
+		});
 	}
 	
 	protected Dialog onCreateDialog(int id) {
@@ -340,7 +369,8 @@ public class VNMEventDetailsActivity extends Activity {
     }
 	
 	private void setDate(TextView view, VNMDate date) {
-		view.setText(date.getDayOfMonth() + "-" + date.getMonth() + "-" + date.getYear() + " (Âm lịch)");
+		String str = this.lunarCalendarRadio.isChecked() ? " (Âm lịch)" : " (Dương lịch)";
+		view.setText(date.getDayOfMonth() + "-" + date.getMonth() + "-" + date.getYear() + str);
 	}
 	
 	private void setTime(TextView view, int hourOfDay, int minute) {
