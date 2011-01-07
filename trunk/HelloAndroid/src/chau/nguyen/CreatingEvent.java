@@ -8,6 +8,7 @@ import java.util.UUID;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.util.Log;
 import chau.nguyen.calendar.VNMDate;
 import chau.nguyen.calendar.VietCalendar;
 
@@ -41,8 +42,10 @@ public class CreatingEvent implements Runnable {
 	
 	private void addEvent(String calId) {
 		if (lunarEvent) {
+			Log.i("INFO", "adding lunar event: " + this.startDate.getDayOfMonth() + "/" + this.startDate.getMonth() + "/" + this.startDate.getYear());
 			addLunarEvent(calId);
 		} else {
+			Log.i("INFO", "adding solar event: " + this.startDate.getDayOfMonth() + "/" + this.startDate.getMonth() + "/" + this.startDate.getYear());
 			addSolarEvent(calId);
 		}
 	}
