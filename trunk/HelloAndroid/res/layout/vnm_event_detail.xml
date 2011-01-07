@@ -10,6 +10,24 @@
         a:layout_height="fill_parent"
         a:padding="10sp">
         <!-- CALENDARS -->
+        <RadioGroup
+      		a:layout_width="fill_parent"
+      		a:layout_height="wrap_content"
+      		a:orientation="horizontal">
+			<RadioButton a:id="@+id/lunarCalendarRadio"
+			    a:layout_width="fill_parent"
+			    a:layout_height="wrap_content"
+			    a:layout_weight="1"
+			    a:textColor="@color/commonTextView"
+			    a:text="Âm lịch" 
+			    a:checked="true"/>
+			<RadioButton a:id="@+id/solarCalendarRadio"
+			    a:layout_width="fill_parent"
+			    a:layout_height="wrap_content"
+			    a:layout_weight="1"
+			    a:textColor="@color/commonTextView"
+			    a:text="Dương lịch" />
+    	</RadioGroup>
         <LinearLayout
             a:orientation="vertical"
             a:layout_width="fill_parent"

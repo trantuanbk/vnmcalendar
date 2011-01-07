@@ -12,6 +12,8 @@ import chau.nguyen.calendar.VNMDate;
 import chau.nguyen.calendar.VietCalendar;
 
 public class CreatingEvent implements Runnable {
+	private final static String MONTHLY = "FREQ=MONTHLY";
+	private final static String YEARLY = "FREQ=YEARLY";
 	public final static int STATE_DONE = 0;
 	public final static int STATE_RUNNING = 1;
 	public final static String STATUS = "status";
@@ -26,6 +28,7 @@ public class CreatingEvent implements Runnable {
 	private ContentResolver contentResolver;
 	private String[] calIds;
 	private String groupId = UUID.randomUUID().toString();
+	private boolean lunarEvent;
 	
 	@Override
 	public void run() {
@@ -37,6 +40,14 @@ public class CreatingEvent implements Runnable {
 	}
 	
 	private void addEvent(String calId) {
+		if (lunarEvent) {
+			addLunarEvent(calId);
+		} else {
+			addSolarEvent(calId);
+		}
+	}
+	
+	private void addLunarEvent(String calId) {
 		Calendar calStart = Calendar.getInstance();
 		VNMDate temp = VietCalendar.convertSolar2LunarInVietnamese(calStart.getTime());
 		int currentYear = temp.getYear();
@@ -51,22 +62,26 @@ public class CreatingEvent implements Runnable {
 		switch (this.repeat) {
 			case VNMEventDetailsActivity.YEARLY_REPEAT:
 				for (int i = 0; i <= numberYears; i++) {
-					values.add(createEvent(calId, VietCalendar.addYear(this.startDate, i), VietCalendar.addYear(this.endDate, i)));
+					values.add(createLunarEvent(calId, VietCalendar.addYear(this.startDate, i), VietCalendar.addYear(this.endDate, i)));
 				}
 				break;			
 			case VNMEventDetailsActivity.MONTHLY_REPEAT:
 				for (int i = 0; i <= 12 * numberYears; i++) {
-					values.add(createEvent(calId, VietCalendar.addMonth(this.startDate, i), VietCalendar.addMonth(this.endDate, i)));
+					values.add(createLunarEvent(calId, VietCalendar.addMonth(this.startDate, i), VietCalendar.addMonth(this.endDate, i)));
 				}
 				break;
 			default:
-				values.add(createEvent(calId, this.startDate, this.endDate));
+				values.add(createLunarEvent(calId, this.startDate, this.endDate));
 				break;
 		}	
 		
 		contentResolver.bulkInsert(EventManager.EVENTS_URI, values.toArray(new ContentValues[0]));		
+		insertReminders();
+	}
+	
+	private void insertReminders() {
 		// query event_ids
-		values.clear();
+		ArrayList<ContentValues> values = new ArrayList<ContentValues>();
 		Cursor managedCursor = contentResolver.query(
 				EventManager.EVENTS_URI,
                 new String[] { "_id" },    // Which columns to return.
@@ -86,7 +101,48 @@ public class CreatingEvent implements Runnable {
 		contentResolver.bulkInsert(EventManager.REMINDERS_URI, values.toArray(new ContentValues[0]));
 	}
 	
-	private ContentValues createEvent(String calId, VNMDate startDate, VNMDate endDate) {		
+	private void addSolarEvent(String calId) {
+		int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+		if (currentYear > this.startDate.getYear()) {
+			this.startDate.setYear(currentYear);
+		}		
+		if (currentYear > this.endDate.getYear()) {
+			this.endDate.setYear(currentYear);
+		}
+		
+		
+		ContentValues event = createEvent(calId, convertVNMDateToMiliseconds(this.startDate), convertVNMDateToMiliseconds(this.endDate));
+		switch (this.repeat) {
+			case VNMEventDetailsActivity.YEARLY_REPEAT:
+				event.put("rrule", YEARLY);
+				break;			
+			case VNMEventDetailsActivity.MONTHLY_REPEAT:
+				event.put("rrule", MONTHLY);
+				break;
+			default:
+				break;
+		}
+		contentResolver.insert(EventManager.EVENTS_URI, event);
+		insertReminders();
+	}
+	
+	private long convertVNMDateToMiliseconds(VNMDate vnmDate) {
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, vnmDate.getYear());
+		cal.set(Calendar.MONTH, vnmDate.getMonth());
+		cal.set(Calendar.DAY_OF_MONTH, vnmDate.getDayOfMonth());
+		cal.set(Calendar.HOUR_OF_DAY, vnmDate.getHourOfDay());
+		cal.set(Calendar.MINUTE, vnmDate.getMinute());
+		return cal.getTimeInMillis();
+	}
+	
+	private ContentValues createLunarEvent(String calId, VNMDate startDate, VNMDate endDate) {		
+		Date solarStartDate = VietCalendar.convertLunar2Solar(startDate);
+		Date solarEndDate = VietCalendar.convertLunar2Solar(endDate);
+		return createEvent(calId, solarStartDate.getTime(), solarEndDate.getTime());
+	}
+	
+	private ContentValues createEvent(String calId, long startTime, long endTime) {
 		ContentValues event = new ContentValues();
 		event.put("calendar_id", calId);
 		event.put("title", this.title);
@@ -94,16 +150,11 @@ public class CreatingEvent implements Runnable {
 		event.put("eventLocation", this.eventLocation);
 		event.put("htmlUri", groupId);
 		
-		Date solarStartDate = VietCalendar.convertLunar2Solar(startDate);
-		Date solarEndDate = VietCalendar.convertLunar2Solar(endDate);
-		
 //		Log.i("Event", "startLunarDay: " + startDate.getDayOfMonth() + "/" + startDate.getMonth() + "/" + startDate.getYear());
 //		Log.i("Event", "startSolarDay: " + solarStartDate);		
 //		Log.i("Event", "endLunarDay: " + endDate.getDayOfMonth() + "/" + endDate.getMonth() + "/" + endDate.getYear());		
 //		Log.i("Event", "endSolarDay: " + solarEndDate);
 		
-		long startTime = solarStartDate.getTime();
-		long endTime = solarEndDate.getTime();
 		event.put("dtstart", startTime);
 		event.put("dtend", endTime);		
 		event.put("hasAlarm", 1);
@@ -170,4 +221,13 @@ public class CreatingEvent implements Runnable {
 	public void setCalIds(String... calIds) {
 		this.calIds = calIds;
 	}
+
+	public boolean isLunarEvent() {
+		return lunarEvent;
+	}
+
+	public void setLunarEvent(boolean lunarEvent) {
+		this.lunarEvent = lunarEvent;
+	}
+	
 }
