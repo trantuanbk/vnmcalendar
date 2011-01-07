@@ -12,11 +12,13 @@ import android.app.TimePickerDialog.OnTimeSetListener;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -69,6 +71,8 @@ public class VNMEventDetailsActivity extends Activity {
 	protected RadioButton lunarCalendarRadio;
 	protected RadioButton solarCalendarRadio;
 	protected LinearLayout numberYearsContainer;
+	
+	private boolean isLunar = true;
 	
 	private ProgressDialog progressDialog;
 	
@@ -334,13 +338,42 @@ public class VNMEventDetailsActivity extends Activity {
 			}			
 		});
 		
+		this.lunarCalendarRadio.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if (isChecked) {
+					numberYearsContainer.setVisibility(View.VISIBLE);
+					isLunar = true;
+					startDate = VietCalendar.convertSolar2LunarInVietnamese(startDate.getMinute(), startDate.getHourOfDay(), startDate.getDayOfMonth(), startDate.getMonth(), startDate.getYear());
+					endDate = VietCalendar.convertSolar2LunarInVietnamese(endDate.getMinute(), endDate.getHourOfDay(), endDate.getDayOfMonth(), endDate.getMonth(), endDate.getYear());
+					setDate(startDateButton, startDate);
+					setDate(endDateButton, endDate);
+					Log.i("INFO", "Lundar radio have been checked");
+				}
+			}
+		});
+		
+		this.solarCalendarRadio.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if (isChecked) {
+					numberYearsContainer.setVisibility(View.GONE);
+					isLunar = false;
+					startDate = VietCalendar.convertLuner2SolarInVietnamese(startDate.getMinute(), startDate.getHourOfDay(), startDate.getDayOfMonth(), startDate.getMonth(), startDate.getYear());
+					endDate = VietCalendar.convertLuner2SolarInVietnamese(endDate.getMinute(), endDate.getHourOfDay(), endDate.getDayOfMonth(), endDate.getMonth(), endDate.getYear());
+					setDate(startDateButton, startDate);
+					setDate(endDateButton, endDate);
+					Log.i("INFO", "Solar radio have been checked");
+				}
+			}
+		});
+		
 		this.lunarCalendarRadio.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				numberYearsContainer.setVisibility(View.VISIBLE);
-				setDate(startDateButton, startDate);
-				setDate(endDateButton, endDate);
 			}
 		});
 		
@@ -348,9 +381,6 @@ public class VNMEventDetailsActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				numberYearsContainer.setVisibility(View.GONE);
-				setDate(startDateButton, startDate);
-				setDate(endDateButton, endDate);
 			}
 		});
 	}
@@ -369,7 +399,7 @@ public class VNMEventDetailsActivity extends Activity {
     }
 	
 	private void setDate(TextView view, VNMDate date) {
-		String str = this.lunarCalendarRadio.isChecked() ? " (Âm lịch)" : " (Dương lịch)";
+		String str = isLunar ? " (Âm lịch)" : " (Dương lịch)";
 		view.setText(date.getDayOfMonth() + "-" + date.getMonth() + "-" + date.getYear() + str);
 	}
 	

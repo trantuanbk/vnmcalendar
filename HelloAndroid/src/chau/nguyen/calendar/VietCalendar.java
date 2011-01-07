@@ -296,6 +296,24 @@ public class VietCalendar {
     	return result;
     }
     
+    public static VNMDate convertSolar2LunarInVietnamese(int minute, int hour, int day, int month, int year) {
+    	Calendar cal = Calendar.getInstance();
+    	cal.set(Calendar.YEAR, year);
+    	cal.set(Calendar.MONTH, month - 1);
+    	cal.set(Calendar.DAY_OF_MONTH, day);
+    	cal.set(Calendar.HOUR_OF_DAY, hour);
+    	cal.set(Calendar.MINUTE, minute);
+    	Date date = cal.getTime();
+    	int[] temp = convertSolar2LunarInVietnam(date);
+    	VNMDate result = new VNMDate();
+    	result.setDayOfMonth(temp[DAY]);
+    	result.setMonth(temp[MONTH]);
+    	result.setYear(temp[YEAR]);
+    	result.setHourOfDay(cal.get(Calendar.HOUR_OF_DAY));
+    	result.setMinute(cal.get(Calendar.MINUTE));
+    	return result;
+    }
+    
     public static int compare(VNMDate date1, VNMDate date2) {
     	if (date1.getYear() > date2.getYear())
     		return 1;
@@ -376,6 +394,17 @@ public class VietCalendar {
     	cal.set(Calendar.HOUR_OF_DAY, vnmDate.getHourOfDay());
     	cal.set(Calendar.MINUTE, vnmDate.getMinute());
     	return cal.getTime();
+    }
+    
+    public static VNMDate convertLuner2SolarInVietnamese(int minute, int hourOfDay, int dayOfMonth, int month, int year) {
+    	int[] temp = convertLunar2Solar(dayOfMonth, month, year);
+    	VNMDate date = new VNMDate();
+    	date.setDayOfMonth(temp[DAY]);
+    	date.setMonth(temp[MONTH]);
+    	date.setYear(temp[YEAR]);
+    	date.setMinute(minute);
+    	date.setHourOfDay(hourOfDay);
+    	return date;
     }
     
     /**
