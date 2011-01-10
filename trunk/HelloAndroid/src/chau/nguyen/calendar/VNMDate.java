@@ -50,5 +50,9 @@ public class VNMDate {
 	}
 	public void setMinute(int minute) {
 		this.minute = minute;
-	}	
+	}
+	@Override
+	public String toString() {
+		return this.dayOfMonth + "/" + this.month + "/" + this.year;
+	}
 }

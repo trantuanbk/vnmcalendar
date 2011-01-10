@@ -296,21 +296,14 @@ public class VietCalendar {
     	return result;
     }
     
-    public static VNMDate convertSolar2LunarInVietnamese(int minute, int hour, int day, int month, int year) {
-    	Calendar cal = Calendar.getInstance();
-    	cal.set(Calendar.YEAR, year);
-    	cal.set(Calendar.MONTH, month - 1);
-    	cal.set(Calendar.DAY_OF_MONTH, day);
-    	cal.set(Calendar.HOUR_OF_DAY, hour);
-    	cal.set(Calendar.MINUTE, minute);
-    	Date date = cal.getTime();
-    	int[] temp = convertSolar2LunarInVietnam(date);
+    public static VNMDate convertSolar2LunarInVietnamese(int minute, int hour, int dayOfMonth, int month, int year) {
+    	int[] temp = convertSolar2LunarInVietnam(dayOfMonth, month + 1, year);;
     	VNMDate result = new VNMDate();
     	result.setDayOfMonth(temp[DAY]);
     	result.setMonth(temp[MONTH]);
     	result.setYear(temp[YEAR]);
-    	result.setHourOfDay(cal.get(Calendar.HOUR_OF_DAY));
-    	result.setMinute(cal.get(Calendar.MINUTE));
+    	result.setHourOfDay(hour);
+    	result.setMinute(minute);
     	return result;
     }
     
@@ -400,7 +393,7 @@ public class VietCalendar {
     	int[] temp = convertLunar2Solar(dayOfMonth, month, year);
     	VNMDate date = new VNMDate();
     	date.setDayOfMonth(temp[DAY]);
-    	date.setMonth(temp[MONTH]);
+    	date.setMonth(temp[MONTH] - 1);
     	date.setYear(temp[YEAR]);
     	date.setMinute(minute);
     	date.setHourOfDay(hourOfDay);

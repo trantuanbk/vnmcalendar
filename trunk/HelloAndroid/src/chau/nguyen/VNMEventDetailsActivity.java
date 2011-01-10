@@ -349,7 +349,7 @@ public class VNMEventDetailsActivity extends Activity {
 					endDate = VietCalendar.convertSolar2LunarInVietnamese(endDate.getMinute(), endDate.getHourOfDay(), endDate.getDayOfMonth(), endDate.getMonth(), endDate.getYear());
 					setDate(startDateButton, startDate);
 					setDate(endDateButton, endDate);
-					Log.i("INFO", "Lundar radio have been checked");
+					//Log.i("INFO", "Lundar radio have been checked");
 				}
 			}
 		});
@@ -365,7 +365,8 @@ public class VNMEventDetailsActivity extends Activity {
 					endDate = VietCalendar.convertLuner2SolarInVietnamese(endDate.getMinute(), endDate.getHourOfDay(), endDate.getDayOfMonth(), endDate.getMonth(), endDate.getYear());
 					setDate(startDateButton, startDate);
 					setDate(endDateButton, endDate);
-					Log.i("INFO", "Solar radio have been checked");
+					//Log.i("INFO", "Solar radio have been checked");
+					Log.i("INFO", "start date " + startDate.toString() + " end date " + endDate.toString());
 				}
 			}
 		});
@@ -400,7 +401,8 @@ public class VNMEventDetailsActivity extends Activity {
 	
 	private void setDate(TextView view, VNMDate date) {
 		String str = isLunar ? " (Âm lịch)" : " (Dương lịch)";
-		view.setText(date.getDayOfMonth() + "-" + date.getMonth() + "-" + date.getYear() + str);
+		String text = isLunar ? date.getDayOfMonth() + "-" + date.getMonth() + "-" + date.getYear() : date.getDayOfMonth() + "-" + date.getMonth() + 1 + "-" + date.getYear();
+		view.setText(text + str);
 	}
 	
 	private void setTime(TextView view, int hourOfDay, int minute) {
