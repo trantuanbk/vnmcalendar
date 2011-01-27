@@ -72,5 +72,5 @@
           android:smallScreens="true"
           android:resizeable="true"
           android:anyDensity="true" />
-    <uses-sdk android:minSdkVersion="4" />
+    <uses-sdk android:minSdkVersion="7" />
 </manifest> 
