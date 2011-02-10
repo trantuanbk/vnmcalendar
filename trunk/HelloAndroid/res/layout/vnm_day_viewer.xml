@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:a="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
 	a:orientation="vertical"
 	a:layout_width="fill_parent"
 	a:layout_height="fill_parent">
@@ -7,53 +7,45 @@
 	<LinearLayout
 		a:orientation="vertical"
 		a:layout_width="fill_parent"
-		a:layout_height="wrap_content">
+		a:layout_height="wrap_content"
+		a:layout_weight="1">
 		
 		<TextView a:id="@+id/monthText" 
 		      a:layout_width="fill_parent" 
-		      a:layout_height="fill_parent" 
+		      a:layout_height="wrap_content" 
 		      a:text="Tháng 2 năm 2012" 
 		      a:gravity="center_horizontal" 
 		      a:textSize="18sp"
-		      a:layout_weight="10"/>
-		<RelativeLayout
-			a:orientation="vertical"
-			a:layout_width="fill_parent"
-			a:layout_height="fill_parent"
-			a:layout_weight="1">
-			<LinearLayout
-				a:orientation="vertical"
-				a:layout_width="fill_parent"
-				a:layout_height="wrap_content"
-				a:layout_centerInParent="true">
-				<TextView a:id="@+id/dayOfMonthText"
-					a:layout_width="fill_parent" 
-					a:layout_height="wrap_content"
-					a:text="29"
-					a:textColor="@color/dayColor"
-					a:gravity="center"
-					a:textSize="160sp"
-					a:textStyle="bold"			
-					a:shadowColor="#FF0000"
-					a:shadowDx="1"
-					a:shadowDy="1"
-					a:shadowRadius="1.5" />
-				<TextView a:id="@+id/dayOfWeekText" 
-					a:layout_width="fill_parent" 
-					a:layout_height="wrap_content" 
-					a:text="Thứ ba"
-					a:textColor="@color/dayOfWeekColor"
-					a:gravity="center_horizontal"		
-					a:textSize="30sp"/>
-				<TextView a:id="@+id/noteText" 
-				      a:layout_width="fill_parent" 
-				      a:layout_height="fill_parent"
-				      a:maxLines="4"		      
-				      a:text="Chúc bạn một ngày vui vẻ Chúc bạn một ngày vui vẻ Chúc bạn một ngày vui vẻ Chúc bạn một ngày vui vẻ Chúc bạn một ngày vui vẻ Chúc bạn một ngày vui vẻ" 
-				      a:gravity="center_horizontal" 
-				      a:textSize="16sp"/>
-			</LinearLayout>
-		</RelativeLayout>
+		      a:paddingTop="10sp" />
+		<TextView a:id="@+id/dayOfMonthText"
+			a:layout_width="fill_parent" 
+			a:layout_height="wrap_content"
+			a:layout_marginTop="-16sp"
+			a:text="29"
+			a:textColor="@color/dayColor"
+			a:gravity="center"
+			a:textSize="160sp"
+			a:textStyle="bold"			
+			a:shadowColor="#FF0000"
+			a:shadowDx="1"
+			a:shadowDy="1"
+			a:shadowRadius="1.5" />
+		<TextView a:id="@+id/dayOfWeekText" 
+			a:layout_width="fill_parent" 
+			a:layout_height="wrap_content" 
+			a:layout_marginTop="-16sp"
+			a:text="Thứ ba"
+			a:textColor="@color/dayOfWeekColor"
+			a:gravity="center_horizontal"		
+			a:textSize="30sp"/>
+		<TextView a:id="@+id/noteText" 
+		      a:layout_width="fill_parent" 
+		      a:layout_height="fill_parent"
+		      a:maxLines="4"		      
+		      a:text="Chúc bạn một ngày vui vẻ Chúc bạn một ngày vui vẻ Chúc bạn một ngày vui vẻ Chúc bạn một ngày vui vẻ Chúc bạn một ngày vui vẻ Chúc bạn một ngày vui vẻ" 
+		      a:gravity="center_horizontal" 
+		      a:textSize="16sp"
+		      a:padding="10sp"/>
 	</LinearLayout>
 	
 	<TableLayout 
@@ -63,8 +55,7 @@
 		a:layout_height="wrap_content"
 		a:layout_weight="0"
 		a:stretchColumns="*"
-		a:background="@drawable/section_bg"
-		a:layout_alignParentBottom="true">
+		a:background="@drawable/section_bg">
 		
 		<TableRow
 		    a:layout_marginBottom="1sp">
@@ -207,4 +198,5 @@
 			</LinearLayout>
 		</TableRow>
 	</TableLayout>
-</RelativeLayout>
+	
+</LinearLayout>
