@@ -27,6 +27,17 @@
 		    </intent-filter>
 		</activity>
 		
+		<service
+            android:label="@string/lichviet_wallpaper1"
+            android:icon="@drawable/icon"
+            android:name=".livewallpaper.LichVietLiveWallpaper"
+            android:permission="android.permission.BIND_WALLPAPER">
+            <intent-filter>
+                <action android:name="android.service.wallpaper.WallpaperService" />
+            </intent-filter>
+            <meta-data android:name="android.service.wallpaper" android:resource="@xml/lichviet_live_wallpaper1" />
+        </service>
+		
 		<receiver android:name=".calendar.appwidget.DayWidgetProvider"
 		  android:label="@string/day_widget_name">
 		    <intent-filter>
