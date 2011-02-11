@@ -99,8 +99,8 @@ public class DayView extends LinearLayout {
 		int hour = calendar.get(Calendar.HOUR_OF_DAY);
 		int minute = calendar.get(Calendar.MINUTE);
 		int month = calendar.get(Calendar.MONTH) + 1;
-		
 		int year = calendar.get(Calendar.YEAR);
+		
 		VNMDate vnmDate = VietCalendar.convertSolar2LunarInVietnamese(date);
 		Holiday holiday = VietCalendar.getHoliday(vnmDate.getDayOfMonth(), vnmDate.getMonth(), dayOfMonth, month);
 		if (dayOfWeek == 1) {
