@@ -77,7 +77,7 @@
 				    a:padding="2px"
 				    a:text="Giờ"
 				    a:gravity="center" 
-				    a:textSize="@dimen/luner_table_font_size"
+				    a:textSize="@dimen/luner_table_exlarge_font_size"
 					a:background="@drawable/lighter_section_bg"/>
 				<TextView
 				    a:layout_width="wrap_content" 
@@ -86,7 +86,7 @@
 				    a:padding="2px"
 				    a:text="Ngày"
 					a:gravity="center" 
-					a:textSize="@dimen/luner_table_font_size"
+					a:textSize="@dimen/luner_table_exlarge_font_size"
 					a:background="@drawable/lighter_section_bg"
 	                a:layout_marginLeft="1sp"/>
 				<TextView
@@ -96,7 +96,7 @@
 				    a:padding="2px"
 				    a:text="Tháng"
 				    a:gravity="center"
-				    a:textSize="@dimen/luner_table_font_size"
+				    a:textSize="@dimen/luner_table_exlarge_font_size"
 				    a:background="@drawable/lighter_section_bg"
 	                a:layout_marginLeft="1sp"/>
 				<TextView
@@ -106,7 +106,7 @@
 				    a:padding="2px"
 				    a:text="Năm"
 					a:gravity="center" 
-					a:textSize="@dimen/luner_table_font_size"
+					a:textSize="@dimen/luner_table_exlarge_font_size"
 					a:background="@drawable/lighter_section_bg"
 	                a:layout_marginLeft="1sp"/>
 			</TableRow>
@@ -126,14 +126,14 @@
 					    a:layout_marginBottom="5sp"
 					    a:text="1:23"
 						a:gravity="center" 
-						a:textSize="@dimen/luner_table_font_size"/>
+						a:textSize="@dimen/luner_table_exlarge_font_size"/>
 					<TextView 
 					    a:id="@+id/vnmHourInText" 
 					    a:layout_width="wrap_content" 
 					    a:layout_height="wrap_content" 
 					    a:text="Quý sửu"
 						a:gravity="center" 
-						a:textSize="@dimen/luner_table_font_size" />
+						a:textSize="@dimen/luner_table_exlarge_font_size" />
 				</LinearLayout>
 				<LinearLayout
 					a:orientation="vertical"
@@ -150,14 +150,14 @@
 					    a:layout_marginBottom="5sp"
 					    a:text="23"
 						a:gravity="center" 
-						a:textSize="@dimen/luner_table_font_size"/>
+						a:textSize="@dimen/luner_table_exlarge_font_size"/>
 					<TextView 
 					    a:id="@+id/vnmDayOfMonthInText" 
 					    a:layout_width="wrap_content" 
 					    a:layout_height="wrap_content" 
 					    a:text="Quý hợi"
 						a:gravity="center" 
-					    a:textSize="@dimen/luner_table_font_size"/>
+					    a:textSize="@dimen/luner_table_exlarge_font_size"/>
 				</LinearLayout>
 				<LinearLayout
 					a:orientation="vertical"
@@ -174,14 +174,14 @@
 					    a:layout_marginBottom="5sp"
 					    a:text="12"
 						a:gravity="center" 
-						a:textSize="@dimen/luner_table_font_size"/>
+						a:textSize="@dimen/luner_table_exlarge_font_size"/>
 					<TextView 
 					    a:id="@+id/vnmMonthInText" 
 					    a:layout_width="wrap_content" 
 					    a:layout_height="wrap_content" 
 					    a:text="Ất sửu"
 						a:gravity="center" 
-						a:textSize="@dimen/luner_table_font_size"/>
+						a:textSize="@dimen/luner_table_exlarge_font_size"/>
 				</LinearLayout>
 				<LinearLayout
 					a:orientation="vertical"
@@ -198,14 +198,14 @@
 					    a:layout_marginBottom="5sp"
 					    a:text="2008"
 						a:gravity="center" 
-						a:textSize="@dimen/luner_table_font_size"/>
+						a:textSize="@dimen/luner_table_exlarge_font_size"/>
 					<TextView 
 					    a:id="@+id/vnmYearInText" 
 					    a:layout_width="wrap_content" 
 					    a:layout_height="wrap_content" 
 					    a:text="Canh Thìn"
 						a:gravity="center" 
-						a:textSize="@dimen/luner_table_font_size"/>
+						a:textSize="@dimen/luner_table_exlarge_font_size"/>
 				</LinearLayout>
 			</TableRow>
 		</TableLayout>
