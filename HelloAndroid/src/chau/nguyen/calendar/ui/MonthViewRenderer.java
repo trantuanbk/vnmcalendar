@@ -210,7 +210,11 @@ public class MonthViewRenderer {
 		
 		if (day > 0) {
 			int[] lunars = VietCalendar.convertSolar2LunarInVietnam(day, month, year);
-			Holiday holiday = VietCalendar.getHoliday(lunars[VietCalendar.DAY], lunars[VietCalendar.MONTH], day, month);
+			Calendar cal = Calendar.getInstance();
+			cal.set(Calendar.YEAR, year);
+			cal.set(Calendar.MONTH, month);
+			cal.set(Calendar.DAY_OF_MONTH, day);
+			Holiday holiday = VietCalendar.getHoliday(cal.getTime());
 			if (holiday != null) {
 				paint.setColor(config.holidayColor);
 				if (config.enableShadow) {

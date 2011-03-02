@@ -39,7 +39,7 @@ public class SmallDayWidgetProvider extends AppWidgetProvider {
 		int year = calendar.get(Calendar.YEAR);
 		int[] lunars = VietCalendar.convertSolar2LunarInVietnam(currentDate);		
 		String[] vnmCalendarTexts = VietCalendar.getCanChiInfo(lunars[VietCalendar.DAY], lunars[VietCalendar.MONTH], lunars[VietCalendar.YEAR], dayOfMonth, month, year);
-		Holiday holiday = VietCalendar.getHoliday(lunars[0], lunars[1], dayOfMonth, month);
+		Holiday holiday = VietCalendar.getHoliday(currentDate);
 		int dayColor = dayOfWeekColor;
 		if (dayOfWeek == 1) {
 			dayColor = weekendColor;			

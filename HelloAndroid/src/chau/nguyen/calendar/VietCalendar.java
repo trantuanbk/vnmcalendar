@@ -27,17 +27,25 @@ public class VietCalendar {
     		"Thu ph\u00E2n", "H\u00E0n l\u1ED9", "S\u01B0\u01A1ng gi\u00E1ng", "L\u1EADp \u0111\u00F4ng", "Ti\u1EC3u tuy\u1EBFt", "\u0110\u1EA1i tuy\u1EBFt",
     		"\u0110\u00F4ng ch\u00ED", "Ti\u1EC3u h\u00E0n", "\u0110\u1EA1i h\u00E0n", "L\u1EADp xu\u00E2n", "V\u0169 Th\u1EE7y", "Kinh tr\u1EADp"
     };    
-    public static Holiday[] HOLIDAYS = new Holiday[] {new Holiday(1, 1, 0, 0, "Mồng một tết Âm lịch"),
-    													new Holiday(2, 1, 0, 0, "Mồng hai tết Âm lịch"),
-    													new Holiday(3, 1, 0, 0, "Mồng ba tết Âm lịch"),
-    													new Holiday(10, 3, 0, 0, "Giỗ tổ Hùng Vương"),
-    													new Holiday(0, 0, 1, 1, "Tết Dương lịch"),
-    													new Holiday(0, 0, 30, 4, "Ngày giải phóng Miền Nam"),
-    													new Holiday(0, 0, 1, 5, "Ngày Quốc tế lao động"),
-    													new Holiday(0, 0, 2, 9, "Ngày Quốc khánh")};
+    public static Holiday[] HOLIDAYS = null;
     
     private static String[] dayOfWeekInVietnamese = new String[] {"Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"};
 	
+    static {
+    	Holiday h1 = new Holiday(1, 1, false, "Mồng một tết Âm lịch");
+    	Holiday h2 = new Holiday(2, 1, false, "Mồng hai tết Âm lịch");
+    	Holiday h3 = new Holiday(3, 1, false, "Mồng ba tết Âm lịch");
+    	Holiday h4 = new Holiday(10, 3, false, "Giỗ tổ Hùng Vương");
+    	Holiday h5 = new Holiday(1, 1, true, "Tết Dương lịch");
+    	Holiday h6 = new Holiday(30, 4, true, "Ngày thống nhất đất nước");
+    	Holiday h7 = new Holiday(1, 5, true, "Ngày Quốc tế lao động");
+    	Holiday h8 = new Holiday(2, 9, true, "Ngày Quốc khánh");
+    	Holiday h9 = new Holiday(14, 2, true, "Ngày lễ tình nhân");
+    	Holiday h10 = new Holiday(8, 3, true, "Ngày quốc tế phụ nữ");
+    	Holiday h11 = new Holiday(20, 10, true, "Ngày phụ nữ Việt Nam");
+    	HOLIDAYS = new Holiday[] {h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11};
+    }
+    
     /*
      * dd : 1 - 31
      * mm : 1 - 12
@@ -448,10 +456,15 @@ public class VietCalendar {
     	System.out.println("Hello");
     }
     
-    public static Holiday getHoliday(int lunarDay, int lunarMonth, int solarDay, int solarMonth) {
+    public static Holiday getHoliday(Date date) {
+    	VNMDate vnmDate = VietCalendar.convertSolar2LunarInVietnamese(date);
+    	Calendar cal = Calendar.getInstance();
+    	cal.setTime(date);
     	for (Holiday day : HOLIDAYS) {
-    		if (day.lunarMonth == lunarMonth && day.lunarDay == lunarDay || day.solarMonth == solarMonth && day.solarDay == solarDay) {
-    			return day;
+    		if (day.isSolar()) {
+    			if (day.getMonth() == cal.get(Calendar.MONTH) && day.getDay() == cal.get(Calendar.DAY_OF_MONTH)) return day;
+    		} else {
+    			if (vnmDate.getMonth() == day.getMonth() && vnmDate.getDayOfMonth() == day.getDay()) return day;
     		}
 			
 		}
@@ -459,47 +472,56 @@ public class VietCalendar {
     }
     
     public static class Holiday {
-    	private int lunarDay;
-    	private int solarDay;
-    	private int lunarMonth;
-    	private int solarMonth;
+    	private int day;
+    	private int month;
+    	private boolean solar;
     	private String description;
-    	public Holiday(int lunarDay, int lunarMonth, int solarDay, int solarMonth, String description) {
-    		this.lunarDay = lunarDay;
-    		this.solarDay = solarDay;
-    		this.description = description;
-    		this.lunarMonth = lunarMonth;
-    		this.setSolarMonth(solarMonth);
-    	}
-    	public void setDescription(String description) {
+    	private boolean isOffDate = true;
+    	private String[] backgroundImageUrls;
+    	
+		public Holiday(int day, int month, boolean solar, String description) {
+			super();
+			this.day = day;
+			this.month = month;
+			this.solar = solar;
 			this.description = description;
 		}
-    	public String getDescription() {
+		public int getDay() {
+			return day;
+		}
+		public void setDay(int day) {
+			this.day = day;
+		}
+		public int getMonth() {
+			return month;
+		}
+		public void setMonth(int month) {
+			this.month = month;
+		}
+		public boolean isSolar() {
+			return solar;
+		}
+		public void setSolar(boolean solar) {
+			this.solar = solar;
+		}
+		public String getDescription() {
 			return description;
 		}
-    	public void setLunar(int lunar) {
-			this.lunarDay = lunar;
+		public void setDescription(String description) {
+			this.description = description;
 		}
-    	public int getLunar() {
-			return lunarDay;
+		public boolean isOffDate() {
+			return isOffDate;
 		}
-    	public void setSolarDay(int solarDay) {
-			this.solarDay = solarDay;
+		public void setOffDate(boolean isOffDate) {
+			this.isOffDate = isOffDate;
 		}
-    	public int getSolarDay() {
-			return solarDay;
+		public String[] getBackgroundImageUrls() {
+			return backgroundImageUrls;
 		}
-    	public void setLunarMonth(int lunarMonth) {
-			this.lunarMonth = lunarMonth;
+		public void setBackgroundImageUrls(String[] backgroundImageUrls) {
+			this.backgroundImageUrls = backgroundImageUrls;
 		}
-    	public int getLunarMonth() {
-			return lunarMonth;
-		}
-		public void setSolarMonth(int solarMonth) {
-			this.solarMonth = solarMonth;
-		}
-		public int getSolarMonth() {
-			return solarMonth;
-		}
+    	
     }
 }
