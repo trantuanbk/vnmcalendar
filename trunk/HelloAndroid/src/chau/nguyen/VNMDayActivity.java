@@ -27,6 +27,7 @@ import chau.nguyen.calendar.widget.HorizontalScrollView;
 import chau.nguyen.calendar.widget.HorizontalScrollView.OnScreenSelectedListener;
 
 public class VNMDayActivity extends Activity {
+	public static final String SELECTED_DATE = "SELECTED_DATE";
 	public static final int SELECT_DATE = 1;
 	
 	private static final int MENU_SELECT_DATE = 1;
@@ -39,7 +40,8 @@ public class VNMDayActivity extends Activity {
 	public static final int DATE_DIALOG_ID = 0;
 	public static final int ABOUT_DIALOG_ID = 1;
 	
-	private HorizontalScrollView scrollView;	
+	private HorizontalScrollView scrollView;
+	private Date selectedDate;
 	
     /** Called when the activity is first created. */
     @Override
@@ -61,12 +63,13 @@ public class VNMDayActivity extends Activity {
     }
     
     private void showDate(Date date) {
+    	this.selectedDate = date;
     	int childCount = this.scrollView.getChildCount(); 
 		for (int i = 0; i < 3 - childCount; i++) {
 			ScrollableDayView view = new ScrollableDayView(this);
 	    	view.setOnDateChangedListener(onDateChangedListener);
 	    	view.setOnClickListener(onClickListener);
-			view.setBackgroundDrawable(BackgroundManager.getRandomBackground());
+			//view.setBackgroundDrawable(BackgroundManager.getRandomBackground());
 			this.scrollView.addView(view);		
 		}
     	    	
@@ -152,6 +155,11 @@ public class VNMDayActivity extends Activity {
 	
 	public void addEvent() {		
 		Intent intent = new Intent(this, VNMEventDetailsActivity.class);
+		String selectedDate = "";
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(getCurrentDate());
+		selectedDate = cal.get(Calendar.DAY_OF_MONTH) + "," + cal.get(Calendar.MONTH) + "," + cal.get(Calendar.YEAR);
+		intent.putExtra(SELECTED_DATE, selectedDate);
 		startActivity(intent);
 		
 	}

@@ -3,6 +3,10 @@ package chau.nguyen.calendar.appwidget;
 import java.util.Calendar;
 import java.util.Date;
 
+import chau.nguyen.R;
+import chau.nguyen.VNMDayActivity;
+import chau.nguyen.calendar.VietCalendar;
+import chau.nguyen.calendar.VietCalendar.Holiday;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -10,12 +14,8 @@ import android.appwidget.AppWidgetProviderInfo;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
-import chau.nguyen.R;
-import chau.nguyen.VNMDayActivity;
-import chau.nguyen.calendar.VietCalendar;
-import chau.nguyen.calendar.VietCalendar.Holiday;
 
-public class DayWidgetProvider extends AppWidgetProvider {
+public class XlargeDayWidgetProvider extends AppWidgetProvider {
 	private static Date currentDate = null;
 	private static int dayOfWeekColor = 0;
 	private static int weekendColor = 0;
@@ -65,11 +65,20 @@ public class DayWidgetProvider extends AppWidgetProvider {
             views.setTextViewText(R.id.vnmDayOfMonthText, lunars[VietCalendar.DAY] + "");
             views.setTextViewText(R.id.vnmDayOfMonthInText, vnmCalendarTexts[VietCalendar.DAY] + "");            
             views.setTextViewText(R.id.vnmMonthText, lunars[VietCalendar.MONTH] + "");
-            views.setTextViewText(R.id.vnmMonthInText, vnmCalendarTexts[VietCalendar.MONTH] + "");            
+            views.setTextViewText(R.id.vnmMonthInText, vnmCalendarTexts[VietCalendar.MONTH] + "");
+            views.setTextViewText(R.id.vnmYearText, lunars[VietCalendar.YEAR] + "");
+            views.setTextViewText(R.id.vnmYearInText, vnmCalendarTexts[VietCalendar.YEAR] + "");
+            views.setTextViewText(R.id.noteText, getQuoteOfDay(context));
             
-        	views.setOnClickPendingIntent(R.id.dayWidget, pendingIntent);
+        	views.setOnClickPendingIntent(R.id.xlargDayWidget, pendingIntent);
         	
             appWidgetManager.updateAppWidget(appWidgetId, views);
         }
-    }	
+    }
+	
+	private String getQuoteOfDay(Context context) {
+		String[] quotes = context.getResources().getStringArray(R.array.quotes);
+		int index = Calendar.getInstance().get(Calendar.MILLISECOND) % quotes.length;
+		return quotes[index];
+	}
 }

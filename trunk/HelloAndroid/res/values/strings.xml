@@ -28,5 +28,6 @@
     <string name="discard_label">Hủy</string>
     <string name="no_date_info">&lt;p&gt;Không có dữ liệu cho ngày này.&lt;/p&gt;</string>
     <string name="lichviet_wallpaper1">Lịch Việt tường động</string>
-    <string name="famous_words_widget_name">Danh ngôn</string>
+    <string name="famous_words_widget_name">Lịch Việt - Danh ngôn</string>
+    <string name="day_xlarge_widget_name">Lịch Việt - Ngày (lớn)</string>
 </resources>

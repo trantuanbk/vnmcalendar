@@ -151,6 +151,11 @@ public class VNMEventDetailsActivity extends Activity {
 		this.solarCalendarRadio = (RadioButton)findViewById(R.id.solarCalendarRadio);
 		this.numberYearsContainer = (LinearLayout)findViewById(R.id.numberYearsContainer);
 		Calendar cal = Calendar.getInstance();
+		String selectedDate = getIntent().getStringExtra(VNMDayActivity.SELECTED_DATE);
+		String[] temps = selectedDate.split(",");
+		cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(temps[0]));
+		cal.set(Calendar.MONTH, Integer.parseInt(temps[1]));
+		cal.set(Calendar.YEAR, Integer.parseInt(temps[2]));
 		
 		this.startDate =  VietCalendar.convertSolar2LunarInVietnamese(cal.getTime());
 		this.startDate.setHourOfDay(7);

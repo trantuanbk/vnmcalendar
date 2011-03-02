@@ -102,7 +102,7 @@ public class DayView extends LinearLayout {
 		int year = calendar.get(Calendar.YEAR);
 		
 		VNMDate vnmDate = VietCalendar.convertSolar2LunarInVietnamese(date);
-		Holiday holiday = VietCalendar.getHoliday(vnmDate.getDayOfMonth(), vnmDate.getMonth(), dayOfMonth, month);
+		Holiday holiday = VietCalendar.getHoliday(date);
 		if (dayOfWeek == 1) {
 			this.dayOfMonthText.setTextColor(this.weekendColor);
 			this.dayOfWeekText.setTextColor(this.weekendColor);
