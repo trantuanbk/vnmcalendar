@@ -1,6 +1,9 @@
-package chau.nguyen;
+package chau.nguyen.managers;
 
 import java.util.Calendar;
+
+import chau.nguyen.R;
+import chau.nguyen.R.drawable;
 
 import android.content.Context;
 import android.content.res.Resources;
