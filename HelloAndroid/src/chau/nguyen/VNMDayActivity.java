@@ -25,6 +25,7 @@ import chau.nguyen.calendar.ui.VNMDatePickerDialog;
 import chau.nguyen.calendar.ui.ScrollableDayView.OnDateChangedListener;
 import chau.nguyen.calendar.widget.HorizontalScrollView;
 import chau.nguyen.calendar.widget.HorizontalScrollView.OnScreenSelectedListener;
+import chau.nguyen.managers.BackgroundManager;
 
 public class VNMDayActivity extends Activity {
 	public static final String SELECTED_DATE = "SELECTED_DATE";

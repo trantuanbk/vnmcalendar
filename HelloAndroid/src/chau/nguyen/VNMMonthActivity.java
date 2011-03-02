@@ -13,6 +13,7 @@ import chau.nguyen.calendar.ui.MonthView.OnDateSelectedListener;
 import chau.nguyen.calendar.ui.ScrollableMonthView.OnDateChangedListener;
 import chau.nguyen.calendar.widget.HorizontalScrollView;
 import chau.nguyen.calendar.widget.HorizontalScrollView.OnScreenSelectedListener;
+import chau.nguyen.managers.BackgroundManager;
 
 public class VNMMonthActivity extends Activity {
 	public static final String SELECTED_DATE_RETURN = "selectedDateReturn";

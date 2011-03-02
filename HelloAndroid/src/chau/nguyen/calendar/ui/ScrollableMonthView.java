@@ -4,9 +4,9 @@ import java.util.Calendar;
 import java.util.Date;
 
 import android.content.Context;
-import chau.nguyen.BackgroundManager;
 import chau.nguyen.calendar.ui.MonthView.OnDateSelectedListener;
 import chau.nguyen.calendar.widget.VerticalScrollView;
+import chau.nguyen.managers.BackgroundManager;
 
 public class ScrollableMonthView extends VerticalScrollView {
 	private OnDateChangedListener onDateChangedListener;
