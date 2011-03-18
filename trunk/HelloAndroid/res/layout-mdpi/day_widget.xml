@@ -101,7 +101,8 @@
                 a:textColor="@color/dayColor"
                 a:gravity="center" 
                 a:textSize="13sp"
-                a:paddingBottom="5sp"/>
+                a:paddingBottom="5sp"
+                a:maxLines="1"/>
         </LinearLayout>
         <LinearLayout
             a:orientation="vertical"
@@ -118,7 +119,8 @@
                 a:text="12"
                 a:textColor="@color/dayColor"
                 a:gravity="center" 
-                a:textSize="18sp"/>
+                a:textSize="18sp"
+                />
             <TextView 
                 a:id="@+id/vnmMonthInText" 
                 a:layout_width="70sp" 
@@ -127,7 +129,8 @@
                 a:textColor="@color/dayColor"
                 a:gravity="center" 
                 a:textSize="13sp"                
-                a:paddingBottom="5sp"/>
+                a:paddingBottom="5sp"
+                a:maxLines="1"/>
         </LinearLayout>            
     </LinearLayout>   		
 </LinearLayout>
