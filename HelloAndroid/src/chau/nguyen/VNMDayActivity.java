@@ -3,6 +3,9 @@ package chau.nguyen;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.admob.android.ads.AdManager;
+import com.admob.android.ads.AdView;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -11,6 +14,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,7 +22,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.DatePicker;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.LinearLayout.LayoutParams;
 import chau.nguyen.calendar.VietCalendar;
 import chau.nguyen.calendar.ui.ScrollableDayView;
 import chau.nguyen.calendar.ui.VNMDatePickerDialog;
@@ -50,9 +56,25 @@ public class VNMDayActivity extends Activity {
     	super.onCreate(savedInstanceState);
         BackgroundManager.init(this);                
         
-        this.scrollView = new HorizontalScrollView(this);
-        this.setContentView(this.scrollView);
+        //Make a experiment with AdMob
+        //AdManager.setTestDevices(new String[] {"0BE539087867A431F09D246AEDB36993"}); //My DroidX phone ^^
+        AdManager.setTestDevices( new String[] { "781D3C6A96B86CCC045A4D2EB93E74DC" } ); //Nexus one
         
+        this.scrollView = new HorizontalScrollView(this);
+        this.setContentView(R.layout.main);
+        LinearLayout main = (LinearLayout)findViewById(R.id.main);
+        
+        LayoutParams layoutParams1 = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT, 1.0f);
+        main.addView(this.scrollView, layoutParams1);
+        
+        AdView adView = new AdView(this);
+        LayoutParams  layoutParams2 = new LayoutParams(
+				LayoutParams.FILL_PARENT,
+				LayoutParams.WRAP_CONTENT);  
+		
+		main.addView(adView, layoutParams2);
+        adView.requestFreshAd();
+		
         this.scrollView.setOnScreenSelectedListener(new OnScreenSelectedListener() {
 			public void onSelected(int selectedIndex) {
 				prepareOtherViews(selectedIndex);				

@@ -108,7 +108,7 @@ public class DayView extends LinearLayout {
 			this.dayOfWeekText.setTextColor(this.weekendColor);
 			this.noteText.setTextColor(this.weekendColor);
 			this.monthText.setTextColor(this.weekendColor);
-		} else if (holiday != null ) {
+		} else if (holiday != null && holiday.isOffDay()) {
 			this.dayOfMonthText.setTextColor(this.holidayColor);
 			this.dayOfWeekText.setTextColor(this.holidayColor);
 			this.noteText.setTextColor(this.holidayColor);

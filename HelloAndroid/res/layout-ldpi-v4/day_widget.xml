@@ -101,7 +101,8 @@
                 a:textColor="@color/dayColor"
                 a:gravity="center" 
                 a:textSize="11sp"
-                a:paddingBottom="5sp"/>
+                a:paddingBottom="5sp"
+                a:maxLines="1"/>
         </LinearLayout>
         <LinearLayout
             a:orientation="vertical"
@@ -127,7 +128,8 @@
                 a:textColor="@color/dayColor"
                 a:gravity="center" 
                 a:textSize="11sp"                
-                a:paddingBottom="5sp"/>
+                a:paddingBottom="5sp"
+                a:maxLines="1"/>
         </LinearLayout>            
     </LinearLayout>   		
 </LinearLayout>

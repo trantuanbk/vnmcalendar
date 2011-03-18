@@ -5,6 +5,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import android.util.Log;
+
 /**
 * @author Hồ Ngọc Đức
 * 
@@ -32,17 +34,17 @@ public class VietCalendar {
     private static String[] dayOfWeekInVietnamese = new String[] {"Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"};
 	
     static {
-    	Holiday h1 = new Holiday(1, 1, false, "Mồng một tết Âm lịch");
-    	Holiday h2 = new Holiday(2, 1, false, "Mồng hai tết Âm lịch");
-    	Holiday h3 = new Holiday(3, 1, false, "Mồng ba tết Âm lịch");
-    	Holiday h4 = new Holiday(10, 3, false, "Giỗ tổ Hùng Vương");
-    	Holiday h5 = new Holiday(1, 1, true, "Tết Dương lịch");
-    	Holiday h6 = new Holiday(30, 4, true, "Ngày thống nhất đất nước");
-    	Holiday h7 = new Holiday(1, 5, true, "Ngày Quốc tế lao động");
-    	Holiday h8 = new Holiday(2, 9, true, "Ngày Quốc khánh");
-    	Holiday h9 = new Holiday(14, 2, true, "Ngày lễ tình nhân");
-    	Holiday h10 = new Holiday(8, 3, true, "Ngày quốc tế phụ nữ");
-    	Holiday h11 = new Holiday(20, 10, true, "Ngày phụ nữ Việt Nam");
+    	Holiday h1 = new Holiday(1, 1, false, true, "Mồng một tết Âm lịch");
+    	Holiday h2 = new Holiday(2, 1, false, true, "Mồng hai tết Âm lịch");
+    	Holiday h3 = new Holiday(3, 1, false, true, "Mồng ba tết Âm lịch");
+    	Holiday h4 = new Holiday(10, 3, false, true, "Giỗ tổ Hùng Vương");
+    	Holiday h5 = new Holiday(1, 1, true, true, "Tết Dương lịch");
+    	Holiday h6 = new Holiday(30, 4, true, true, "Ngày thống nhất đất nước");
+    	Holiday h7 = new Holiday(1, 5, true, true, "Ngày Quốc tế lao động");
+    	Holiday h8 = new Holiday(2, 9, true, true, "Ngày Quốc khánh");
+    	Holiday h9 = new Holiday(14, 2, true, false, "Ngày lễ tình nhân");
+    	Holiday h10 = new Holiday(8, 3, true, false, "Ngày quốc tế phụ nữ");
+    	Holiday h11 = new Holiday(20, 10, true, false, "Ngày phụ nữ Việt Nam");
     	HOLIDAYS = new Holiday[] {h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11};
     }
     
@@ -462,7 +464,7 @@ public class VietCalendar {
     	cal.setTime(date);
     	for (Holiday day : HOLIDAYS) {
     		if (day.isSolar()) {
-    			if (day.getMonth() == cal.get(Calendar.MONTH) && day.getDay() == cal.get(Calendar.DAY_OF_MONTH)) return day;
+    			if (day.getMonth() == (cal.get(Calendar.MONTH) + 1) && day.getDay() == cal.get(Calendar.DAY_OF_MONTH)) return day;
     		} else {
     			if (vnmDate.getMonth() == day.getMonth() && vnmDate.getDayOfMonth() == day.getDay()) return day;
     		}
@@ -476,14 +478,15 @@ public class VietCalendar {
     	private int month;
     	private boolean solar;
     	private String description;
-    	private boolean isOffDate = true;
+    	private boolean isOffDay = true;
     	private String[] backgroundImageUrls;
     	
-		public Holiday(int day, int month, boolean solar, String description) {
+		public Holiday(int day, int month, boolean solar, boolean isOffDay, String description) {
 			super();
 			this.day = day;
 			this.month = month;
 			this.solar = solar;
+			this.isOffDay = isOffDay;
 			this.description = description;
 		}
 		public int getDay() {
@@ -510,11 +513,11 @@ public class VietCalendar {
 		public void setDescription(String description) {
 			this.description = description;
 		}
-		public boolean isOffDate() {
-			return isOffDate;
+		public boolean isOffDay() {
+			return isOffDay;
 		}
-		public void setOffDate(boolean isOffDate) {
-			this.isOffDate = isOffDate;
+		public void setOffDay(boolean isOffDate) {
+			this.isOffDay = isOffDate;
 		}
 		public String[] getBackgroundImageUrls() {
 			return backgroundImageUrls;

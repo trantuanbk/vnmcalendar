@@ -209,11 +209,11 @@ public class MonthViewRenderer {
 		float y = cellY + cellHeight / 2;
 		
 		if (day > 0) {
-			int[] lunars = VietCalendar.convertSolar2LunarInVietnam(day, month, year);
 			Calendar cal = Calendar.getInstance();
 			cal.set(Calendar.YEAR, year);
-			cal.set(Calendar.MONTH, month);
+			cal.set(Calendar.MONTH, month - 1);
 			cal.set(Calendar.DAY_OF_MONTH, day);
+			int[] lunars = VietCalendar.convertSolar2LunarInVietnam(cal.getTime());
 			Holiday holiday = VietCalendar.getHoliday(cal.getTime());
 			if (holiday != null) {
 				paint.setColor(config.holidayColor);
