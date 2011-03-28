@@ -58,7 +58,7 @@ public class VNMDayActivity extends Activity {
         
         //Make a experiment with AdMob
         //AdManager.setTestDevices(new String[] {"0BE539087867A431F09D246AEDB36993"}); //My DroidX phone ^^
-        AdManager.setTestDevices( new String[] { "781D3C6A96B86CCC045A4D2EB93E74DC" } ); //Nexus one
+       // AdManager.setTestDevices( new String[] { "781D3C6A96B86CCC045A4D2EB93E74DC" } ); //Nexus one
         
         this.scrollView = new HorizontalScrollView(this);
         this.setContentView(R.layout.main);
@@ -67,13 +67,13 @@ public class VNMDayActivity extends Activity {
         LayoutParams layoutParams1 = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT, 1.0f);
         main.addView(this.scrollView, layoutParams1);
         
-        AdView adView = new AdView(this);
-        LayoutParams  layoutParams2 = new LayoutParams(
-				LayoutParams.FILL_PARENT,
-				LayoutParams.WRAP_CONTENT);  
+        //AdView adView = new AdView(this);
+        //LayoutParams  layoutParams2 = new LayoutParams(
+		//		LayoutParams.FILL_PARENT,
+		//		LayoutParams.WRAP_CONTENT);  
 		
-		main.addView(adView, layoutParams2);
-        adView.requestFreshAd();
+		//main.addView(adView, layoutParams2);
+        //adView.requestFreshAd();
 		
         this.scrollView.setOnScreenSelectedListener(new OnScreenSelectedListener() {
 			public void onSelected(int selectedIndex) {

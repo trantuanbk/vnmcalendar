@@ -10,6 +10,7 @@ import android.graphics.Canvas;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -113,6 +114,11 @@ public class DayView extends LinearLayout {
 			this.dayOfWeekText.setTextColor(this.holidayColor);
 			this.noteText.setTextColor(this.holidayColor);
 			this.monthText.setTextColor(this.holidayColor);
+			if (!holiday.isSolar()) {
+				this.vnmDayOfMonthText.setTextColor(this.holidayColor);
+				this.vnmMonthText.setTextColor(this.holidayColor);
+				this.vnmYearText.setTextColor(this.holidayColor);
+			}
 		} else {
 			this.dayOfMonthText.setTextColor(this.dayOfWeekColor);			
 			this.dayOfWeekText.setTextColor(this.dayOfWeekColor);
@@ -167,6 +173,7 @@ public class DayView extends LinearLayout {
 		//super.setBackgroundDrawable(d);
 	}
 	
+	
 	@Override
 	protected void onDraw(Canvas canvas) {
 		Bitmap cacheBitmap = getDrawingCache();
@@ -177,6 +184,14 @@ public class DayView extends LinearLayout {
 		} else {
 			super.onDraw(canvas);
 		}
+	}
+	
+	@Override
+	protected void onLayout(boolean changed, int l, int t, int r, int b) {
+		Log.d("DEBUG", "Called Onlayout...");
+		this.destroyDrawingCache();
+		super.onLayout(changed, l, t, r, b);
+		this.buildDrawingCache();
 	}
 	
 //	@Override
