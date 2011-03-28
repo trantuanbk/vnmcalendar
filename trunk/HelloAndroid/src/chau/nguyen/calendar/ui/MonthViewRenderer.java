@@ -215,7 +215,7 @@ public class MonthViewRenderer {
 			cal.set(Calendar.DAY_OF_MONTH, day);
 			int[] lunars = VietCalendar.convertSolar2LunarInVietnam(cal.getTime());
 			Holiday holiday = VietCalendar.getHoliday(cal.getTime());
-			if (holiday != null) {
+			if (holiday != null && holiday.isSolar() && holiday.isOffDay()) {
 				paint.setColor(config.holidayColor);
 				if (config.enableShadow) {
 					paint.setShadowLayer(1, 0, 0, config.holidayShadowColor);
@@ -249,7 +249,10 @@ public class MonthViewRenderer {
 				paint.setShadowLayer(1, 0, 0, otherMonth ? config.otherDayShadowColor : config.dayShadowColor);
 			}
 			paint.setTextSize(config.cellSubTextSize);
-			paint.setTextAlign(Align.RIGHT);			
+			paint.setTextAlign(Align.RIGHT);
+			if (holiday != null && !holiday.isSolar() && holiday.isOffDay()) {
+				paint.setColor(config.holidayColor);
+			}
 			if (lunars[VietCalendar.DAY] == 1) {
 				canvas.drawText(lunars[VietCalendar.DAY] + "/" + lunars[VietCalendar.MONTH], cellX + cellWidth - 5, y + config.cellSubTextSize + 2, paint);
 			} else {
