@@ -4,9 +4,6 @@
 	a:orientation="vertical"
 	a:layout_width="fill_parent"
 	a:layout_height="fill_parent"
-	a:background="@drawable/body">
-	<ViewSwitcher a:id="@+id/monthSwitcher"
-    	a:layout_width="fill_parent"
-        a:layout_height="wrap_content"
-        a:layout_weight="1"/>
+	>
+	
 </LinearLayout>

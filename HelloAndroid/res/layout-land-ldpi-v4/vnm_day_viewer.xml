@@ -3,7 +3,7 @@
 	a:orientation="vertical"
 	a:layout_width="fill_parent"
 	a:layout_height="fill_parent"
-	a:paddingTop="100sp">
+	a:paddingTop="40sp">
 	
 	<LinearLayout
 		a:orientation="vertical"
