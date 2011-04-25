@@ -2,7 +2,8 @@
 <LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
 	a:orientation="vertical"
 	a:layout_width="fill_parent"
-	a:layout_height="fill_parent">
+	a:layout_height="fill_parent"
+	a:paddingTop="40sp">
 	
 	<LinearLayout
 		a:orientation="vertical"

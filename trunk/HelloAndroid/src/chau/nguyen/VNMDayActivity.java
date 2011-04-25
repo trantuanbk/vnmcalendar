@@ -20,8 +20,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.DatePicker;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.LinearLayout.LayoutParams;
@@ -54,7 +57,13 @@ public class VNMDayActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
-        BackgroundManager.init(this);                
+        BackgroundManager.init(this);
+        
+        //Remove title bar
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //Fullscreen
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
+        		WindowManager.LayoutParams.FLAG_FULLSCREEN);
         
         //Make a experiment with AdMob
         //AdManager.setTestDevices(new String[] {"0BE539087867A431F09D246AEDB36993"}); //My DroidX phone ^^
@@ -62,18 +71,19 @@ public class VNMDayActivity extends Activity {
         
         this.scrollView = new HorizontalScrollView(this);
         this.setContentView(R.layout.main);
-        LinearLayout main = (LinearLayout)findViewById(R.id.main);
+        FrameLayout main = (FrameLayout)findViewById(R.id.main);
         
         LayoutParams layoutParams1 = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT, 1.0f);
         main.addView(this.scrollView, layoutParams1);
         
-        //AdView adView = new AdView(this);
-        //LayoutParams  layoutParams2 = new LayoutParams(
-		//		LayoutParams.FILL_PARENT,
-		//		LayoutParams.WRAP_CONTENT);  
+        AdView adView = new AdView(this);
+        android.widget.FrameLayout.LayoutParams  layoutParams2 = new android.widget.FrameLayout.LayoutParams(
+				LayoutParams.WRAP_CONTENT,
+				LayoutParams.WRAP_CONTENT);
+        layoutParams2.gravity = Gravity.CENTER_HORIZONTAL;
 		
-		//main.addView(adView, layoutParams2);
-        //adView.requestFreshAd();
+		main.addView(adView, layoutParams2);
+        adView.requestFreshAd();
 		
         this.scrollView.setOnScreenSelectedListener(new OnScreenSelectedListener() {
 			public void onSelected(int selectedIndex) {
