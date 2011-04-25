@@ -4,7 +4,8 @@
 	a:orientation="vertical"
 	a:layout_width="120sp"
 	a:layout_height="150sp"		
-	a:layout_gravity="center">
+	a:layout_gravity="center"	
+    a:background="@drawable/day_widget_bg">
 	<TextView a:id="@+id/monthText"
         a:layout_width="fill_parent" 
         a:layout_height="wrap_content"
