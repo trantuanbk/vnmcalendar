@@ -3,9 +3,6 @@ package chau.nguyen;
 import java.util.Calendar;
 import java.util.Date;
 
-import com.admob.android.ads.AdManager;
-import com.admob.android.ads.AdView;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -14,24 +11,23 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.View.OnClickListener;
+import android.webkit.WebView;
 import android.widget.DatePicker;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.TextView;
 import chau.nguyen.calendar.VietCalendar;
 import chau.nguyen.calendar.ui.ScrollableDayView;
-import chau.nguyen.calendar.ui.VNMDatePickerDialog;
 import chau.nguyen.calendar.ui.ScrollableDayView.OnDateChangedListener;
+import chau.nguyen.calendar.ui.VNMDatePickerDialog;
 import chau.nguyen.calendar.widget.HorizontalScrollView;
 import chau.nguyen.calendar.widget.HorizontalScrollView.OnScreenSelectedListener;
 import chau.nguyen.managers.BackgroundManager;
@@ -73,17 +69,22 @@ public class VNMDayActivity extends Activity {
         this.setContentView(R.layout.main);
         FrameLayout main = (FrameLayout)findViewById(R.id.main);
         
-        LayoutParams layoutParams1 = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT, 1.0f);
-        main.addView(this.scrollView, layoutParams1);
+        LayoutParams layoutParams1 = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT, 1.0f);       
+//        main.addView(this.scrollView, layoutParams1);
         
-        AdView adView = new AdView(this);
+        WebView webView = new WebView(this);
+        main.addView(webView, layoutParams1);
+        
+        webView.loadUrl("file:///android_asset/announcement.html");
+        
+        /*AdView adView = new AdView(this);
         android.widget.FrameLayout.LayoutParams  layoutParams2 = new android.widget.FrameLayout.LayoutParams(
 				LayoutParams.WRAP_CONTENT,
 				LayoutParams.WRAP_CONTENT);
         layoutParams2.gravity = Gravity.CENTER_HORIZONTAL;
 		
 		main.addView(adView, layoutParams2);
-        adView.requestFreshAd();
+        adView.requestFreshAd();*/
 		
         this.scrollView.setOnScreenSelectedListener(new OnScreenSelectedListener() {
 			public void onSelected(int selectedIndex) {
